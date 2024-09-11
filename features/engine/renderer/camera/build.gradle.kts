@@ -5,9 +5,8 @@ plugins {
 
 group = LibExt.GROUP_ID
 
-val moduleName = "g3d"
+val moduleName = "camera"
 
 dependencies {
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
-    implementation(LibExt.gdxGLTFVersion)
 }
