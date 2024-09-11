@@ -5,7 +5,7 @@ plugins {
 
 group = LibExt.GROUP_ID
 
-val moduleName = "imgui-lib"
+val moduleName = "imgui"
 
 dependencies {
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")

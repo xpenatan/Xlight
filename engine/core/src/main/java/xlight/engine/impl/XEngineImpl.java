@@ -1,15 +1,29 @@
 package xlight.engine.impl;
 
 import xlight.engine.core.XEngine;
+import xlight.engine.ecs.XECSWorld;
 
 public class XEngineImpl implements XEngine {
-    @Override
-    public void render() {
 
+    XECSWorldImpl world;
+
+    public XEngineImpl() {
+        world = new XECSWorldImpl();
     }
 
     @Override
-    public void update() {
+    public XECSWorld getWorld() {
+        return world;
+    }
 
+    @Override
+    public void update(float deltaTime) {
+        world.tickUpdate(deltaTime);
+    }
+
+    @Override
+    public void render() {
+        world.tickRender();
+        world.tickUI();
     }
 }

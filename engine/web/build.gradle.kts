@@ -5,7 +5,7 @@ plugins {
 
 group = LibExt.GROUP_ID
 
-val moduleName = "core"
+val moduleName = "core-web"
 
 dependencies {
     api(project(":engine:core"))

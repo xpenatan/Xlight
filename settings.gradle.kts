@@ -15,8 +15,16 @@ include(":editor:teavm")
 
 // Features
 
-include(":features:core:renderer:g3d")
-include(":features:core:renderer:g2d")
+include(":features:engine:ecs")
+include(":features:engine:pool")
+include(":features:engine:list")
+include(":features:engine:math")
+include(":features:engine:lang")
+include(":features:engine:renderer:g3d")
+include(":features:engine:renderer:g2d")
+include(":features:engine:renderer:camera")
+include(":features:engine:physics:2d:box2d")
+include(":features:engine:physics:3d:jolt")
 
 include(":features:editor:renderer:imgui")
 
