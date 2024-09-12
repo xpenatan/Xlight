@@ -5,7 +5,6 @@ pluginManagement {
     }
 }
 
-include(":engine:ecs")
 include(":engine:core")
 include(":engine:desktop")
 include(":engine:web")
@@ -16,15 +15,18 @@ include(":editor:teavm")
 
 // Features
 
+include(":features:engine:ecs")
 include(":features:engine:camera")
 include(":features:engine:pool")
 include(":features:engine:list")
 include(":features:engine:math")
 include(":features:engine:lang")
-include(":features:engine:ecs:renderer:g3d")
-include(":features:engine:ecs:renderer:g2d")
-include(":features:engine:ecs:physics:box2d")
-include(":features:engine:ecs:physics:jolt")
+include(":features:engine:shaperenderer")
+include(":features:engine:transform")
+include(":features:engine:renderer:g3d")
+include(":features:engine:renderer:g2d")
+include(":features:engine:physics:box2d")
+include(":features:engine:physics:jolt")
 
 include(":features:editor:renderer:imgui")
 
