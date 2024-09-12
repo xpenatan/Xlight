@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.Vector3;
-import xpeengine.engine.core.util.XMultiShapeRenderer;
-import xpeengine.engine.core.util.XShapeRenderer;
+import xlight.engine.debug.XMultiShapeRenderer;
+import xlight.engine.debug.XShapeRenderer;
 
 public class XCameraUtils {
 

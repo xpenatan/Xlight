@@ -2,20 +2,21 @@ package xlight.engine.pool;
 
 import com.badlogic.gdx.utils.Array;
 
-public abstract class XPool<T extends XPoolable> {
+public abstract class XPool<T> {
 
     private Array<T> freeObjects;
+
+    public XPool() {
+        this(100, 100);
+    }
+
+    public XPool(int initialCapacity) {
+        this(0, initialCapacity);
+    }
 
     public XPool(int initialSize, int capacity) {
         freeObjects = new Array<>(false, capacity);
         createNewObjects(initialSize);
-    }
-
-    private void createNewObjects(int size) {
-        for(int i = 0; i < size; i++) {
-            T t = newObject();
-            freeObjects.add(t);
-        }
     }
 
     /**
@@ -35,7 +36,9 @@ public abstract class XPool<T extends XPoolable> {
     }
 
     public void free(T object) {
-        object.onReset();
+        if(object instanceof XPoolable) {
+            ((XPoolable)object).onReset();
+        }
         freeObjects.add(object);
     }
 
@@ -46,5 +49,21 @@ public abstract class XPool<T extends XPoolable> {
         freeObjects.clear();
     }
 
-    public abstract T newObject();
+    public int getFree() {
+        return freeObjects.size;
+    }
+
+    public void fill() {
+        int newSize = freeObjects.items.length - freeObjects.size;
+        createNewObjects(newSize);
+    }
+
+    protected abstract T newObject();
+
+    private void createNewObjects(int size) {
+        for(int i = 0; i < size; i++) {
+            T t = newObject();
+            freeObjects.add(t);
+        }
+    }
 }

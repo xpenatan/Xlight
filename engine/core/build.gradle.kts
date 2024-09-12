@@ -12,6 +12,9 @@ dependencies {
     api(project(":features:engine:renderer:g3d"))
     api(project(":features:engine:renderer:g2d"))
     api(project(":features:engine:transform"))
+    api(project(":features:engine:json"))
+    api(project(":features:engine:list"))
+    api(project(":features:engine:datamap"))
     api(project(":features:engine:camera"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")

@@ -10,7 +10,7 @@ import xlight.engine.ecs.component.XComponentMatcherBuilder;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.system.XSystemType;
-import xpeengine.engine.core.transform.XTransform;
+import xlight.engine.transform.XTransform;
 
 public class XCameraSystem extends XEntitySystem {
 

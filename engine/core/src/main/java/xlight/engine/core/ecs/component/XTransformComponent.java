@@ -1,7 +1,7 @@
 package xlight.engine.core.ecs.component;
 
 import xlight.engine.ecs.component.XComponent;
-import xpeengine.engine.core.transform.XTransform;
+import xlight.engine.transform.XTransform;
 
 public class XTransformComponent implements XComponent {
 

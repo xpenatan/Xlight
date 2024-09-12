@@ -33,7 +33,7 @@ import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 import xlight.engine.camera.XCameraUtils;
 import xlight.engine.g3d.XBatch3D;
 import xlight.engine.g3d.XBatch3DOp;
-import xpeengine.engine.core.util.XMultiShapeRenderer;
+import xlight.engine.debug.XMultiShapeRenderer;
 
 public class XModelRenderer implements XBatch3D {
 
