@@ -2,10 +2,9 @@ package xlight.engine.core.ecs.system;
 
 import xlight.engine.camera.XCamera;
 import xlight.engine.core.ecs.component.XCameraComponent;
-import xlight.engine.core.ecs.component.XRenderComponent;
+import xlight.engine.core.ecs.component.XGameComponent;
 import xlight.engine.core.ecs.component.XTransformComponent;
 import xlight.engine.core.ecs.component.XUIComponent;
-import xlight.engine.core.ecs.service.camera.XCameraService;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
 import xlight.engine.ecs.component.XComponentService;
@@ -37,8 +36,8 @@ public class XCameraSystem extends XEntitySystem {
     }
 
     private Class<?> getRenderComponentType() {
-        if(systemType == XSystemType.RENDERER) {
-            return XRenderComponent.class;
+        if(systemType == XSystemType.GAME) {
+            return XGameComponent.class;
         }
         else if(systemType == XSystemType.UI) {
             return XUIComponent.class;

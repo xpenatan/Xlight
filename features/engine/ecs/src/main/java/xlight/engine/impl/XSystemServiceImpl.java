@@ -6,7 +6,6 @@ import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.ecs.util.timestep.timestep.XSimpleFixedTimeStep;
 import xlight.engine.ecs.util.timestep.timestep.XStepUpdate;
-import xlight.engine.math.XPair;
 
 public class XSystemServiceImpl implements XSystemService, XStepUpdate {
 
@@ -46,7 +45,7 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
                 uiSystem.add(new XSystemInternalData(system));
             }
         }
-        else if(type.isRenderer()) {
+        else if(type.isGame()) {
             if(getSystem(renderSystem, system.getClass()) == -1) {
                 renderSystem.add(new XSystemInternalData(system));
             }
