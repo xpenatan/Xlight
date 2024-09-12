@@ -44,9 +44,9 @@ public class XModelSystem extends XEntitySystem {
 
     @Override
     public void onEntityTick(XComponentService cs, XEntity e) {
+        XModelComponent modelComponent = cs.getComponent(e, XModelComponent.class);
         XTransformComponent transformComponent = cs.getComponent(e, XTransformComponent.class);
 
-        System.out.println("1111");
 
     }
 

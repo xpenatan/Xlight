@@ -34,16 +34,18 @@ public class MainApp implements XApplication {
     }
 
     public void createCameraEntity(XEntityService es, XComponentService cs) {
-        XEntity cameraEntity = es.obtain();
-        cs.attachComponent(cameraEntity, new XTransformComponent().position(0, 0, -10));
-        cs.attachComponent(cameraEntity, new XCameraComponent());
-        cs.attachComponent(cameraEntity, new XGameComponent());
+        XEntity e = es.obtain();
+        cs.attachComponent(e, new XTransformComponent().position(0, 0, -10));
+        cs.attachComponent(e, new XCameraComponent());
+        cs.attachComponent(e, new XGameComponent());
+        es.attachEntity(e);
     }
 
     public void createModelEntity(XEntityService es, XComponentService cs) {
-        XEntity cameraEntity = es.obtain();
-        cs.attachComponent(cameraEntity, new XModelComponent());
-        cs.attachComponent(cameraEntity, new XTransformComponent().position(0, 0, 0));
-        cs.attachComponent(cameraEntity, new XGameComponent());
+        XEntity e = es.obtain();
+        cs.attachComponent(e, new XModelComponent());
+        cs.attachComponent(e, new XTransformComponent().position(0, 0, 0));
+        cs.attachComponent(e, new XGameComponent());
+        es.attachEntity(e);
     }
 }
