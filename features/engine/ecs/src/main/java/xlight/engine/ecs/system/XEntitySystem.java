@@ -1,4 +1,4 @@
-package xlight.engine.core.ecs.system;
+package xlight.engine.ecs.system;
 
 import com.badlogic.gdx.utils.IntArray;
 import xlight.engine.ecs.XECSWorld;
@@ -7,8 +7,11 @@ import xlight.engine.ecs.component.XComponentMatcherBuilder;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
-import xlight.engine.ecs.system.XSystem;
 
+/**
+ * XEntitySystem is a higher class that already do all the component matching for you.
+ * For every frame it calls onEntityTick passing each entity.
+ */
 public abstract class XEntitySystem extends XSystem {
 
     private XEntityService entityService;
@@ -31,11 +34,13 @@ public abstract class XEntitySystem extends XSystem {
     }
 
     @Override
-    public final void onTick() {
+    public final void onTick(XECSWorld world) {
         if(entities == null) {
             return;
         }
-        onBeginTick();
+        if(onBeginTick()) {
+            return;
+        }
         for(int i = 0; i < entities.size; i++) {
             int entityId = entities.get(i);
             XEntity entity = entityService.getEntity(entityId);
@@ -44,7 +49,10 @@ public abstract class XEntitySystem extends XSystem {
         onEndTick();
     }
 
-    protected void onBeginTick() {}
+    /**
+     * Returning true will skip processing all entities.
+     */
+    protected boolean onBeginTick() { return false; }
     protected void onEndTick() {}
 
     public abstract XComponentMatcher getMatcher(XComponentMatcherBuilder builder);

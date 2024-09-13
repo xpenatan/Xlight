@@ -16,6 +16,7 @@ include(":editor:teavm")
 // Features
 
 include(":features:engine:ecs")
+include(":features:engine:asset")
 include(":features:engine:camera")
 include(":features:engine:pool")
 include(":features:engine:list")

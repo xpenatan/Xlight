@@ -1,14 +1,15 @@
 package xlight.engine.core.ecs.system;
 
 import xlight.engine.camera.XCamera;
-import xlight.engine.core.ecs.component.XCameraComponent;
-import xlight.engine.core.ecs.component.XGameComponent;
-import xlight.engine.core.ecs.component.XTransformComponent;
-import xlight.engine.core.ecs.component.XUIComponent;
+import xlight.engine.camera.ecs.component.XCameraComponent;
+import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.transform.ecs.component.XTransformComponent;
+import xlight.engine.ecs.component.XUIComponent;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.ecs.system.XEntitySystem;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.transform.XTransform;
 
@@ -33,6 +34,8 @@ public class XCameraSystem extends XEntitySystem {
 
         XCamera camera = cameraComponent.camera;
         XTransform transform = transformComponent.transform;
+        camera.setPosition(transform.getPosition());
+        camera.rotate(transform.getQuaternion());
     }
 
     private Class<?> getRenderComponentType() {

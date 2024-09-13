@@ -57,10 +57,7 @@ public class XPools {
         if(object == null) throw new IllegalArgumentException("object cannot be null.");
         Class<?> type = object.getClass();
         if(object instanceof XPoolable) {
-            Class<?> poolType = ((XPoolable)object).getPoolType();
-            if(poolType != null) {
-                type = poolType;
-            }
+            type = ((XPoolable)object).getPoolType();
         }
         free(type, object);
     }

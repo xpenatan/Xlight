@@ -4,12 +4,12 @@ import com.badlogic.gdx.utils.ObjectMap;
 import xlight.engine.pool.XPool;
 import xlight.engine.pool.XPoolable;
 
-public class XObjectMapRaw<NODE_KEY, NODE_VALUE, NODE_TYPE extends XObjectMapRaw.XObjectDataMapNode<NODE_KEY, NODE_VALUE, NODE_TYPE>> {
+public class XObjectMapListRaw<NODE_KEY, NODE_VALUE, NODE_TYPE extends XObjectMapListRaw.XObjectDataMapNode<NODE_KEY, NODE_VALUE, NODE_TYPE>> {
 
     private ObjectMap<NODE_KEY, NODE_TYPE> map;
     private XLinkedDataList<NODE_VALUE, NODE_TYPE> linkedList;
 
-    public XObjectMapRaw(XPool<NODE_TYPE> pool) {
+    public XObjectMapListRaw(XPool<NODE_TYPE> pool) {
         init(pool);
     }
 

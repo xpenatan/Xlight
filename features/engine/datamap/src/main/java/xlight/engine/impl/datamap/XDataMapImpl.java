@@ -26,14 +26,14 @@ import xlight.engine.list.XArray;
 import xlight.engine.list.XBooleanArray;
 import xlight.engine.list.XFloatArray;
 import xlight.engine.list.XIntArray;
-import xlight.engine.list.XIntMapList;
+import xlight.engine.list.XIntMap;
 import xlight.engine.list.XIntMapListNode;
 import xlight.engine.list.XList;
 import xlight.engine.list.XStringArray;
 
 public class XDataMapImpl implements XDataMap, XPoolable {
 
-    private final XIntMapList<Object> map;
+    private final XIntMap<Object> map;
 
     private final XPoolController poolController;
     private final XJson json;
@@ -41,7 +41,7 @@ public class XDataMapImpl implements XDataMap, XPoolable {
     public XDataMapImpl(XPoolController poolController, XJson json) {
         this.poolController = poolController;
         this.json = json;
-        map = new XIntMapList<>();
+        map = new XIntMap<>();
     }
 
     @Override

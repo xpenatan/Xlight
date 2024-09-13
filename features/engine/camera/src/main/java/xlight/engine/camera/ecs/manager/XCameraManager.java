@@ -1,8 +1,8 @@
-package xlight.engine.core.ecs.service.camera;
+package xlight.engine.camera.ecs.manager;
 
 import xlight.engine.camera.XCamera;
 
-public interface XCameraService {
+public interface XCameraManager {
 
     void clear();
 
@@ -46,4 +46,9 @@ public interface XCameraService {
      * Default: true
      */
     void setAllowToReplaceCamera(boolean flag);
+
+    interface XEditorCamera {
+        void setGameEditorCam(XCamera camera);
+        void setGuiEditorCam(XCamera camera);
+    }
 }

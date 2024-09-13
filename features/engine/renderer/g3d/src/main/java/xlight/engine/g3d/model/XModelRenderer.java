@@ -52,6 +52,8 @@ public class XModelRenderer implements XBatch3D {
     Cubemap specularCubemap;
     private CascadeShadowMap cascadeShadowMap;
 
+    private Camera camera;
+
     public XModelRenderer() {
         drawables = new Array<>();
         drawablesNoEnvironment = new Array<>();
@@ -104,10 +106,11 @@ public class XModelRenderer implements XBatch3D {
     }
 
     public void update(Camera camera) {
+        this.camera = camera;
         updateSkyboxRotation();
     }
 
-    public void render(Camera camera) {
+    public void render() {
         renderColor(camera);
     }
 
@@ -118,7 +121,7 @@ public class XModelRenderer implements XBatch3D {
         batch.end();
     }
 
-    public void renderShadows(Camera camera) {
+    public void renderShadows() {
         DirectionalShadowLight shadowLight = getFirstDirectionalShadowLight();
         float depth = 10;
         if(shadowLight != null) {

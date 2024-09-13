@@ -1,61 +1,73 @@
-package xlight.engine.core.ecs.system;
+package xlight.engine.g3d.ecs.system;
 
+import com.badlogic.gdx.graphics.Camera;
 import xlight.engine.camera.XCamera;
-import xlight.engine.core.ecs.component.XCameraComponent;
-import xlight.engine.core.ecs.component.XModelComponent;
-import xlight.engine.core.ecs.component.XGameComponent;
-import xlight.engine.core.ecs.component.XTransformComponent;
-import xlight.engine.core.ecs.component.XUIComponent;
-import xlight.engine.core.ecs.service.camera.XCameraService;
+import xlight.engine.camera.ecs.manager.XCameraManager;
+import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.ecs.component.XUIComponent;
+import xlight.engine.ecs.system.XEntitySystem;
 import xlight.engine.ecs.XECSWorld;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.system.XSystemType;
+import xlight.engine.g3d.ecs.component.XRender3DComponent;
 import xlight.engine.g3d.model.XModelRenderer;
+import xlight.engine.transform.ecs.component.XTransformComponent;
 
-public class XModelSystem extends XEntitySystem {
+public class XRender3DSystem extends XEntitySystem {
 
     XModelRenderer renderer;
     private XSystemType systemType;
-    private XCameraService cameraService;
+    private XCameraManager cameraManager;
 
-    public XModelSystem(XSystemType systemType) {
+    public XRender3DSystem(XSystemType systemType) {
         this.systemType = systemType;
         renderer = new XModelRenderer();
     }
 
     @Override
     public void onAttachSystem(XECSWorld world) {
-        cameraService = world.getService(XCameraService.class);
+        cameraManager = world.getManager(XCameraManager.class);
     }
 
     @Override
     public XComponentMatcher getMatcher(XComponentMatcherBuilder builder) {
         Class<?> renderComponentType = getRenderComponentType();
-        return builder.all(XModelComponent.class, XTransformComponent.class, renderComponentType).build();
+        return builder.all(XRender3DComponent.class, XTransformComponent.class, renderComponentType).build();
     }
 
     @Override
-    protected void onBeginTick() {
+    protected boolean onBeginTick() {
         XCamera gameCamera = getRenderingCamera();
+        if(gameCamera == null) {
+            return true;
+        }
+        Camera gdxCamera = gameCamera.asGDXCamera();
+        renderer.update(gdxCamera);
+        return false;
+    }
+    @Override
+    protected void onEndTick() {
+        renderer.render();
+        renderer.renderShadows();
     }
 
     @Override
     public void onEntityTick(XComponentService cs, XEntity e) {
-        XModelComponent modelComponent = cs.getComponent(e, XModelComponent.class);
+        XRender3DComponent modelComponent = cs.getComponent(e, XRender3DComponent.class);
         XTransformComponent transformComponent = cs.getComponent(e, XTransformComponent.class);
-
-
+        modelComponent.onUpdate(transformComponent.transform);
+        modelComponent.onRender(0, renderer);
     }
 
     private XCamera getRenderingCamera() {
         if(systemType == XSystemType.GAME) {
-            return cameraService.getRenderingGameCamera();
+            return cameraManager.getRenderingGameCamera();
         }
         else if(systemType == XSystemType.UI) {
-            return cameraService.getRenderingUICamera();
+            return cameraManager.getRenderingUICamera();
         }
         return null;
     }

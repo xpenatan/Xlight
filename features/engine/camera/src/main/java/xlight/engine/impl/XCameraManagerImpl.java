@@ -2,12 +2,11 @@ package xlight.engine.impl;
 
 
 import xlight.engine.camera.XCamera;
-import xlight.engine.core.ecs.service.camera.XCameraService;
-import xlight.engine.core.ecs.service.camera.XEditorCamera;
+import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.ecs.XECSWorld;
-import xlight.engine.ecs.service.XService;
+import xlight.engine.ecs.manager.XManager;
 
-class XCameraServiceImpl implements XCameraService, XEditorCamera, XService {
+class XCameraManagerImpl implements XCameraManager, XCameraManager.XEditorCamera, XManager {
 
     public XCamera gameCamera;
     public XCamera guiCamera;
@@ -17,7 +16,7 @@ class XCameraServiceImpl implements XCameraService, XEditorCamera, XService {
 
     public boolean allowReplace = true;
 
-    public XCameraServiceImpl() {
+    public XCameraManagerImpl() {
     }
 
     @Override

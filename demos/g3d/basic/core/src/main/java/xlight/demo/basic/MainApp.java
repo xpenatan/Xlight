@@ -2,17 +2,16 @@ package xlight.demo.basic;
 
 import xlight.engine.core.XApplication;
 import xlight.engine.core.XEngine;
-import xlight.engine.core.ecs.component.XCameraComponent;
-import xlight.engine.core.ecs.component.XGameComponent;
-import xlight.engine.core.ecs.component.XModelComponent;
-import xlight.engine.core.ecs.component.XTransformComponent;
+import xlight.engine.camera.ecs.component.XCameraComponent;
+import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.core.ecs.system.XCameraSystem;
 import xlight.engine.ecs.XECSWorld;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.system.XSystemService;
-import xlight.engine.core.ecs.system.XModelSystem;
+import xlight.engine.g3d.ecs.system.XRender3DSystem;
 import xlight.engine.ecs.system.XSystemType;
 
 public class MainApp implements XApplication {
@@ -24,7 +23,7 @@ public class MainApp implements XApplication {
         XSystemService systemService = world.getSystemService();
 
         systemService.attachSystem(new XCameraSystem(XSystemType.GAME));
-        systemService.attachSystem(new XModelSystem(XSystemType.GAME));
+        systemService.attachSystem(new XRender3DSystem(XSystemType.GAME));
 
         XEntityService es = world.getEntityService();
         XComponentService cs = world.getComponentService();
@@ -43,7 +42,7 @@ public class MainApp implements XApplication {
 
     public void createModelEntity(XEntityService es, XComponentService cs) {
         XEntity e = es.obtain();
-        cs.attachComponent(e, new XModelComponent());
+//        cs.attachComponent(e, new XRender3DComponent());
         cs.attachComponent(e, new XTransformComponent().position(0, 0, 0));
         cs.attachComponent(e, new XGameComponent());
         es.attachEntity(e);

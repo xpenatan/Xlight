@@ -1,4 +1,4 @@
-package xlight.engine.core.ecs.component;
+package xlight.engine.transform.ecs.component;
 
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.transform.XTransform;

@@ -25,7 +25,7 @@ class XComponentServiceImpl implements XComponentService {
 
     @Override
     public <T extends XComponent> boolean registerComponent(Class<T> type) {
-        XComponentType componentType = getComponentType(type);
+        XComponentType componentType = getComponentInternal(type);
         if(componentType == null) {
             int nextIndex = components.size;
             componentType = new XComponentType(type, nextIndex);
@@ -53,7 +53,7 @@ class XComponentServiceImpl implements XComponentService {
 
     @Override
     public <T extends XComponent> T getComponent(XEntity entity, Class<T> type) {
-        XComponentType componentType = getComponentType(type);
+        XComponentType componentType = getComponentInternal(type);
         T component = null;
         if(componentType != null) {
             int index = componentType.getIndex();
@@ -66,7 +66,7 @@ class XComponentServiceImpl implements XComponentService {
 
     @Override
     public <T extends XComponent> void attachComponent(XEntity entity, XComponent component) {
-        XComponentType componentType = getComponentType(component.getClass());
+        XComponentType componentType = getComponentInternal(component.getComponentType());
         if(componentType != null) {
             int index = componentType.getIndex();
             XPair<XComponentType, XComponentArray> pair = components.get(index);
@@ -77,7 +77,7 @@ class XComponentServiceImpl implements XComponentService {
 
     @Override
     public <T extends XComponent> void detachComponent(XEntity entity, Class<T> type) {
-        XComponentType componentType = getComponentType(type);
+        XComponentType componentType = getComponentInternal(type);
         if(componentType != null) {
             int index = componentType.getIndex();
             XPair<XComponentType, XComponentArray> pair = components.get(index);

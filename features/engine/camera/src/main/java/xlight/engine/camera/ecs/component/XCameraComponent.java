@@ -1,4 +1,4 @@
-package xlight.engine.core.ecs.component;
+package xlight.engine.camera.ecs.component;
 
 import xlight.engine.camera.XCamera;
 import xlight.engine.ecs.component.XComponent;

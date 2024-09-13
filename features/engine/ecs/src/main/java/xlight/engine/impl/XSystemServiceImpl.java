@@ -147,7 +147,7 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
             }
 
             if(system.isEnabled()) {
-                system.onTick();
+                system.onTick(world);
             }
         }
     }
