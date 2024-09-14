@@ -3,6 +3,8 @@ package xlight.editor.impl;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import java.io.File;
+import java.io.IOException;
 import xlight.editor.core.XEditor;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
@@ -17,10 +19,6 @@ public class XEditorImpl implements XEditor {
     private XEngine editorEngine;
 
     public XEditorImpl() {
-        editorEngine = XEngine.newInstance();
-        XEditorManagerImpl editorManager = new XEditorManagerImpl();
-        editorEngine.getWorld().attachManager(XEditorManager.class, editorManager);
-        editorEngine.getWorld().attachManager(XProjectManager.class, new XProjectManagerImpl());
     }
 
     @Override
@@ -30,28 +28,40 @@ public class XEditorImpl implements XEditor {
 
     @Override
     public void onSetup(XEngine engine) {
-        XECSWorld world = editorEngine.getWorld();
-        XProjectManager projectManager = world.getManager(XProjectManager.class);
+        editorEngine = engine;
 
-        XProjectOptions projectOptions = vehicleDemo();
-        projectManager.newProject(projectOptions);
+        XEditorManagerImpl editorManager = new XEditorManagerImpl();
+        editorEngine.getWorld().attachManager(XEditorManager.class, editorManager);
+        editorEngine.getWorld().attachManager(XProjectManager.class, new XProjectManagerImpl());
+
+        editorEngine.update(1); // Do a single step to attach editor data
+
+        XECSWorld world = engine.getWorld();
+        
+        loadBasicDemo(world);
     }
 
-
     @Deprecated
-    private XProjectOptions vehicleDemo() {
+    private void loadBasicDemo(XECSWorld world) {
         FileHandle projectPath;
+        String path = "demos/g3d/basic";
         if(Gdx.app.getType() == Application.ApplicationType.WebGL) {
-            projectPath = Gdx.files.local("demos/g3d/vehicle");
+            projectPath = Gdx.files.local(path);
         }
         else {
-            projectPath = Gdx.files.absolute("E:/Dev/Projects/java/Escplay/XpeEngine/demos/g3d/vehicle");
+            try {
+                String projectPathStr = new File("../../" + path).getCanonicalPath();
+                projectPath = Gdx.files.absolute(projectPathStr);
+            } catch(IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        XECSWorld world = editorEngine.getWorld();
 
         XProjectOptions options = new XProjectOptions();
         XPoolController poolController = world.getManager(XPoolManager.class).getPoolController();
         options.loadProject(poolController, projectPath);
-        return options;
+
+        XProjectManager projectManager = world.getManager(XProjectManager.class);
+        projectManager.newProject(options);
     }
 }

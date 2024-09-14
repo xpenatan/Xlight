@@ -16,6 +16,7 @@ class XApplicationInternal implements ApplicationListener {
 
     @Override
     public void create() {
+        engine.update(1); // Do a single update so default manager/services are initialized
         applicationListener.onSetup(engine);
         engine.getWorld().getEventService().sendEvent(XEvent.EVENT_CREATE);
     }

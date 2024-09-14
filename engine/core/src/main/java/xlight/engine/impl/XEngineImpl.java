@@ -18,7 +18,26 @@ public class XEngineImpl implements XEngine {
 
     public XEngineImpl() {
         world = new XECSWorldImpl();
+        setupEngine();
+    }
 
+    @Override
+    public XECSWorld getWorld() {
+        return world;
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        world.tickUpdate(deltaTime);
+    }
+
+    @Override
+    public void render() {
+        world.tickRender();
+        world.tickUI();
+    }
+
+    private void setupEngine() {
         registerComponents();
 
         // Setup Camera
@@ -42,21 +61,5 @@ public class XEngineImpl implements XEngine {
         componentService.registerComponent(XTransformComponent.class);
         componentService.registerComponent(XCameraComponent.class);
         componentService.registerComponent(XRender3DComponent.class);
-    }
-
-    @Override
-    public XECSWorld getWorld() {
-        return world;
-    }
-
-    @Override
-    public void update(float deltaTime) {
-        world.tickUpdate(deltaTime);
-    }
-
-    @Override
-    public void render() {
-        world.tickRender();
-        world.tickUI();
     }
 }
