@@ -8,9 +8,10 @@ group = LibExt.GROUP_ID
 val moduleName = "camera"
 
 dependencies {
-    implementation(project(":feature:engine:ecs"))
-    implementation(project(":feature:engine:transform"))
-    implementation(project(":feature:engine:shaperenderer"))
+    implementation(project(":feature:lib:camera"))
+    implementation(project(":feature:lib:transform"))
+    implementation(project(":feature:lib:ecs"))
+    implementation(project(":feature:lib:renderer:shaperenderer"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 }

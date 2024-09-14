@@ -13,25 +13,33 @@ include(":editor:core")
 include(":editor:desktop")
 include(":editor:teavm")
 
-// Features
+// Libs
 
-include(":feature:engine:ecs")
+include(":feature:lib:ecs")
+include(":feature:lib:renderer:g3d")
+include(":feature:lib:renderer:g2d")
+include(":feature:lib:renderer:shaperenderer")
+include(":feature:lib:camera")
+include(":feature:lib:transform")
+include(":feature:lib:pool")
+include(":feature:lib:list")
+include(":feature:lib:math")
+include(":feature:lib:lang")
+include(":feature:lib:json")
+include(":feature:lib:datamap")
+include(":feature:lib:properties")
+
+// Engine features
+
 include(":feature:engine:asset")
 include(":feature:engine:camera")
-include(":feature:engine:pool")
-include(":feature:engine:list")
-include(":feature:engine:math")
-include(":feature:engine:lang")
-include(":feature:engine:json")
-include(":feature:engine:datamap")
-include(":feature:engine:properties")
-include(":feature:engine:shaperenderer")
 include(":feature:engine:transform")
 include(":feature:engine:renderer:g3d")
 include(":feature:engine:renderer:g2d")
 include(":feature:engine:physics:box2d")
 include(":feature:engine:physics:jolt")
 
+// Editor features
 include(":feature:editor:renderer:imgui")
 
 // Demos

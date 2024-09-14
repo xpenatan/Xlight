@@ -1,13 +1,15 @@
 plugins {
     id("java")
-    id("java-library")
 }
 
 group = LibExt.GROUP_ID
 
-val moduleName = "math"
+val moduleName = "ecs"
 
 dependencies {
+    implementation(project(":feature:lib:pool"))
+    implementation(project(":feature:lib:math"))
+    implementation(project(":feature:lib:list"))
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 
     testImplementation("com.google.truth:truth:${LibExt.truthVersion}")
