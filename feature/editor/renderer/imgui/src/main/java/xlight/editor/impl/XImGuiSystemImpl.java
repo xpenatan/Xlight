@@ -3,7 +3,6 @@ package xlight.editor.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import imgui.ImDrawData;
 import imgui.ImFontAtlas;
 import imgui.ImGui;
@@ -113,7 +112,6 @@ public class XImGuiSystemImpl implements XSystem, XImGuiSystem {
         editorEngine = null;
     }
 
-    boolean first = false;
     int rootDockspaceID;
 
     @Override
@@ -167,10 +165,6 @@ public class XImGuiSystemImpl implements XSystem, XImGuiSystem {
             ImDrawData drawData = ImGui.GetDrawData();
             impl.render(drawData);
         }
-    }
-
-    private int toInt(float r, float g, float b, float a) {
-        return Color.toIntBits((int)(r*255), (int)(g*255), (int)(b*255), (int)(a*255));
     }
 
     private void initStyle() {
