@@ -43,6 +43,8 @@ include(":feature:engine:physics:box2d")
 include(":feature:engine:physics:jolt")
 
 // Editor features
+include(":feature:editor:core")
+include(":feature:editor:editor-assets")
 include(":feature:editor:renderer:imgui")
 
 // Demos

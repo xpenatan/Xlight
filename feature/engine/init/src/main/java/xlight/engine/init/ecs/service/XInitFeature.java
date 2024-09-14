@@ -1,11 +1,11 @@
 package xlight.engine.init.ecs.service;
 
-public class XFeature {
+public class XInitFeature {
     public final int featureKey;
 
     boolean initialized = false;
 
-    public XFeature(int featureKey) {
+    public XInitFeature(int featureKey) {
         this.featureKey = featureKey;
     }
 

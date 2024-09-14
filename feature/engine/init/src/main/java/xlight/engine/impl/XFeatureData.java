@@ -1,12 +1,12 @@
 package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.IntArray;
-import xlight.engine.init.ecs.service.XFeature;
+import xlight.engine.init.ecs.service.XInitFeature;
 import xlight.engine.init.ecs.service.XInitFeatureListener;
 
 public class XFeatureData {
 
-    private XFeature feature;
+    private XInitFeature feature;
 
     private IntArray featureInitializedDependency = new IntArray();
     private IntArray featureDependency = new IntArray();
@@ -19,13 +19,13 @@ public class XFeatureData {
     XInitFeatureServiceImpl service;
 
     public XFeatureData(XInitFeatureServiceImpl service, int featureKey, XInitFeatureListener featureStart) {
-        feature = new XFeature(featureKey);
+        feature = new XInitFeature(featureKey);
         this.service = service;
         this.featureStart = featureStart;
     }
 
     public XFeatureData(XInitFeatureServiceImpl service, Runnable run) {
-        feature = new XFeature(0);
+        feature = new XInitFeature(0);
         this.service = service;
         this.run = run;
     }

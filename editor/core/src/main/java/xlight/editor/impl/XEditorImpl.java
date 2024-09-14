@@ -5,11 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import java.io.File;
 import java.io.IOException;
+import xlight.editor.assets.XEditorAssets;
 import xlight.editor.core.XEditor;
 import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.editor.core.project.XProjectOptions;
+import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XECSWorld;
 import xlight.engine.ecs.event.XEvent;
@@ -34,9 +36,12 @@ public class XEditorImpl implements XEditor {
     public void onSetup(XEngine engine) {
         editorEngine = engine;
 
+        XEditorAssets.loadAssets();
+
         XEditorManagerImpl editorManager = new XEditorManagerImpl();
         editorEngine.getWorld().attachManager(XEditorManager.class, editorManager);
         editorEngine.getWorld().attachManager(XProjectManager.class, new XProjectManagerImpl());
+        editorEngine.getWorld().attachManager(XImGuiManager.class, new XImGuiManagerImpl());
 
         editorEngine.update(1); // Do a single step to attach editor data
 
@@ -46,6 +51,13 @@ public class XEditorImpl implements XEditor {
             @Override
             public boolean onEvent(XEvent event) {
                 onEditorReady(event.getWorld());
+                return false;
+            }
+        });
+        eventService.addEventListener(XEditorEvents.EVENT_ENGINE_DISPOSED, new XEventListener() {
+            @Override
+            public boolean onEvent(XEvent event) {
+                XEditorAssets.disposeAssets();
                 return false;
             }
         });

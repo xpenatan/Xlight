@@ -3,8 +3,10 @@ plugins {
     id("java-library")
 }
 
-dependencies {
-    api(project(":feature:lib:pool"))
+group = "com.xpeengine.imgui"
 
+dependencies {
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
+
+    implementation(LibExt.gdxGLTFVersion)
 }

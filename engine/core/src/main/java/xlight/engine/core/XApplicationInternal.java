@@ -2,6 +2,7 @@ package xlight.engine.core;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.ScreenUtils;
 import xlight.engine.ecs.event.XEvent;
 
 class XApplicationInternal implements ApplicationListener {
@@ -23,6 +24,7 @@ class XApplicationInternal implements ApplicationListener {
 
     @Override
     public void render() {
+        ScreenUtils.clear(0, 0, 0, 1, true);
         float deltaTime = Gdx.graphics.getDeltaTime();
         engine.update(deltaTime);
         engine.render();

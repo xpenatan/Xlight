@@ -5,6 +5,9 @@ plugins {
 
 dependencies {
     api(project(":engine:core"))
+    implementation(project(":feature:editor:core"))
+    implementation(project(":feature:editor:editor-assets"))
+    implementation(project(":feature:editor:renderer:imgui"))
 
     implementation(project(":feature:editor:renderer:imgui"))
 
