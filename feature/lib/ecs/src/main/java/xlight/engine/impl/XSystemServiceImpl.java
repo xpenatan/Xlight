@@ -139,7 +139,6 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
         return null;
     }
 
-
     private static int getSystem(Array<XSystemInternalData> systems, Class<?> type) {
         for(int i = 0; i < systems.size; i++) {
             XSystemInternalData data = systems.get(i);
