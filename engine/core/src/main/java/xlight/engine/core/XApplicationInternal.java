@@ -17,7 +17,6 @@ class XApplicationInternal implements ApplicationListener {
     @Override
     public void create() {
         applicationListener.onSetup(engine);
-
         engine.getWorld().getEventService().sendEvent(XEvent.EVENT_CREATE);
     }
 

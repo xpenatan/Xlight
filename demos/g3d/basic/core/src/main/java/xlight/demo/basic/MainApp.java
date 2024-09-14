@@ -4,6 +4,7 @@ import xlight.engine.core.XApplication;
 import xlight.engine.core.XEngine;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.g3d.ecs.component.XBox3DComponent;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.core.ecs.system.XCameraSystem;
 import xlight.engine.ecs.XECSWorld;
@@ -42,7 +43,7 @@ public class MainApp implements XApplication {
 
     public void createModelEntity(XEntityService es, XComponentService cs) {
         XEntity e = es.obtain();
-//        cs.attachComponent(e, new XRender3DComponent());
+        cs.attachComponent(e, new XBox3DComponent());
         cs.attachComponent(e, new XTransformComponent().position(0, 0, 0));
         cs.attachComponent(e, new XGameComponent());
         es.attachEntity(e);

@@ -15,9 +15,12 @@ public interface XCamera {
     Vector3 getPosition();
     void setPosition(float x, float y, float z);
     void setPosition(Vector3 position);
+    void setTransform (final Matrix4 transform);
     void setX(float x);
     void setY(float y);
     void setZ(float z);
+    void transform(final Matrix4 transform);
+
     float getViewportWidth();
     float getViewportHeight();
     void setZoom(float zoom);
@@ -52,6 +55,7 @@ public interface XCamera {
     Camera asGDXCamera();
 
     boolean isActiveCamera();
+    void setActiveCamera(boolean flag);
 
     void setDirty();
     boolean isDirty();

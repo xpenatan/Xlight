@@ -44,7 +44,7 @@ class XCameraManagerImpl implements XCameraManager, XCameraManager.XEditorCamera
     }
 
     @Override
-    public void setGuiCamera(XCamera camera) {
+    public void setUICamera(XCamera camera) {
         if(camera == guiCamera) {
             return;
         }
@@ -90,11 +90,23 @@ class XCameraManagerImpl implements XCameraManager, XCameraManager.XEditorCamera
 
     @Override
     public XCamera getGameCamera() {
+        if(gameCamera != null) {
+            if(!gameCamera.isActiveCamera()) {
+                gameCamera.setActiveCamera(false);
+                gameCamera = null;
+            }
+        }
         return gameCamera;
     }
 
     @Override
-    public XCamera getGuiCamera() {
+    public XCamera getUICamera() {
+        if(guiCamera != null) {
+            if(!guiCamera.isActiveCamera()) {
+                guiCamera.setActiveCamera(false);
+                guiCamera = null;
+            }
+        }
         return guiCamera;
     }
 

@@ -14,7 +14,7 @@ public interface XCameraManager {
     /** Set the gui rendering camera that will be used to render in model batch and sprite batch.
      * This camera will be replaced temporary when your game is rendering inside an editor window.
      */
-    void setGuiCamera(XCamera camera);
+    void setUICamera(XCamera camera);
 
     /**
      * Return the current rendering camera. This camera may be the game camera or other custom camera.
@@ -40,7 +40,7 @@ public interface XCameraManager {
      * Return the current gui camera. Does not use this camera for rendering.
      * May be null.
      */
-    XCamera getGuiCamera();
+    XCamera getUICamera();
 
     /** Allow editor to replace rendering camera. Used in editor windows.
      * Default: true

@@ -27,6 +27,7 @@ public abstract class XRender3DComponent implements XComponent, XRender3D, XPool
 
     @Override
     public final void onRender(int engineType, XBatch3D batch) {
+        onRender(batch);
     }
 
     @Override

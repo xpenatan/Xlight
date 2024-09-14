@@ -196,6 +196,13 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     }
 
     @Override
+    public void setTransform(Matrix4 transform) {
+        up.set(0, 1, 0);
+        direction.set(0, 0, -1);
+        transform(transform);
+    }
+
+    @Override
     public void setX(float x) {
         setPosition(x, position.y, position.z);
     }
@@ -304,6 +311,11 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public boolean isActiveCamera() {
         return isActiveCamera;
+    }
+
+    @Override
+    public void setActiveCamera(boolean flag) {
+        isActiveCamera = flag;
     }
 
     public void setDirty() {
