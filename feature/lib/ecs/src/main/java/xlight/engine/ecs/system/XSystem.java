@@ -6,9 +6,6 @@ import xlight.engine.ecs.XECSWorld;
  * XSystem is a processing class related ECS. Its purpose is to process entity components.
  */
 public interface XSystem {
-    // TODO change to interface
-
-    boolean enabled = true;
 
     /**
      * Attach is used to initialize the system. It's called at the first frame step.
