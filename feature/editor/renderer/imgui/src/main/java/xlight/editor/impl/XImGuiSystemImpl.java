@@ -27,7 +27,6 @@ import xlight.editor.imgui.window.XImGuiWindowContext;
 import xlight.engine.ecs.XECSWorld;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
-import xlight.engine.ecs.event.XEventService;
 import xlight.engine.ecs.system.XSystem;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.init.ecs.service.XInitFeatureService;
@@ -284,5 +283,10 @@ public class XImGuiSystemImpl implements XSystem, XImGuiSystem {
         if(window != null) {
             window.dispose(editorEngine);
         }
+    }
+
+    @Override
+    public Class<?> getSystemType() {
+        return XImGuiSystem.class;
     }
 }
