@@ -1,5 +1,7 @@
 package xlight.engine.ecs.event;
 
+import xlight.engine.ecs.XECSWorld;
+
 public interface XEvent {
     static final int EVENT_CREATE = 1;
     static final int EVENT_RESIZE = 1;
@@ -9,4 +11,5 @@ public interface XEvent {
 
     int getID();
     <T> T getUserData();
+    XECSWorld getWorld();
 }

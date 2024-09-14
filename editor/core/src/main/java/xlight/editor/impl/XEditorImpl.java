@@ -6,11 +6,15 @@ import com.badlogic.gdx.files.FileHandle;
 import java.io.File;
 import java.io.IOException;
 import xlight.editor.core.XEditor;
+import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.editor.core.project.XProjectOptions;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.event.XEvent;
+import xlight.engine.ecs.event.XEventListener;
+import xlight.engine.ecs.event.XEventService;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.pool.ecs.manager.XPoolManager;
 
@@ -37,7 +41,17 @@ public class XEditorImpl implements XEditor {
         editorEngine.update(1); // Do a single step to attach editor data
 
         XECSWorld world = engine.getWorld();
-        
+        XEventService eventService = world.getEventService();
+        eventService.addEventListener(XEditorEvents.EVENT_EDITOR_READY, new XEventListener() {
+            @Override
+            public boolean onEvent(XEvent event) {
+                onEditorReady(event.getWorld());
+                return false;
+            }
+        });
+    }
+
+    private void onEditorReady(XECSWorld world) {
         loadBasicDemo(world);
     }
 

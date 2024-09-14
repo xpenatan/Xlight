@@ -32,7 +32,7 @@ public class XECSWorldImpl implements XECSWorld {
         entityService = new XEntityServiceImpl();
         componentService = new XComponentServiceImpl(entityService);
         systemService = new XSystemServiceImpl(this);
-        eventService = new XEventServiceImpl();
+        eventService = new XEventServiceImpl(this);
 
         initServices = new Array<>();
         initManagers = new Array<>();

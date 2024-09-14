@@ -2,17 +2,21 @@ package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
+import xlight.engine.ecs.XECSWorld;
 import xlight.engine.ecs.event.XEventListener;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.pool.XPool;
 
 class XEventServiceImpl implements XEventService {
+
+    private final XECSWorld world;
     private final Array<XEventImpl> toAdd;
     private final Array<XEventImpl> processing;
     private final IntMap<Array<XEventListener>> listenersMap;
     private final XPool<XEventImpl> eventPool;
 
-    public XEventServiceImpl() {
+    public XEventServiceImpl(XECSWorld world) {
+        this.world = world;
         toAdd = new Array<>();
         processing = new Array<>();
         listenersMap = new IntMap<>();
@@ -50,6 +54,7 @@ class XEventServiceImpl implements XEventService {
         event.id = id;
         event.userData = userData;
         event.listener = listener;
+        event.world = world;
 
         if(isAsync) {
             toAdd.add(event);
