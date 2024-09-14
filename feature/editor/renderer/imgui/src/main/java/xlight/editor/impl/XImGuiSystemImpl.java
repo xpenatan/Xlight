@@ -176,10 +176,6 @@ public class XImGuiSystemImpl implements XSystem, XImGuiSystem {
     private void initStyle() {
         ImGui.StyleColorsDark();
 
-        int active = 85;
-        int hovered = 95;
-        int header = 85;
-
         ImGuiStyle imGuiStyle = ImGui.GetStyle();
 
         imGuiStyle.set_ColorButtonPosition(ImGuiDir.ImGuiDir_Left);
