@@ -1,10 +1,10 @@
 plugins {
     id("java")
+    id("java-library")
 }
 
 dependencies {
-    implementation(project(":features:engine:ecs"))
-    implementation(project(":features:engine:math"))
+    implementation(project(":feature:engine:pool"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 }

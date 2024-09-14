@@ -3,6 +3,8 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":feature:engine:ecs"))
+    implementation(project(":feature:engine:math"))
+
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
-    implementation(project(":features:engine:math"))
 }

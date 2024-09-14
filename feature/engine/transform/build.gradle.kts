@@ -2,13 +2,9 @@ plugins {
     id("java")
 }
 
-group = LibExt.GROUP_ID
-
-val moduleName = "lang"
-
 dependencies {
-    implementation(project(":features:engine:pool"))
+    implementation(project(":feature:engine:ecs"))
+    implementation(project(":feature:engine:math"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 }
-

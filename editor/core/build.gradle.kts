@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     api(project(":engine:core"))
-    implementation(project(":features:editor:renderer:imgui"))
+    implementation(project(":feature:editor:renderer:imgui"))
 
     // Libgdx
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
