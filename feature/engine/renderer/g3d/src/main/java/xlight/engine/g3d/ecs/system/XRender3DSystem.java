@@ -52,6 +52,7 @@ public class XRender3DSystem extends XEntitySystem {
     protected void onEndTick() {
         renderer.render();
         renderer.renderShadows();
+        renderer.clear();
     }
 
     @Override

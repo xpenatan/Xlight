@@ -1,5 +1,7 @@
 package xlight.demo.basic;
 
+import com.badlogic.gdx.math.Vector3;
+import xlight.engine.camera.PROJECTION_MODE;
 import xlight.engine.core.XApplication;
 import xlight.engine.core.XEngine;
 import xlight.engine.camera.ecs.component.XCameraComponent;
@@ -30,20 +32,32 @@ public class MainApp implements XApplication {
         XComponentService cs = world.getComponentService();
 
         createCameraEntity(es, cs);
-        createModelEntity(es, cs);
+        createBox3DEntity(es, cs);
     }
 
     public void createCameraEntity(XEntityService es, XComponentService cs) {
         XEntity e = es.obtain();
+
+        XCameraComponent cameraComponent = new XCameraComponent();
+        cameraComponent.camera.setProjectionMode(PROJECTION_MODE.PERSPECTIVE);
+
         cs.attachComponent(e, new XTransformComponent().position(0, 0, -10));
-        cs.attachComponent(e, new XCameraComponent());
+        cs.attachComponent(e, cameraComponent);
         cs.attachComponent(e, new XGameComponent());
         es.attachEntity(e);
     }
 
-    public void createModelEntity(XEntityService es, XComponentService cs) {
+    public void createBox3DEntity(XEntityService es, XComponentService cs) {
         XEntity e = es.obtain();
-        cs.attachComponent(e, new XBox3DComponent());
+        cs.attachComponent(e, new XBox3DComponent(new Vector3(1, 1, 1)));
+        cs.attachComponent(e, new XTransformComponent().position(0, 0, 0));
+        cs.attachComponent(e, new XGameComponent());
+        es.attachEntity(e);
+    }
+
+    public void createGroundEntity(XEntityService es, XComponentService cs) {
+        XEntity e = es.obtain();
+        cs.attachComponent(e, new XBox3DComponent(new Vector3(50, 1, 50)));
         cs.attachComponent(e, new XTransformComponent().position(0, 0, 0));
         cs.attachComponent(e, new XGameComponent());
         es.attachEntity(e);

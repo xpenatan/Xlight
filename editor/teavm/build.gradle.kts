@@ -8,15 +8,16 @@ gretty {
 }
 
 dependencies {
+    implementation(project(":editor:core"))
+    implementation(project(":engine:web"))
+
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
     implementation("com.github.xpenatan.gdx-teavm:backend-teavm:${LibExt.gdxTeaVMVersion}")
     implementation("com.github.xpenatan.gdx-imgui:imgui-ext-teavm:${LibExt.gdxImGuiVersion}")
     implementation("com.github.xpenatan.gdx-bullet:bullet-teavm:${LibExt.gdxBullet}")
-
-    implementation(project(":editor:core"))
 }
 
-val mainClassName = "xlight.Build"
+val mainClassName = "xlight.editor.WebBuild"
 
 tasks.register<JavaExec>("editor-build") {
     group = "example-teavm"

@@ -20,9 +20,8 @@ public class XBox3DComponent extends XRender3DComponent {
 
     private Model model;
     private XModelInstance modelInstance;
-    private final Vector3 size = new Vector3(1, 1, 1);
 
-    public XBox3DComponent() {
+    public XBox3DComponent(Vector3 size) {
         ModelBuilder mb = new ModelBuilder();
         mb.begin();
         Material material = new Material("material",

@@ -6,6 +6,7 @@ dependencies {
     implementation("com.badlogicgames.gdx:gdx-backend-lwjgl3:${LibExt.gdxVersion}")
 
     implementation(project(":editor:core"))
+    implementation(project(":engine:desktop"))
 
     // Natives
     implementation("com.github.xpenatan.gdx-imgui:imgui-ext-desktop:${LibExt.gdxImGuiVersion}")
@@ -14,7 +15,7 @@ dependencies {
     implementation("com.badlogicgames.gdx:gdx-box2d-platform:${LibExt.gdxVersion}:natives-desktop")
 }
 
-val mainClassName = "xlight.editor.Launcher"
+val mainClassName = "xlight.editor.DesktopMain"
 
 tasks.register<JavaExec>("run") {
     group = "Xlight"
