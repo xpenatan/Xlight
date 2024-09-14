@@ -12,7 +12,7 @@ import xlight.engine.ecs.entity.XEntityService;
  * XEntitySystem is a higher class that already do all the component matching for you.
  * For every frame it calls onEntityTick passing each entity.
  */
-public abstract class XEntitySystem extends XSystem {
+public abstract class XEntitySystem implements XSystem {
 
     private XEntityService entityService;
     private XComponentService componentService;

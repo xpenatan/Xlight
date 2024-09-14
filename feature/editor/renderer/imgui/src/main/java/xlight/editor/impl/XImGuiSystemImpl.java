@@ -38,7 +38,7 @@ import xlight.engine.list.XList;
 /**
  * System is responsible to render imgui objects and process all systems in imgui controller
  */
-public class XImGuiSystemImpl extends XSystem implements XImGuiSystem {
+public class XImGuiSystemImpl implements XSystem, XImGuiSystem {
 
     private boolean init = false;
 

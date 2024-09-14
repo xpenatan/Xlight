@@ -2,6 +2,7 @@ package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.Array;
 import xlight.engine.ecs.system.XSystem;
+import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.ecs.util.timestep.timestep.XSimpleFixedTimeStep;
@@ -81,27 +82,16 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
 
     @Override
     public <T extends XSystem> T getSystem(Class<T> type) {
-        int index = getSystem(this.updateSystem, type);
-        XSystemInternalData data = null;
-        if(index >= 0) {
-            data = updateSystem.get(index);
-        }
-        index = getSystem(this.stepSystem, type);
-        if(index >= 0) {
-            data = stepSystem.get(index);
-        }
-        index = getSystem(this.renderSystem, type);
-        if(index >= 0) {
-            data = renderSystem.get(index);
-        }
-        index = getSystem(this.uiSystem, type);
-        if(index >= 0) {
-            data = uiSystem.get(index);
-        }
+        XSystemInternalData data = getInternalSystemData(type);
         if(data != null) {
             return (T)data.system;
         }
         return null;
+    }
+
+    @Override
+    public <T extends XSystem> XSystemData getSystemData(Class<T> type) {
+        return getInternalSystemData(type);
     }
 
     @Override
@@ -125,6 +115,31 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
         tickSystem(uiSystem);
     }
 
+    private <T extends XSystem> XSystemInternalData getInternalSystemData(Class<T> type) {
+        int index = getSystem(this.updateSystem, type);
+        XSystemInternalData data = null;
+        if(index >= 0) {
+            data = updateSystem.get(index);
+        }
+        index = getSystem(this.stepSystem, type);
+        if(index >= 0) {
+            data = stepSystem.get(index);
+        }
+        index = getSystem(this.renderSystem, type);
+        if(index >= 0) {
+            data = renderSystem.get(index);
+        }
+        index = getSystem(this.uiSystem, type);
+        if(index >= 0) {
+            data = uiSystem.get(index);
+        }
+        if(data != null) {
+            return data;
+        }
+        return null;
+    }
+
+
     private static int getSystem(Array<XSystemInternalData> systems, Class<?> type) {
         for(int i = 0; i < systems.size; i++) {
             XSystemInternalData data = systems.get(i);
@@ -146,18 +161,30 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
                 system.onAttach(world);
             }
 
-            if(system.isEnabled()) {
+            if(data.isEnabled) {
                 system.onTick(world);
             }
         }
     }
 
-    private static class XSystemInternalData {
+    private static class XSystemInternalData implements XSystemData {
         public boolean callAttach = true;
+
+        public boolean isEnabled = true;
         public XSystem system;
 
         public XSystemInternalData(XSystem system) {
             this.system = system;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return isEnabled;
+        }
+
+        @Override
+        public void setEnabled(boolean flag) {
+            isEnabled = flag;
         }
     }
 }
