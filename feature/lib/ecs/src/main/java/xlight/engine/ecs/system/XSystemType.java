@@ -3,15 +3,15 @@ package xlight.engine.ecs.system;
 public enum XSystemType {
     UPDATE,
     TIMESTEP,
-    GAME,
+    RENDER,
     UI;
 
     public boolean isUI() {
         return this == UI;
     }
 
-    public boolean isGame() {
-        return this == GAME;
+    public boolean isRender() {
+        return this == RENDER;
     }
 
     public boolean isUpdate() {

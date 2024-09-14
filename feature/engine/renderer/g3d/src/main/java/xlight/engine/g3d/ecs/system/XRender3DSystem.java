@@ -64,7 +64,7 @@ public class XRender3DSystem extends XEntitySystem {
     }
 
     private XCamera getRenderingCamera() {
-        if(systemType == XSystemType.GAME) {
+        if(systemType == XSystemType.RENDER) {
             return cameraManager.getRenderingGameCamera();
         }
         else if(systemType == XSystemType.UI) {
@@ -74,7 +74,7 @@ public class XRender3DSystem extends XEntitySystem {
     }
 
     private Class<?> getRenderComponentType() {
-        if(systemType == XSystemType.GAME) {
+        if(systemType == XSystemType.RENDER) {
             return XGameComponent.class;
         }
         else if(systemType == XSystemType.UI) {

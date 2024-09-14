@@ -9,4 +9,9 @@ public interface XImGuiManager {
     InputMultiplexer getImGuiInput();
 
     XImGuiWindowContext getCurrentWindowContext();
+
+    boolean containsClassID(int classID);
+    boolean addWindowContext(int classID, XImGuiWindowContext windowContext);
+    <T extends XImGuiWindowContext> T getWindowContext(int classID);
+    void removeWindowContext(int classID);
 }

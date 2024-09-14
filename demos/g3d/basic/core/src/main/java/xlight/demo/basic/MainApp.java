@@ -25,8 +25,8 @@ public class MainApp implements XApplication {
         XECSWorld world = engine.getWorld();
         XSystemService systemService = world.getSystemService();
 
-        systemService.attachSystem(new XCameraSystem(XSystemType.GAME));
-        systemService.attachSystem(new XRender3DSystem(XSystemType.GAME));
+        systemService.attachSystem(new XCameraSystem(XSystemType.RENDER));
+        systemService.attachSystem(new XRender3DSystem(XSystemType.RENDER));
 
         XEntityService es = world.getEntityService();
         XComponentService cs = world.getComponentService();

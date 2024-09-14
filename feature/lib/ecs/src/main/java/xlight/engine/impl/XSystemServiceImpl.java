@@ -2,6 +2,7 @@ package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.Array;
 import xlight.engine.ecs.system.XSystem;
+import xlight.engine.ecs.system.XSystemBeginEndListener;
 import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.ecs.system.XSystemType;
@@ -18,6 +19,11 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
     private final Array<XSystemInternalData> uiSystem;
     private final XSimpleFixedTimeStep timeStep;
 
+    private final Array<XSystemBeginEndListener> updateListener;
+    private final Array<XSystemBeginEndListener> stepListener;
+    private final Array<XSystemBeginEndListener> uiListener;
+    private final Array<XSystemBeginEndListener> renderListener;
+
     public XSystemServiceImpl(XECSWorldImpl world) {
         this.world = world;
         stepSystem = new Array<>();
@@ -26,6 +32,11 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
         uiSystem = new Array<>();
         timeStep = new XSimpleFixedTimeStep();
         timeStep.addStepListener(this);
+
+        updateListener = new Array<>();
+        stepListener = new Array<>();
+        uiListener = new Array<>();
+        renderListener = new Array<>();
     }
 
     @Override
@@ -46,7 +57,7 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
                 uiSystem.add(new XSystemInternalData(system));
             }
         }
-        else if(type.isGame()) {
+        else if(type.isRender()) {
             if(getSystem(renderSystem, system.getClass()) == -1) {
                 renderSystem.add(new XSystemInternalData(system));
             }
@@ -54,7 +65,7 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
     }
 
     @Override
-    public <T extends XSystem> T detachSystem(Class<T> classType) {
+    public <T extends XSystem> T detachSystem(Class<?> classType) {
         int index = getSystem(this.updateSystem, classType);
         XSystemInternalData data = null;
         if(index >= 0) {
@@ -81,7 +92,7 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
     }
 
     @Override
-    public <T extends XSystem> T getSystem(Class<T> type) {
+    public <T extends XSystem> T getSystem(Class<?> type) {
         XSystemInternalData data = getInternalSystemData(type);
         if(data != null) {
             return (T)data.system;
@@ -95,27 +106,67 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
     }
 
     @Override
+    public void addTickListener(XSystemType type, XSystemBeginEndListener listener) {
+        if(type == XSystemType.UPDATE) {
+            updateListener.add(listener);
+        }
+        else if(type == XSystemType.TIMESTEP) {
+            stepListener.add(listener);
+        }
+        else if(type == XSystemType.UI) {
+            uiListener.add(listener);
+        }
+        else if(type == XSystemType.RENDER) {
+            renderListener.add(listener);
+        }
+    }
+
+    @Override
+    public void removeTickListener(XSystemType type, XSystemBeginEndListener listener) {
+        if(type == XSystemType.UPDATE) {
+            updateListener.removeValue(listener, true);
+        }
+        else if(type == XSystemType.TIMESTEP) {
+            stepListener.removeValue(listener, true);
+        }
+        else if(type == XSystemType.UI) {
+            uiListener.removeValue(listener, true);
+        }
+        else if(type == XSystemType.RENDER) {
+            renderListener.removeValue(listener, true);
+        }
+    }
+
+    @Override
     public void onUpdate() {
         tickSystem(stepSystem);
     }
 
     void tickUpdateSystem() {
+        tickBeginListener(updateListener);
         tickSystem(updateSystem);
+        tickEndListener(updateListener);
     }
 
     void tickStepSystem() {
+        tickBeginListener(stepListener);
         timeStep.tick();
+        tickEndListener(stepListener);
     }
 
     void tickRenderSystem() {
+        tickBeginListener(renderListener);
         tickSystem(renderSystem);
+        tickEndListener(renderListener);
     }
 
     void tickUISystem() {
+        tickBeginListener(uiListener);
         tickSystem(uiSystem);
+        tickEndListener(uiListener);
     }
 
-    private <T extends XSystem> XSystemInternalData getInternalSystemData(Class<T> type) {
+    private <T extends XSystem> XSystemInternalData getInternalSystemData(Class<?> type) {
         int index = getSystem(this.updateSystem, type);
         XSystemInternalData data = null;
         if(index >= 0) {
@@ -163,6 +214,20 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
             if(data.isEnabled) {
                 system.onTick(world);
             }
+        }
+    }
+
+    private void tickBeginListener(Array<XSystemBeginEndListener> listeners) {
+        for(int i = 0; i < listeners.size; i++) {
+            XSystemBeginEndListener listener = listeners.get(i);
+            listener.onBegin(world);
+        }
+    }
+
+    private void tickEndListener(Array<XSystemBeginEndListener> listeners) {
+        for(int i = 0; i < listeners.size; i++) {
+            XSystemBeginEndListener listener = listeners.get(i);
+            listener.onEnd(world);
         }
     }
 

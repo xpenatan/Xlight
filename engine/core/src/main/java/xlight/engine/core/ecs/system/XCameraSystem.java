@@ -5,7 +5,6 @@ import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.ecs.XECSWorld;
 import xlight.engine.ecs.component.XGameComponent;
-import xlight.engine.math.XMath;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.ecs.component.XUIComponent;
 import xlight.engine.ecs.component.XComponentMatcher;
@@ -55,7 +54,7 @@ public class XCameraSystem extends XEntitySystem {
         boolean activeCamera = camera.isActiveCamera();
         // Component active flag will replace the manager camera
         if(activeCamera) {
-            if(systemType == XSystemType.GAME) {
+            if(systemType == XSystemType.RENDER) {
                 XCamera activeGameCamera = cameraManager.getGameCamera();
                 if(activeGameCamera != null) {
                     if(camera != activeGameCamera) {
@@ -81,7 +80,7 @@ public class XCameraSystem extends XEntitySystem {
     }
 
     private Class<?> getRenderComponentType() {
-        if(systemType == XSystemType.GAME) {
+        if(systemType == XSystemType.RENDER) {
             return XGameComponent.class;
         }
         else if(systemType == XSystemType.UI) {
