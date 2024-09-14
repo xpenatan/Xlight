@@ -25,6 +25,7 @@ dependencies {
     api(project(":feature:engine:camera"))
     api(project(":feature:engine:json"))
     api(project(":feature:engine:pool"))
+    api(project(":feature:engine:init"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 
