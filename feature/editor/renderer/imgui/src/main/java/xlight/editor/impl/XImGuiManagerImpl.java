@@ -24,6 +24,7 @@ import imgui.gdx.ImGuiGdxInputMultiplexer;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.editor.imgui.window.XImGuiWindowContext;
+import xlight.editor.imgui.window.XMainWindow;
 import xlight.engine.ecs.XECSWorld;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
@@ -63,7 +64,7 @@ public class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginE
     private void init(XECSWorld world, XInitFeature feature) {
         XSystemService systemService = world.getSystemService();
 
-//        imGuiSystem.addWindowContext(windowClassID, new XMainWindow());
+        addWindowContext(XMainWindow.windowClassID, new XMainWindow());
 
         systemService.addTickListener(XSystemType.UI, this);
 

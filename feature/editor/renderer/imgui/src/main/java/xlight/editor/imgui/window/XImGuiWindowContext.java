@@ -17,9 +17,9 @@ public abstract class XImGuiWindowContext {
         this.dockWindowName = dockWindowName;
     }
 
-    protected abstract void onAdd(XECSWorld editorEngine, int windowClassID);
-    protected abstract void onRemove(XECSWorld editorEngine);
-    protected abstract void onRender(XECSWorld editorEngine, int rootDockspaceID);
+    protected abstract void onAdd(XECSWorld world, int windowClassID);
+    protected abstract void onRemove(XECSWorld world);
+    protected abstract void onRender(XECSWorld world, int rootDockspaceID);
 
     public final void dispose(XECSWorld editorEngine) {
         onRemove(editorEngine);
@@ -27,27 +27,27 @@ public abstract class XImGuiWindowContext {
         windowClass = null;
     }
 
-    public final void render(XECSWorld editorEngine, int rootDockspaceID, int windowClassID) {
+    public final void render(XECSWorld world, int rootDockspaceID, int windowClassID) {
         if(windowClass == null) {
             windowClass = new ImGuiWindowClass();
             windowClass.set_ClassId(windowClassID);
             windowClass.set_DockingAllowUnclassed(false);
-            onAdd(editorEngine, windowClassID);
+            onAdd(world, windowClassID);
         }
         if(isVisible) {
-            renderDockWindow(editorEngine, rootDockspaceID);
-            onRender(editorEngine, rootDockspaceID);
+            renderDockWindow(world, rootDockspaceID);
+            onRender(world, rootDockspaceID);
         }
     }
 
-    private void renderDockWindow(XECSWorld editorEngine, int rootDockspaceID) {
+    private void renderDockWindow(XECSWorld world, int rootDockspaceID) {
         int windowFlags = ImGuiWindowFlags.ImGuiWindowFlags_MenuBar;
         ImGui.SetNextWindowDockID(rootDockspaceID, ImGuiCond.ImGuiCond_FirstUseEver);
 
         int dockNodeFlags = 0;
         ImGui.Begin(dockWindowName, null, windowFlags);
         dockspaceId = ImGui.GetID("ChildDockSpaceId");
-        OnRenderDockspace(editorEngine);
+        OnRenderDockspace(world);
         ImVec2 dockspace_size = ImGui.GetContentRegionAvail();
         ImGui.DockSpace(dockspaceId, dockspace_size, dockNodeFlags, windowClass);
         ImGui.End();
@@ -57,5 +57,5 @@ public abstract class XImGuiWindowContext {
         return windowClass;
     }
 
-    protected void OnRenderDockspace(XECSWorld editorEngine) {}
+    protected void OnRenderDockspace(XECSWorld world) {}
 }
