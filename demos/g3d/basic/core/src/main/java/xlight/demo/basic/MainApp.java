@@ -7,6 +7,8 @@ import xlight.engine.core.XEngine;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.ecs.component.XGameComponent;
 import xlight.engine.g3d.ecs.component.XBox3DComponent;
+import xlight.engine.scene.XSceneListener;
+import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.core.ecs.system.XCameraSystem;
 import xlight.engine.ecs.XWorld;
@@ -31,8 +33,17 @@ public class MainApp implements XApplication {
         XEntityService es = world.getEntityService();
         XComponentService cs = world.getComponentService();
 
-        createCameraEntity(es, cs);
-        createBox3DEntity(es, cs);
+        XSceneManager sceneManager = world.getManager(XSceneManager.class);
+
+        sceneManager.setSceneListener(new XSceneListener() {
+            @Override
+            public void onLoadSceneBegin(int sceneId) {
+                if(sceneId == 0) {
+                    createCameraEntity(es, cs);
+                    createBox3DEntity(es, cs);
+                }
+            }
+        });
     }
 
     public void createCameraEntity(XEntityService es, XComponentService cs) {

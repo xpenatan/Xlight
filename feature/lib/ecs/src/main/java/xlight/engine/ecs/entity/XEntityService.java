@@ -21,8 +21,14 @@ public interface XEntityService {
     /**
      * Detach entity from the world.
      * This entity will be changed to Detach state and will release all components from the systems.
+     * Return true if detached is successfully.
      */
     boolean detachEntity(XEntity entity);
 
     XEntity getEntity(int id);
+
+    /**
+     * Clear all entities and remove the components from the systems. This is done sync.
+     */
+    void clear();
 }

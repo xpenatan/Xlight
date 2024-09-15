@@ -7,12 +7,9 @@ import xlight.engine.datamap.XDataMap;
  */
 public interface XScene {
 
-    String getID();
+    int getId();
 
-    /**
-     * Name of the scene
-     */
-    void setID(String id);
+    String getName();
 
     void loadJson(String jsonStr);
 

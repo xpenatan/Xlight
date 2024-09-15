@@ -8,7 +8,8 @@ import xlight.engine.scene.XSceneType;
 
 class XSceneImpl implements XScene, XPoolable {
 
-    public String id;
+    public int id = -1;
+    public String name;
 
     public XDataMap sceneDataMap;
 
@@ -20,13 +21,21 @@ class XSceneImpl implements XScene, XPoolable {
     }
 
     @Override
-    public String getID() {
+    public int getId() {
         return id;
     }
 
-    @Override
-    public void setID(String id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -60,7 +69,8 @@ class XSceneImpl implements XScene, XPoolable {
 
     @Override
     public void onReset() {
-        id = "";
+        id = -1;
+        name = null;
         type = XSceneType.SCENE;
         sceneDataMap.clear();
     }

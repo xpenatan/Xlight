@@ -3,6 +3,7 @@ package xlight.engine.scene.ecs.manager;
 
 import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.scene.XScene;
+import xlight.engine.scene.XSceneListener;
 
 public interface XSceneManager {
     /** Get current scene object */
@@ -28,4 +29,11 @@ public interface XSceneManager {
      * The current scene will be cleared before loading.
      */
     void loadFromFile(FileHandle file);
+
+    void setSceneListener(XSceneListener listener);
+
+    /**
+     * Setup a new empty scene. The current scene data will be cleared and will be updated to have the new id and name
+     */
+    void setScene(int id, String name);
 }

@@ -2,10 +2,12 @@ package xlight.engine.impl;
 
 import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.manager.XManager;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.pool.ecs.manager.XPoolManager;
 import xlight.engine.scene.XScene;
+import xlight.engine.scene.XSceneListener;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 
 class XSceneManagerImpl implements XSceneManager, XManager {
@@ -44,5 +46,20 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     @Override
     public void loadFromFile(FileHandle file) {
 
+    }
+
+    @Override
+    public void setSceneListener(XSceneListener listener) {
+
+    }
+
+    @Override
+    public void setScene(int id, String name) {
+        currentScene.clear();
+        currentScene.setId(id);
+        currentScene.setName(name);
+
+        XEntityService entityService = world.getEntityService();
+        entityService.clear();
     }
 }

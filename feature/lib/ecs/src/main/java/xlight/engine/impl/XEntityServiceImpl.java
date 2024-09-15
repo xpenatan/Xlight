@@ -8,6 +8,7 @@ import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
+import xlight.engine.ecs.entity.XEntityState;
 
 class XEntityServiceImpl implements XEntityService {
 
@@ -43,6 +44,18 @@ class XEntityServiceImpl implements XEntityService {
     @Override
     public XEntity getEntity(int id) {
         return entities.get(id);
+    }
+
+    @Override
+    public void clear() {
+        for(int i = 0; i < entities.items.length; i++) {
+            XEntityImpl entity = entities.get(i);
+            if(entity != null) {
+                if(detachEntity(entity)) {
+                    releaseEntity(entity);
+                }
+            }
+        }
     }
 
     public XComponentMatcher getOrCreate(int id, XComponentMatcherBuilderImpl builder, XComponentMatcher.XComponentMatcherListener listener) {
