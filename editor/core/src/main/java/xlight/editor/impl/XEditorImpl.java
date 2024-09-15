@@ -14,9 +14,7 @@ import xlight.editor.core.project.XProjectOptions;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.editor.imgui.ecs.manager.XImGuiWindowsManager;
 import xlight.engine.core.XEngine;
-import xlight.engine.ecs.XECSWorld;
-import xlight.engine.ecs.event.XEvent;
-import xlight.engine.ecs.event.XEventListener;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.pool.ecs.manager.XPoolManager;
@@ -47,7 +45,7 @@ public class XEditorImpl implements XEditor {
 
         editorEngine.update(1); // Do a single step to attach editor data
 
-        XECSWorld world = engine.getWorld();
+        XWorld world = engine.getWorld();
         XEventService eventService = world.getEventService();
         eventService.addEventListener(XEditorEvents.EVENT_EDITOR_READY, event -> {
             onEditorReady(event.getWorld());
@@ -59,12 +57,12 @@ public class XEditorImpl implements XEditor {
         });
     }
 
-    private void onEditorReady(XECSWorld world) {
+    private void onEditorReady(XWorld world) {
         loadBasicDemo(world);
     }
 
     @Deprecated
-    private void loadBasicDemo(XECSWorld world) {
+    private void loadBasicDemo(XWorld world) {
         FileHandle projectPath;
         String path = "demos/g3d/basic";
         if(Gdx.app.getType() == Application.ApplicationType.WebGL) {

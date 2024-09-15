@@ -1,7 +1,7 @@
 package xlight.engine.impl;
 
 import com.badlogic.gdx.files.FileHandle;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.manager.XManager;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.pool.ecs.manager.XPoolManager;
@@ -11,10 +11,10 @@ import xlight.engine.scene.ecs.manager.XSceneManager;
 class XSceneManagerImpl implements XSceneManager, XManager {
 
     XSceneImpl currentScene;
-    XECSWorld world;
+    XWorld world;
 
     @Override
-    public void onAttach(XECSWorld world) {
+    public void onAttach(XWorld world) {
         XPoolManager poolService = world.getManager(XPoolManager.class);
         XPoolController poolController = poolService.getPoolController();
         this.world = world;

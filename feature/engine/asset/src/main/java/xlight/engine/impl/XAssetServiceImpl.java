@@ -1,6 +1,6 @@
 package xlight.engine.impl;
 
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.service.XService;
 
 class XAssetServiceImpl implements XService {
@@ -12,17 +12,17 @@ class XAssetServiceImpl implements XService {
     }
 
     @Override
-    public void onAttach(XECSWorld world) {
+    public void onAttach(XWorld world) {
 
     }
 
     @Override
-    public void onDetach(XECSWorld world) {
+    public void onDetach(XWorld world) {
 
     }
 
     @Override
-    public void onTick(XECSWorld world) {
+    public void onTick(XWorld world) {
         assetManager.update();
     }
 }

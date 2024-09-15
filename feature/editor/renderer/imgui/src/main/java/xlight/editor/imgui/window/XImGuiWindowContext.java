@@ -5,7 +5,7 @@ import imgui.ImGuiCond;
 import imgui.ImGuiWindowClass;
 import imgui.ImGuiWindowFlags;
 import imgui.ImVec2;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 
 public abstract class XImGuiWindowContext {
     protected ImGuiWindowClass windowClass;
@@ -17,17 +17,17 @@ public abstract class XImGuiWindowContext {
         this.dockWindowName = dockWindowName;
     }
 
-    protected abstract void onAdd(XECSWorld world, int windowClassID);
-    protected abstract void onRemove(XECSWorld world);
-    protected abstract void onRender(XECSWorld world, int rootDockspaceID);
+    protected abstract void onAdd(XWorld world, int windowClassID);
+    protected abstract void onRemove(XWorld world);
+    protected abstract void onRender(XWorld world, int rootDockspaceID);
 
-    public final void dispose(XECSWorld editorEngine) {
+    public final void dispose(XWorld editorEngine) {
         onRemove(editorEngine);
         windowClass.dispose();
         windowClass = null;
     }
 
-    public final void render(XECSWorld world, int rootDockspaceID, int windowClassID) {
+    public final void render(XWorld world, int rootDockspaceID, int windowClassID) {
         if(windowClass == null) {
             windowClass = new ImGuiWindowClass();
             windowClass.set_ClassId(windowClassID);
@@ -40,7 +40,7 @@ public abstract class XImGuiWindowContext {
         }
     }
 
-    private void renderDockWindow(XECSWorld world, int rootDockspaceID) {
+    private void renderDockWindow(XWorld world, int rootDockspaceID) {
         int windowFlags = ImGuiWindowFlags.ImGuiWindowFlags_MenuBar;
         ImGui.SetNextWindowDockID(rootDockspaceID, ImGuiCond.ImGuiCond_FirstUseEver);
 
@@ -61,5 +61,5 @@ public abstract class XImGuiWindowContext {
         return dockspaceId;
     }
 
-    protected void OnRenderDockspace(XECSWorld world) {}
+    protected void OnRenderDockspace(XWorld world) {}
 }

@@ -10,7 +10,7 @@ import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.engine.camera.XCamera;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.core.XEngine;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
 import xlight.engine.init.ecs.service.XInitFeature;
@@ -20,12 +20,12 @@ public class XGameEditorAppListener implements ApplicationListener {
 
     public static final int FEATURE = XGameEditorAppListener.class.hashCode();
 
-    private XECSWorld editorWorld;
+    private XWorld editorWorld;
     private XEditorManager editorManager;
 
     private XCamera editorGameCamera;
 
-    public XGameEditorAppListener(XECSWorld editorWorld) {
+    public XGameEditorAppListener(XWorld editorWorld) {
         this.editorWorld = editorWorld;
 
         editorGameCamera = XCamera.newInstance();
@@ -71,7 +71,7 @@ public class XGameEditorAppListener implements ApplicationListener {
         XEngine gameEngine = editorManager.getGameEngine();
         if(gameEngine != null) {
             XGameState gameState = editorManager.getGameState();
-            XECSWorld gameWorld = gameEngine.getWorld();
+            XWorld gameWorld = gameEngine.getWorld();
             float deltaTime = Gdx.graphics.getDeltaTime();
             if(gameState == XGameState.STOP) {
                 XCameraManager.XEditorCamera editorCameraManager = (XCameraManager.XEditorCamera)gameWorld.getManager(XCameraManager.class);

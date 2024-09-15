@@ -1,7 +1,7 @@
 package xlight.engine.impl;
 
 
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.pool.XPoolable;
@@ -10,7 +10,7 @@ public class XEventImpl implements XEvent, XPoolable {
     public int id;
     public Object userData;
     public XEventService.XSendEventListener listener;
-    public XECSWorld world;
+    public XWorld world;
 
     @Override
     public int getID() {
@@ -18,7 +18,7 @@ public class XEventImpl implements XEvent, XPoolable {
     }
 
     @Override
-    public XECSWorld getWorld() {
+    public XWorld getWorld() {
         return world;
     }
 

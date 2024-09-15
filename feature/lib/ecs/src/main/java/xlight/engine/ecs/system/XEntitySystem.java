@@ -1,7 +1,7 @@
 package xlight.engine.ecs.system;
 
 import com.badlogic.gdx.utils.IntArray;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
 import xlight.engine.ecs.component.XComponentService;
@@ -19,7 +19,7 @@ public abstract class XEntitySystem implements XSystem {
     protected IntArray entities;
 
     @Override
-    public final void onAttach(XECSWorld world) {
+    public final void onAttach(XWorld world) {
         entityService = world.getEntityService();
         componentService = world.getComponentService();
         XComponentMatcherBuilder matcherBuilder = componentService.getMatcherBuilder();
@@ -29,12 +29,12 @@ public abstract class XEntitySystem implements XSystem {
     }
 
     @Override
-    public final void onDetach(XECSWorld world) {
+    public final void onDetach(XWorld world) {
         onDetachSystem(world);
     }
 
     @Override
-    public final void onTick(XECSWorld world) {
+    public final void onTick(XWorld world) {
         if(entities == null) {
             return;
         }
@@ -56,7 +56,7 @@ public abstract class XEntitySystem implements XSystem {
     protected void onEndTick() {}
 
     public abstract XComponentMatcher getMatcher(XComponentMatcherBuilder builder);
-    public void onAttachSystem(XECSWorld world) {}
-    public void onDetachSystem(XECSWorld world) {}
+    public void onAttachSystem(XWorld world) {}
+    public void onDetachSystem(XWorld world) {}
     public abstract void onEntityTick(XComponentService cs, XEntity e);
 }

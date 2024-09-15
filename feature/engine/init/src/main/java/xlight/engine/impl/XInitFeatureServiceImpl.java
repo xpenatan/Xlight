@@ -2,7 +2,7 @@ package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.service.XService;
 import xlight.engine.init.ecs.service.XInitFeatureListener;
 import xlight.engine.init.ecs.service.XInitFeatureService;
@@ -54,7 +54,7 @@ class XInitFeatureServiceImpl implements XInitFeatureService, XService {
     }
 
     @Override
-    public void onTick(XECSWorld world) {
+    public void onTick(XWorld world) {
         for(IntMap.Entry<XFeatureData> feature : features) {
             XFeatureData value = feature.value;
             value.update();

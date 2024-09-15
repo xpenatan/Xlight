@@ -1,8 +1,8 @@
 package xlight.engine.ecs.system;
 
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 
 public interface XSystemBeginEndListener {
-    void onBegin(XECSWorld world);
-    void onEnd(XECSWorld world);
+    void onBegin(XWorld world);
+    void onEnd(XWorld world);
 }

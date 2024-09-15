@@ -25,7 +25,7 @@ import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.editor.imgui.window.XImGuiWindowContext;
 import xlight.editor.imgui.window.XMainWindow;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
 import xlight.engine.ecs.manager.XManager;
@@ -39,7 +39,7 @@ import xlight.engine.list.XIntMapListNode;
 import xlight.engine.list.XList;
 
 class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListener {
-    private XECSWorld world;
+    private XWorld world;
     private InputMultiplexer input;
     private XImGuiWindowContext curWindowContext;
     private ImGuiGdxImpl impl;
@@ -53,7 +53,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
     }
 
     @Override
-    public void onAttach(XECSWorld world) {
+    public void onAttach(XWorld world) {
         this.world = world;
         XInitFeatureService featureService = world.getService(XInitFeatureService.class);
         featureService.addFeature(XImGuiManager.FEATURE, feature -> ImGuiLoader.init(() -> {
@@ -61,7 +61,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         }));
     }
 
-    private void init(XECSWorld world, XInitFeature feature) {
+    private void init(XWorld world, XInitFeature feature) {
         XSystemService systemService = world.getSystemService();
 
         addWindowContext(XMainWindow.CLASS_ID, new XMainWindow());
@@ -73,7 +73,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         feature.initFeature();
     }
 
-    private void initImGui(XECSWorld world) {
+    private void initImGui(XWorld world) {
         XEditorManager editorManager = world.getManager(XEditorManager.class);
         XImGuiManager imguiManager = world.getManager(XImGuiManager.class);
         InputMultiplexer editorInput = editorManager.getDefaultMultiplexer();
@@ -164,7 +164,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
     }
 
     @Override
-    public void onBegin(XECSWorld world) {
+    public void onBegin(XWorld world) {
         if(init) {
             impl.newFrame();
 
@@ -209,7 +209,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
     }
 
     @Override
-    public void onEnd(XECSWorld world) {
+    public void onEnd(XWorld world) {
         if(init) {
 //            ImGui.ShowDemoWindow();
 //            ImGui.ShowMetricsWindow();

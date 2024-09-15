@@ -8,7 +8,7 @@ import xlight.engine.ecs.service.XService;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.impl.XECSWorldImpl;
 
-public interface XECSWorld {
+public interface XWorld {
     <T extends XService> void attachService(Class<?> type, XService service);
     boolean detachService(Class<?> type);
     <T> T getService(Class<T> type);
@@ -26,5 +26,5 @@ public interface XECSWorld {
     void tickUI();
     void tickRender();
 
-    static XECSWorld newInstance() { return new XECSWorldImpl(); }
+    static XWorld newInstance() { return new XECSWorldImpl(); }
 }

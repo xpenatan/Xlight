@@ -3,7 +3,7 @@ package xlight.engine.core.ecs.system;
 import xlight.engine.camera.XCamera;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.camera.ecs.manager.XCameraManager;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XGameComponent;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.ecs.component.XUIComponent;
@@ -25,7 +25,7 @@ public class XCameraSystem extends XEntitySystem {
     }
 
     @Override
-    public void onAttachSystem(XECSWorld world) {
+    public void onAttachSystem(XWorld world) {
         cameraManager = world.getManager(XCameraManager.class);
     }
 

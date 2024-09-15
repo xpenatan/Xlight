@@ -12,7 +12,7 @@ import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.ecs.component.XUIComponent;
 import xlight.engine.camera.ecs.manager.XCameraManager;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 
 public class XEngineImpl implements XEngine {
 
@@ -24,7 +24,7 @@ public class XEngineImpl implements XEngine {
     }
 
     @Override
-    public XECSWorld getWorld() {
+    public XWorld getWorld() {
         return world;
     }
 

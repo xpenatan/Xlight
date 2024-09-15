@@ -15,19 +15,19 @@ import xlight.editor.imgui.ecs.system.XInspectorWindowSystem;
 import xlight.editor.imgui.ecs.system.XUIWindowSystem;
 import xlight.editor.imgui.window.XImGuiWindowContext;
 import xlight.editor.imgui.window.XMainWindow;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.manager.XManager;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.init.ecs.service.XInitFeatureService;
 
 public class XImGuiWindowsManager implements XManager {
     @Override
-    public void onAttach(XECSWorld world) {
+    public void onAttach(XWorld world) {
         XInitFeatureService featureService = world.getService(XInitFeatureService.class);
         featureService.addFeatureDependency(() -> Gdx.app.postRunnable(() -> initSystems(featureService, world)), XImGuiManager.FEATURE);
     }
 
-    private void initSystems(XInitFeatureService featureService, XECSWorld world) {
+    private void initSystems(XInitFeatureService featureService, XWorld world) {
         XSystemService systemService = world.getSystemService();
         systemService.attachSystem(new XHierarchyWindowSystem());
         systemService.attachSystem(new XGameWindowSystem());

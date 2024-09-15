@@ -2,7 +2,7 @@ package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEventService;
@@ -10,9 +10,8 @@ import xlight.engine.ecs.manager.XManager;
 import xlight.engine.ecs.service.XService;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.list.XIntMap;
-import xlight.engine.list.XList;
 
-public class XECSWorldImpl implements XECSWorld {
+public class XECSWorldImpl implements XWorld {
 
     private float deltaTime;
     private final XIntMap<XService> services;

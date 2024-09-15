@@ -17,7 +17,7 @@ import xlight.editor.assets.XEditorAssets;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.engine.core.XEngine;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 
 public class XMainWindow extends XImGuiWindowContext {
 
@@ -59,24 +59,24 @@ public class XMainWindow extends XImGuiWindowContext {
     }
 
     @Override
-    protected void onAdd(XECSWorld world, int windowClassID) {
+    protected void onAdd(XWorld world, int windowClassID) {
 
     }
 
     @Override
-    protected void onRemove(XECSWorld world) {
+    protected void onRemove(XWorld world) {
 
     }
 
     @Override
-    protected void onRender(XECSWorld world, int rootDockspaceID) {
+    protected void onRender(XWorld world, int rootDockspaceID) {
         if(first) {
             layout();
         }
     }
 
     @Override
-    protected void OnRenderDockspace(XECSWorld world) {
+    protected void OnRenderDockspace(XWorld world) {
         if(editorManager == null) {
             editorManager = world.getManager(XEditorManager.class);
         }

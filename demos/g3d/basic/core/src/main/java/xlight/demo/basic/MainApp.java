@@ -9,7 +9,7 @@ import xlight.engine.ecs.component.XGameComponent;
 import xlight.engine.g3d.ecs.component.XBox3DComponent;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.core.ecs.system.XCameraSystem;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
@@ -22,7 +22,7 @@ public class MainApp implements XApplication {
     @Override
     public void onSetup(XEngine engine) {
 
-        XECSWorld world = engine.getWorld();
+        XWorld world = engine.getWorld();
         XSystemService systemService = world.getSystemService();
 
         systemService.attachSystem(new XCameraSystem(XSystemType.RENDER));

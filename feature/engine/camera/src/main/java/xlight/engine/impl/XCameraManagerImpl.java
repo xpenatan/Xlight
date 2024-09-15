@@ -3,7 +3,7 @@ package xlight.engine.impl;
 
 import xlight.engine.camera.XCamera;
 import xlight.engine.camera.ecs.manager.XCameraManager;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.manager.XManager;
 
 class XCameraManagerImpl implements XCameraManager, XCameraManager.XEditorCamera, XManager {
@@ -111,12 +111,12 @@ class XCameraManagerImpl implements XCameraManager, XCameraManager.XEditorCamera
     }
 
     @Override
-    public void onAttach(XECSWorld world) {
+    public void onAttach(XWorld world) {
 
     }
 
     @Override
-    public void onDetach(XECSWorld world) {
+    public void onDetach(XWorld world) {
 
     }
 }

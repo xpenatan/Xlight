@@ -9,7 +9,7 @@ import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.editor.imgui.window.XImGuiWindowContext;
 import xlight.editor.imgui.window.XMainWindow;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.system.XSystem;
 import xlight.engine.ecs.system.XSystemType;
 
@@ -25,7 +25,7 @@ public class XGameWindowSystem implements XSystem {
     private XGameEditorAppListener gameAppListener;
 
     @Override
-    public void onAttach(XECSWorld world) {
+    public void onAttach(XWorld world) {
         XImGuiManager imguiManager = world.getManager(XImGuiManager.class);
         XEditorManager editorManager = world.getManager(XEditorManager.class);
         XImGuiWindowContext windowContext = imguiManager.getWindowContext(XMainWindow.CLASS_ID);
@@ -40,7 +40,7 @@ public class XGameWindowSystem implements XSystem {
     }
 
     @Override
-    public void onTick(XECSWorld world) {
+    public void onTick(XWorld world) {
         ImGui.SetNextWindowClass(windowClass);
         frameWindow.render();
     }

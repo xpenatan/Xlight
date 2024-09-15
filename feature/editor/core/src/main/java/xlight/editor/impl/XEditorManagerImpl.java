@@ -7,7 +7,7 @@ import com.github.xpenatan.gdx.multiview.EmuFiles;
 import xlight.editor.core.ecs.XGameState;
 import xlight.engine.core.XEngine;
 import xlight.editor.core.ecs.manager.XEditorManager;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.manager.XManager;
 
 class XEditorManagerImpl implements XEditorManager, XManager {
@@ -23,7 +23,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
     public XGameState gameState = XGameState.PLAY;
 
     @Override
-    public void onAttach(XECSWorld world) {
+    public void onAttach(XWorld world) {
 
 
         defaultInput = Gdx.input; // cache the default input
@@ -33,7 +33,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
     }
 
     @Override
-    public void onDetach(XECSWorld world) {
+    public void onDetach(XWorld world) {
 
     }
 

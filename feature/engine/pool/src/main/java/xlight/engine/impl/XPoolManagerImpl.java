@@ -1,7 +1,7 @@
 package xlight.engine.impl;
 
 import xlight.engine.datamap.pool.XDataMapPoolUtil;
-import xlight.engine.ecs.XECSWorld;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.manager.XManager;
 import xlight.engine.json.XJson;
 import xlight.engine.json.ecs.manager.XJsonManager;
@@ -25,7 +25,7 @@ class XPoolManagerImpl implements XPoolManager, XManager {
     }
 
     @Override
-    public void onAttach(XECSWorld world) {
+    public void onAttach(XWorld world) {
         XJson json = world.getManager(XJsonManager.class).getJson();
         XListPoolUtil.registerPool(poolController);
         XPrimitivePoolUtil.registerPool(poolController);
