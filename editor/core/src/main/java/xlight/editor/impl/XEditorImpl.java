@@ -49,19 +49,13 @@ public class XEditorImpl implements XEditor {
 
         XECSWorld world = engine.getWorld();
         XEventService eventService = world.getEventService();
-        eventService.addEventListener(XEditorEvents.EVENT_EDITOR_READY, new XEventListener() {
-            @Override
-            public boolean onEvent(XEvent event) {
-                onEditorReady(event.getWorld());
-                return false;
-            }
+        eventService.addEventListener(XEditorEvents.EVENT_EDITOR_READY, event -> {
+            onEditorReady(event.getWorld());
+            return false;
         });
-        eventService.addEventListener(XEditorEvents.EVENT_ENGINE_DISPOSED, new XEventListener() {
-            @Override
-            public boolean onEvent(XEvent event) {
-                XEditorAssets.disposeAssets();
-                return false;
-            }
+        eventService.addEventListener(XEditorEvents.EVENT_ENGINE_DISPOSED, event -> {
+            XEditorAssets.disposeAssets();
+            return false;
         });
     }
 

@@ -3,12 +3,13 @@ package xlight.editor.imgui.ecs.manager;
 import com.badlogic.gdx.Gdx;
 import imgui.ImGui;
 import imgui.ImGuiDir;
-import imgui.ImGuiDockNodeFlagsPrivate_;
 import imgui.ImGuiInternal;
 import imgui.ImGuiViewport;
 import imgui.idl.helper.IDLInt;
+import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.imgui.ecs.system.XContentBrowserWindowSystem;
-import xlight.editor.imgui.ecs.system.XGameWindowSystem;
+import xlight.editor.imgui.ecs.system.game.XGameEditorAppListener;
+import xlight.editor.imgui.ecs.system.game.XGameWindowSystem;
 import xlight.editor.imgui.ecs.system.XHierarchyWindowSystem;
 import xlight.editor.imgui.ecs.system.XInspectorWindowSystem;
 import xlight.editor.imgui.ecs.system.XUIWindowSystem;
@@ -23,10 +24,10 @@ public class XImGuiWindowsManager implements XManager {
     @Override
     public void onAttach(XECSWorld world) {
         XInitFeatureService featureService = world.getService(XInitFeatureService.class);
-        featureService.addFeatureDependency(() -> Gdx.app.postRunnable(() -> initSystems(world)), XImGuiManager.FEATURE);
+        featureService.addFeatureDependency(() -> Gdx.app.postRunnable(() -> initSystems(featureService, world)), XImGuiManager.FEATURE);
     }
 
-    private void initSystems(XECSWorld world) {
+    private void initSystems(XInitFeatureService featureService, XECSWorld world) {
         XSystemService systemService = world.getSystemService();
         systemService.attachSystem(new XHierarchyWindowSystem());
         systemService.attachSystem(new XGameWindowSystem());
@@ -38,6 +39,11 @@ public class XImGuiWindowsManager implements XManager {
 
         int dockSpaceId = windowContext.getDockSpaceId();
         layout(dockSpaceId);
+
+        featureService.addFeatureDependency(() -> {
+            // When all imgui windows are ready we send a editor ready event
+            world.getEventService().sendEvent(XEditorEvents.EVENT_EDITOR_READY);
+        }, XGameEditorAppListener.FEATURE);
     }
 
     private void layout(int dockSpaceId) {

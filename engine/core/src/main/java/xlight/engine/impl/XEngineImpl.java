@@ -8,6 +8,7 @@ import xlight.engine.g3d.ecs.component.XRender3DComponent;
 import xlight.engine.init.ecs.service.XInitFeatureService;
 import xlight.engine.json.ecs.manager.XJsonManager;
 import xlight.engine.pool.ecs.manager.XPoolManager;
+import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.ecs.component.XUIComponent;
 import xlight.engine.camera.ecs.manager.XCameraManager;
@@ -54,6 +55,7 @@ public class XEngineImpl implements XEngine {
         world.attachManager(XAssetManager.class, assetManager);
         world.attachManager(XJsonManager.class, new XJsonManagerImpl());
         world.attachManager(XPoolManager.class, new XPoolManagerImpl());
+        world.attachManager(XSceneManager.class, new XSceneManagerImpl());
     }
 
     private void registerComponents() {
