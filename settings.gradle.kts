@@ -46,6 +46,7 @@ include(":feature:engine:physics:jolt")
 include(":feature:editor:core")
 include(":feature:editor:editor-assets")
 include(":feature:editor:renderer:imgui")
+include(":feature:editor:renderer:window")
 
 // Demos
 

@@ -37,8 +37,9 @@ class XInitFeatureServiceImpl implements XInitFeatureService, XService {
     }
 
     @Override
-    public void addFeatureDependency(Runnable run, int... featureDependencies) {
+    public void addFeatureDependency(Runnable run, int featureDependency, int... featureDependencies) {
         XFeatureData featureData = new XFeatureData(this, run);
+        featureData.addFeatureDependency(featureDependency);
         updateDependency(featureData, featureDependencies);
         featureDep.add(featureData);
     }

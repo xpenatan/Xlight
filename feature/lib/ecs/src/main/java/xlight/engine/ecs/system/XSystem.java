@@ -23,7 +23,7 @@ public interface XSystem {
         return XSystemType.UPDATE;
     }
 
-    default Class<?> getSystemType() {
+    default Class<?> getClassType() {
         return getClass();
     }
 }

@@ -12,6 +12,7 @@ import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.editor.core.project.XProjectOptions;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
+import xlight.editor.imgui.ecs.manager.XImGuiWindowsManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XECSWorld;
 import xlight.engine.ecs.event.XEvent;
@@ -42,6 +43,7 @@ public class XEditorImpl implements XEditor {
         editorEngine.getWorld().attachManager(XEditorManager.class, editorManager);
         editorEngine.getWorld().attachManager(XProjectManager.class, new XProjectManagerImpl());
         editorEngine.getWorld().attachManager(XImGuiManager.class, new XImGuiManagerImpl());
+        editorEngine.getWorld().attachManager(XImGuiWindowsManager.class, new XImGuiWindowsManager());
 
         editorEngine.update(1); // Do a single step to attach editor data
 

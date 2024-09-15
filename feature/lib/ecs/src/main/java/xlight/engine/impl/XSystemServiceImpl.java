@@ -194,7 +194,7 @@ public class XSystemServiceImpl implements XSystemService, XStepUpdate {
         for(int i = 0; i < systems.size; i++) {
             XSystemInternalData data = systems.get(i);
             XSystem system = data.system;
-            if(system.getSystemType() == type) {
+            if(system.getClassType() == type) {
                 return i;
             }
 

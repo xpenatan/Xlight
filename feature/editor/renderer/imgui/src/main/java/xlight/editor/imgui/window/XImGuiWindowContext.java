@@ -10,7 +10,7 @@ import xlight.engine.ecs.XECSWorld;
 public abstract class XImGuiWindowContext {
     protected ImGuiWindowClass windowClass;
     private String dockWindowName;
-    protected int dockspaceId;
+    protected int dockspaceId = -1;
     public boolean isVisible;
 
     public XImGuiWindowContext(String dockWindowName) {
@@ -55,6 +55,10 @@ public abstract class XImGuiWindowContext {
 
     public ImGuiWindowClass getWindowClass() {
         return windowClass;
+    }
+
+    public int getDockSpaceId() {
+        return dockspaceId;
     }
 
     protected void OnRenderDockspace(XECSWorld world) {}

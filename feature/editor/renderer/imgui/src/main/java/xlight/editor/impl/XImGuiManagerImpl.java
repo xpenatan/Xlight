@@ -38,7 +38,7 @@ import xlight.engine.list.XIntMap;
 import xlight.engine.list.XIntMapListNode;
 import xlight.engine.list.XList;
 
-public class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListener {
+class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListener {
     private XECSWorld world;
     private InputMultiplexer input;
     private XImGuiWindowContext curWindowContext;
@@ -64,7 +64,7 @@ public class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginE
     private void init(XECSWorld world, XInitFeature feature) {
         XSystemService systemService = world.getSystemService();
 
-        addWindowContext(XMainWindow.windowClassID, new XMainWindow());
+        addWindowContext(XMainWindow.CLASS_ID, new XMainWindow());
 
         systemService.addTickListener(XSystemType.UI, this);
 
@@ -137,12 +137,12 @@ public class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginE
     }
 
     @Override
-    public <T extends XImGuiWindowContext> T getWindowContext(int classID) {
+    public XImGuiWindowContext getWindowContext(int classID) {
         XImGuiWindowContext windowContext = windowContexts.get(classID);
         if(windowContext == null) {
             return null;
         }
-        return (T)windowContext;
+        return windowContext;
     }
 
     @Override
@@ -205,16 +205,15 @@ public class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginE
                 }
                 imGuiManager.curWindowContext = null;
             }
-
         }
     }
 
     @Override
     public void onEnd(XECSWorld world) {
         if(init) {
-            ImGui.ShowDemoWindow();
-            ImGui.ShowMetricsWindow();
-            ImGui.ShowStyleEditor();
+//            ImGui.ShowDemoWindow();
+//            ImGui.ShowMetricsWindow();
+//            ImGui.ShowStyleEditor();
 
             ImGui.Render();
             ImDrawData drawData = ImGui.GetDrawData();

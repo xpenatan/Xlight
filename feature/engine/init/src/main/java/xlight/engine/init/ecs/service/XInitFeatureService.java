@@ -17,5 +17,5 @@ public interface XInitFeatureService {
     /**
      * Works similar to addFeature, but it's only called if all features are initialized.
      */
-    void addFeatureDependency(Runnable run, int ... featureDependencies);
+    void addFeatureDependency(Runnable run, int featureDependency, int ... featureDependencies);
 }

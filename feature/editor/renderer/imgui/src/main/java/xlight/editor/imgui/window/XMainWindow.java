@@ -21,7 +21,7 @@ import xlight.engine.ecs.XECSWorld;
 
 public class XMainWindow extends XImGuiWindowContext {
 
-    public static final int windowClassID = 1;
+    public static final int CLASS_ID = 1;
 
     private static final String BIG_MENU = "Big Menu";
 

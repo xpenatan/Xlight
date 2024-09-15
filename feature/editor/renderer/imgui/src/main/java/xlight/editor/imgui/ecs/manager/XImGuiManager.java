@@ -12,6 +12,6 @@ public interface XImGuiManager {
 
     boolean containsClassID(int classID);
     boolean addWindowContext(int classID, XImGuiWindowContext windowContext);
-    <T extends XImGuiWindowContext> T getWindowContext(int classID);
+    XImGuiWindowContext getWindowContext(int classID);
     void removeWindowContext(int classID);
 }
