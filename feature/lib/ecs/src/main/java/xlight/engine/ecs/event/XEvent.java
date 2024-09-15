@@ -4,10 +4,10 @@ import xlight.engine.ecs.XECSWorld;
 
 public interface XEvent {
     static final int EVENT_CREATE = 1;
-    static final int EVENT_RESIZE = 1;
-    static final int EVENT_DISPOSE = 2;
-    static final int EVENT_PAUSE = 2;
-    static final int EVENT_RESUME = 2;
+    static final int EVENT_RESIZE = 2;
+    static final int EVENT_PAUSE = 3;
+    static final int EVENT_RESUME = 4;
+    static final int EVENT_DISPOSE = 5;
 
     int getID();
     <T> T getUserData();
