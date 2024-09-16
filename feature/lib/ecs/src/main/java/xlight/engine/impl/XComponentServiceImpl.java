@@ -17,7 +17,10 @@ class XComponentServiceImpl implements XComponentService {
     XEntityServiceImpl entityService;
     private XComponentMatcherBuilderImpl matcher;
 
-    public XComponentServiceImpl(XEntityServiceImpl entityService) {
+    private XECSWorldImpl world;
+
+    public XComponentServiceImpl(XECSWorldImpl world, XEntityServiceImpl entityService) {
+        this.world = world;
         components = new Array<>();
         this.entityService = entityService;
         matcher = new XComponentMatcherBuilderImpl(this, entityService);
@@ -122,16 +125,19 @@ class XComponentServiceImpl implements XComponentService {
                     entity.componentMask.set(componentIndex);
                     entity.componentsIndex.add(componentIndex);
                     entityService.onComponentAdded(entity, component);
+                    component.onAttach(world, entity);
                 }
             }
             else {
-                if(getComponent(componentList, entityIndex) != null) {
+                XComponent componentFound = getComponent(componentList, entityIndex);
+                if(componentFound != null) {
                     Bits tmpBits = XBit.BITS_1;
                     tmpBits.clear();
                     tmpBits.or(entity.componentMask);
                     entity.componentMask.clear(componentIndex);
                     entityService.onComponentRemoved(entity, tmpBits, entity.componentMask);
                     entity.componentsIndex.removeValue(componentIndex);
+                    componentFound.onDetach(world, entity);
                 }
             }
             componentList.set(entityIndex, component);
