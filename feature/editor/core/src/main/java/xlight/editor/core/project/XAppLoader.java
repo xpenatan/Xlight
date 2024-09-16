@@ -1,8 +1,8 @@
 package xlight.editor.core.project;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.utils.Array;
 import java.lang.reflect.InvocationTargetException;
+import xlight.engine.core.XApplication;
 
 public class XAppLoader {
 
@@ -12,10 +12,10 @@ public class XAppLoader {
         classLoader = new XClassLoader(binaryPaths);
     }
 
-    public ApplicationListener create(String applicationClassPath) {
-        Class<ApplicationListener> gamePackageClass = null;
+    public XApplication create(String applicationClassPath) {
+        Class<XApplication> gamePackageClass = null;
         try {
-            gamePackageClass = (Class<ApplicationListener>)classLoader.loadClass(applicationClassPath.trim());
+            gamePackageClass = (Class<XApplication>)classLoader.loadClass(applicationClassPath.trim());
             return gamePackageClass.getDeclaredConstructor().newInstance();
         } catch(ClassNotFoundException e) {
             throw new RuntimeException(e);

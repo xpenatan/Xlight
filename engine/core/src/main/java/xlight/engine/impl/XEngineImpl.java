@@ -1,5 +1,6 @@
 package xlight.engine.impl;
 
+import xlight.editor.core.XEngineEvent;
 import xlight.engine.asset.ecs.manager.XAssetManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.camera.ecs.component.XCameraComponent;
@@ -37,6 +38,14 @@ public class XEngineImpl implements XEngine {
     public void render() {
         world.tickRender();
         world.tickUI();
+    }
+
+    @Override
+    public void dispose() {
+        world.getEntityService().clear();
+        update(2);
+        world.getEventService().sendEvent(XEngineEvent.EVENT_DISPOSE, null, null, false);
+        world = null;
     }
 
     private void setupEngine() {

@@ -57,6 +57,6 @@ class XApplicationInternal implements ApplicationListener {
 
     @Override
     public void dispose() {
-        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_DISPOSE, null, null, false);
+        engine.dispose();
     }
 }

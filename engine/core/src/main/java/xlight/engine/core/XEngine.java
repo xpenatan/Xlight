@@ -9,4 +9,5 @@ public interface XEngine {
     XWorld getWorld();
     void update(float deltaTime);
     void render();
+    void dispose();
 }

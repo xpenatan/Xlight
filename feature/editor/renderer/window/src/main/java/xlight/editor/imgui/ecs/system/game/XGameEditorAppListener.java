@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import xlight.editor.core.XEngineEvent;
 import xlight.editor.core.ecs.XGameState;
 import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;
@@ -59,11 +60,6 @@ public class XGameEditorAppListener implements ApplicationListener {
     }
 
     @Override
-    public void resize(int width, int height) {
-        System.out.println("LOG RESIZE " + width + " " + height);
-    }
-
-    @Override
     public void render() {
         ScreenUtils.clear(0.2f, 0.2f, 0.2f, 1, true);
         editorGameCamera.updateCamera();
@@ -102,13 +98,30 @@ public class XGameEditorAppListener implements ApplicationListener {
     }
 
     @Override
+    public void resize(int width, int height) {
+        System.out.println("LOG RESIZE " + width + " " + height);
+        XEngine gameEngine = editorManager.getGameEngine();
+        if(gameEngine != null) {
+            gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_RESIZE);
+        }
+    }
+
+    @Override
     public void pause() {
         System.out.println("LOG PAUSE");
+        XEngine gameEngine = editorManager.getGameEngine();
+        if(gameEngine != null) {
+            gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_PAUSE);
+        }
     }
 
     @Override
     public void resume() {
         System.out.println("LOG RESUME");
+        XEngine gameEngine = editorManager.getGameEngine();
+        if(gameEngine != null) {
+            gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_RESUME);
+        }
     }
 
     @Override
