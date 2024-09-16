@@ -29,7 +29,7 @@ public class XECSWorldImpl implements XWorld {
         services = new XIntMap<>();
         managers = new IntMap<>();
         entityService = new XEntityServiceImpl();
-        componentService = new XComponentServiceImpl(entityService);
+        componentService = new XComponentServiceImpl(this, entityService);
         systemService = new XSystemServiceImpl(this);
         eventService = new XEventServiceImpl(this);
 
