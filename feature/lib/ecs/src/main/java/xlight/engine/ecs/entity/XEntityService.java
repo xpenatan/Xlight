@@ -17,7 +17,7 @@ public interface XEntityService {
      * Attach entity to the world.
      * This entity will be changed to attach state and will match all components to systems
      */
-    void attachEntity(XEntity entity);
+    boolean attachEntity(XEntity entity);
     /**
      * Detach entity from the world.
      * This entity will be changed to Detach state and will release all components from the systems.

@@ -8,7 +8,7 @@ import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
-import xlight.engine.ecs.entity.XEntityState;
+import xlight.engine.math.XMath;
 
 class XEntityServiceImpl implements XEntityService {
 
@@ -32,13 +32,25 @@ class XEntityServiceImpl implements XEntityService {
     }
 
     @Override
-    public void attachEntity(XEntity entity) {
-        entities.attachEntity(entity.getId());
+    public boolean attachEntity(XEntity entity) {
+        if(entities.attachEntity(entity.getId())) {
+            // Loop all matchers if entity mask bits match
+            updateEntityAdded((XEntityImpl)entity);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean detachEntity(XEntity entity) {
-        return entities.detachEntity(entity.getId());
+        boolean flag = entities.detachEntity(entity.getId());
+        if(flag) {
+            XEntityImpl e = (XEntityImpl)entity;
+            // Loop all matchers if entity mask bits match
+            XMath.BITS_1.clear();
+            updateEntityRemove(e, e.componentMask, XMath.BITS_1);
+        }
+        return flag;
     }
 
     @Override
