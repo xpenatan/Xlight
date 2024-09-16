@@ -31,6 +31,7 @@ public interface XSceneManager {
     void loadFromFile(FileHandle file);
 
     void setSceneListener(XSceneListener listener);
+    XSceneListener getSceneListener();
 
     /**
      * Setup a new empty scene. The current scene data will be cleared and will be updated to have the new id and name

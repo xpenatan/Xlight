@@ -65,6 +65,11 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     }
 
     @Override
+    public XSceneListener getSceneListener() {
+        return sceneListener;
+    }
+
+    @Override
     public void setScene(int id, String name) {
         currentScene.clear();
         XEntityService entityService = world.getEntityService();

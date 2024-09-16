@@ -4,6 +4,9 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 import xlight.editor.core.XEngineEvent;
+import xlight.engine.ecs.event.XEvent;
+import xlight.engine.ecs.event.XEventService;
+import xlight.engine.scene.ecs.manager.XSceneManager;
 
 class XApplicationInternal implements ApplicationListener {
 
@@ -19,7 +22,14 @@ class XApplicationInternal implements ApplicationListener {
     public void create() {
         engine.update(1); // Do a single update so default manager/services are initialized
         applicationListener.onSetup(engine);
-        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_CREATE);
+
+        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
+            @Override
+            public void onEnd(XEvent event) {
+                XSceneManager sceneManager = engine.getWorld().getManager(XSceneManager.class);
+                sceneManager.setScene(0, "default");
+            }
+        });
     }
 
     @Override
