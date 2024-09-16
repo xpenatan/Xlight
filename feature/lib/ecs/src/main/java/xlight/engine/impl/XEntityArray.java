@@ -18,6 +18,7 @@ class XEntityArray {
     public XEntityImpl obtainEntity() {
         int nextId = getNextId();
         XEntityImpl entity = items[nextId];
+        entity.index = nextId;
         entity.state = XEntityState.DETACHED;
         return entity;
     }
