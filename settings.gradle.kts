@@ -31,6 +31,7 @@ include(":feature:lib:properties")
 
 // Engine features
 
+include(":feature:engine:core")
 include(":feature:engine:scene")
 include(":feature:engine:asset")
 include(":feature:engine:camera")

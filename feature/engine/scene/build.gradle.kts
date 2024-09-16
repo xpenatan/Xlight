@@ -6,6 +6,7 @@ plugins {
 group = LibExt.GROUP_ID
 
 dependencies {
+    implementation(project(":feature:engine:core"))
     implementation(project(":feature:engine:pool"))
 
     implementation(project(":feature:lib:ecs"))

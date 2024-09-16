@@ -18,6 +18,7 @@ dependencies {
     api(project(":feature:lib:datamap"))
     api(project(":feature:lib:properties"))
 
+    api(project(":feature:engine:core"))
     api(project(":feature:engine:asset"))
     api(project(":feature:engine:renderer:g3d"))
     api(project(":feature:engine:renderer:g2d"))

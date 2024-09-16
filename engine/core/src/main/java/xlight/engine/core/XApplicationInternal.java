@@ -3,7 +3,7 @@ package xlight.engine.core;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
-import xlight.engine.ecs.event.XEvent;
+import xlight.editor.core.XEngineEvent;
 
 class XApplicationInternal implements ApplicationListener {
 
@@ -19,7 +19,7 @@ class XApplicationInternal implements ApplicationListener {
     public void create() {
         engine.update(1); // Do a single update so default manager/services are initialized
         applicationListener.onSetup(engine);
-        engine.getWorld().getEventService().sendEvent(XEvent.EVENT_CREATE);
+        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_CREATE);
     }
 
     @Override
@@ -32,21 +32,21 @@ class XApplicationInternal implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
-        engine.getWorld().getEventService().sendEvent(XEvent.EVENT_RESIZE);
+        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_RESIZE);
     }
 
     @Override
     public void pause() {
-        engine.getWorld().getEventService().sendEvent(XEvent.EVENT_PAUSE);
+        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_PAUSE);
     }
 
     @Override
     public void resume() {
-        engine.getWorld().getEventService().sendEvent(XEvent.EVENT_RESUME);
+        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_RESUME);
     }
 
     @Override
     public void dispose() {
-        engine.getWorld().getEventService().sendEvent(XEvent.EVENT_DISPOSE, null, null, false);
+        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_DISPOSE, null, null, false);
     }
 }

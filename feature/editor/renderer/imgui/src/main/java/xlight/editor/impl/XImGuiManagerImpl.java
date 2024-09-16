@@ -21,6 +21,7 @@ import imgui.ImGuiWindowFlags;
 import imgui.ImVec2;
 import imgui.gdx.ImGuiGdxImpl;
 import imgui.gdx.ImGuiGdxInputMultiplexer;
+import xlight.editor.core.XEngineEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.editor.imgui.window.XImGuiWindowContext;
@@ -112,7 +113,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         rootWindowClass.set_DockingAlwaysTabBar(true);
         rootWindowClass.get_ClassId();
 
-        world.getEventService().addEventListener(XEvent.EVENT_DISPOSE, new XEventListener() {
+        world.getEventService().addEventListener(XEngineEvent.EVENT_DISPOSE, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 impl.dispose();
