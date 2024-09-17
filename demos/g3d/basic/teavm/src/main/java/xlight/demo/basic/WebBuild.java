@@ -15,7 +15,7 @@ public class WebBuild {
         XWebBuildConfiguration webConfiguration = new XWebBuildConfiguration();
         webConfiguration.mainClass = WebMain.class.getName();
         webConfiguration.webappPath = new File("build/dist").getCanonicalPath();
-        AssetFileHandle assets = AssetFileHandle.createHandle("../assets", Files.FileType.Internal);
+        AssetFileHandle assets = AssetFileHandle.createHandle("../assets_raw", Files.FileType.Internal);
         webConfiguration.assetsPath.add(assets);
         new XWebBuild(webConfiguration);
     }
