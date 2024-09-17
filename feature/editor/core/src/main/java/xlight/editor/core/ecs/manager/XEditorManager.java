@@ -17,4 +17,6 @@ public interface XEditorManager {
 
     boolean shouldOverrideGameCamera();
     boolean shouldOverrideUICamera();
+
+    void setGameEngineError();
 }

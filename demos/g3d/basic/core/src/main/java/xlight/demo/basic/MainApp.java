@@ -1,5 +1,6 @@
 package xlight.demo.basic;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import xlight.engine.camera.PROJECTION_MODE;
 import xlight.engine.core.XApplication;
@@ -7,6 +8,8 @@ import xlight.engine.core.XEngine;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.ecs.component.XGameComponent;
 import xlight.engine.g3d.ecs.component.XBox3DComponent;
+import xlight.engine.g3d.ecs.component.XGLTFComponent;
+import xlight.engine.g3d.ecs.system.XGLTFSystem;
 import xlight.engine.scene.XSceneListener;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.transform.ecs.component.XTransformComponent;
@@ -28,7 +31,8 @@ public class MainApp implements XApplication {
         XSystemService systemService = world.getSystemService();
 
         systemService.attachSystem(new XCameraSystem(XSystemType.RENDER));
-        systemService.attachSystem(new XRender3DSystem(XSystemType.RENDER));
+//        systemService.attachSystem(new XRender3DSystem(XSystemType.RENDER));
+        systemService.attachSystem(new XGLTFSystem(XSystemType.RENDER));
 
         XEntityService es = world.getEntityService();
         XComponentService cs = world.getComponentService();
@@ -51,8 +55,10 @@ public class MainApp implements XApplication {
 
         XCameraComponent cameraComponent = new XCameraComponent();
         cameraComponent.camera.setProjectionMode(PROJECTION_MODE.PERSPECTIVE);
+        cameraComponent.camera.setNear(0.1f);
+        cameraComponent.camera.setFar(1000f);
 
-        cs.attachComponent(e, new XTransformComponent().position(0, 0, -10));
+        cs.attachComponent(e, new XTransformComponent().position(0, 0, 3.0f));
         cs.attachComponent(e, cameraComponent);
         cs.attachComponent(e, new XGameComponent());
         es.attachEntity(e);
@@ -60,7 +66,8 @@ public class MainApp implements XApplication {
 
     public void createBox3DEntity(XEntityService es, XComponentService cs) {
         XEntity e = es.obtain();
-        cs.attachComponent(e, new XBox3DComponent(new Vector3(1, 1, 1)));
+//        cs.attachComponent(e, new XBox3DComponent(new Vector3(1, 1, 1)));
+        cs.attachComponent(e, new XGLTFComponent(Gdx.files.internal("models/DamagedHelmet/DamagedHelmet.glb")));
         cs.attachComponent(e, new XTransformComponent().position(0, 0, 0));
         cs.attachComponent(e, new XGameComponent());
         es.attachEntity(e);

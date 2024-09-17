@@ -17,5 +17,5 @@ tasks.register<JavaExec>("desktop-run") {
     description = "Run desktop demo"
     mainClass.set(mainClassName)
     classpath = sourceSets["main"].runtimeClasspath
-    workingDir = File("../assets/")
+    workingDir = File("../assets_raw/")
 }

@@ -43,6 +43,7 @@ public class XEngineImpl implements XEngine {
     @Override
     public void dispose() {
         world.getEntityService().clear();
+        world.eventService.clear();
         update(2);
         world.getEventService().sendEvent(XEngineEvent.EVENT_DISPOSE, null, null, false);
         world = null;

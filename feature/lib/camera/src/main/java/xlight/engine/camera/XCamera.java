@@ -60,4 +60,6 @@ public interface XCamera {
     void setDirty();
     boolean isDirty();
 
+    void setType(int type);
+    int getType();
 }

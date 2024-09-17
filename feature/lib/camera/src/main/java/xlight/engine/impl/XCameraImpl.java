@@ -12,12 +12,10 @@ import xlight.engine.camera.XCamera;
 
 public class XCameraImpl extends XMultiCamera implements XCamera {
     private int type = 0;
-    public String tag = "";
     private Viewport viewport;
 
     private int screenWidth;
     private int screenHeight;
-    private boolean isPreviewCamera = false;
     public boolean isActiveCamera;
 
     private boolean isDirty = true;
@@ -61,10 +59,12 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
         setViewport(viewport);
     }
 
+    @Override
     public void setType(int type) {
         this.type = type;
     }
 
+    @Override
     public int getType() {
         return type;
     }
@@ -78,7 +78,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     public void setViewport(Viewport viewport) {
         this.viewport = viewport;
         viewport.setCamera(this);
-        isDirty = true;
+        setDirty();
     }
 
     @Override
@@ -108,7 +108,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     public boolean setProjectionMode(PROJECTION_MODE mode) {
         boolean flag = super.setProjectionMode(mode);
         if(flag) {
-            isDirty = true;
+            setDirty();
         }
         return flag;
     }
@@ -122,14 +122,6 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
         // TODO
     }
 
-    public boolean isPreviewCamera() {
-        return isPreviewCamera;
-    }
-
-    public void setPreviewCamera(boolean flag) {
-        isPreviewCamera = flag;
-    }
-
     @Override
     public float getFieldOfView() {
         return fieldOfView;
@@ -138,7 +130,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public void setFieldOfView(float fieldOfView) {
         this.fieldOfView = fieldOfView;
-        isDirty = true;
+        setDirty();
     }
 
     @Override
@@ -149,7 +141,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public void setZoom(float value) {
         zoom = value;
-        isDirty = true;
+        setDirty();
     }
 
     @Override
@@ -160,7 +152,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public void setFar(float value) {
         this.far = value;
-        isDirty = true;
+        setDirty();
     }
 
     @Override
@@ -171,7 +163,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public void setNear(float value) {
         this.near = value;
-        isDirty = true;
+        setDirty();
     }
 
     @Override
@@ -186,7 +178,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
             position.x = x;
             position.y = y;
             position.z = z;
-            isDirty = true;
+            setDirty();
         }
     }
 
@@ -226,7 +218,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public void setDirection(float x, float y, float z) {
         direction.set(x, y, z);
-        isDirty = true;
+        setDirty();
     }
 
     @Override
@@ -238,7 +230,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public void setUp(float x, float y, float z) {
         up.set(x, y, z);
-        isDirty = true;
+        setDirty();
     }
 
     @Override
@@ -250,7 +242,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public void setProjection(Matrix4 value) {
         projection.set(value);
-        isDirty = true;
+        setDirty();
     }
 
     @Override
@@ -262,7 +254,7 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public void setView(Matrix4 value) {
         view.set(value);
-        isDirty = true;
+        setDirty();
     }
 
     @Override
@@ -294,13 +286,13 @@ public class XCameraImpl extends XMultiCamera implements XCamera {
     @Override
     public void rotate(final Matrix4 transform) {
         super.rotate(transform);
-        isDirty = true;
+        setDirty();
     }
 
     @Override
     public void rotate(final Quaternion quat) {
         super.rotate(quat);
-        isDirty = true;
+        setDirty();
     }
 
     @Override

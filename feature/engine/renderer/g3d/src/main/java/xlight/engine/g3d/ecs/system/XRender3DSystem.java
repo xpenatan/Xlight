@@ -39,17 +39,18 @@ public class XRender3DSystem extends XEntitySystem {
     }
 
     @Override
-    protected boolean onBeginTick() {
+    protected boolean onBeginTick(XWorld world) {
         XCamera gameCamera = getRenderingCamera();
         if(gameCamera == null) {
             return true;
         }
+        gameCamera.updateCamera();
         Camera gdxCamera = gameCamera.asGDXCamera();
         renderer.update(gdxCamera);
         return false;
     }
     @Override
-    protected void onEndTick() {
+    protected void onEndTick(XWorld world) {
         renderer.render();
         renderer.renderShadows();
         renderer.clear();

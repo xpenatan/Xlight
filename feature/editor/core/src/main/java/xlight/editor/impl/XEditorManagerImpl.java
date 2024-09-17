@@ -77,40 +77,42 @@ class XEditorManagerImpl implements XEditorManager, XManager {
         try {
             XAppLoader appLoader = new XAppLoader(projectOptions.buildPath);
             XApplication applicationListener = appLoader.create(projectOptions.mainApplication);
-            XEngine gameEngine = XEngine.newInstance();
-            gameEngine.update(1);
-            boolean error = false;
-            try {
-                applicationListener.onSetup(gameEngine);
-            }catch(Throwable t) {
-                error = true;
-                t.printStackTrace();
-            }
-
-            if(!error) {
-                editorManager.rootEmuFiles.setInternalPrefix(projectOptions.getProjectAssetPath());
-                editorManager.rootEmuFiles.setLocalPrefix(projectOptions.getProjectAssetPath());
-
-                // Update 1 time so all systems are created
+            if(applicationListener != null) {
+                XEngine gameEngine = XEngine.newInstance();
                 gameEngine.update(1);
+                boolean error = false;
+                try {
+                    applicationListener.onSetup(gameEngine);
+                }catch(Throwable t) {
+                    error = true;
+                    t.printStackTrace();
+                }
 
-                eventService.sendEvent(XEditorEvents.EVENT_ENGINE_CREATED, gameEngine, new XEventService.XSendEventListener() {
-                    @Override
-                    public void onBegin(XEvent event) {
-                        editorManager.gameEngine = gameEngine;
-                    }
+                if(!error) {
+                    editorManager.rootEmuFiles.setInternalPrefix(projectOptions.getProjectAssetPath());
+                    editorManager.rootEmuFiles.setLocalPrefix(projectOptions.getProjectAssetPath());
 
-                    @Override
-                    public void onEnd(XEvent event) {
-                        gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
-                            @Override
-                            public void onEnd(XEvent event) {
-                                XSceneManager sceneManager = gameEngine.getWorld().getManager(XSceneManager.class);
-                                sceneManager.setScene(0, "default");
-                            }
-                        });
-                    }
-                });
+                    // Update 1 time so all systems are created
+                    gameEngine.update(1);
+
+                    eventService.sendEvent(XEditorEvents.EVENT_ENGINE_CREATED, gameEngine, new XEventService.XSendEventListener() {
+                        @Override
+                        public void onBegin(XEvent event) {
+                            editorManager.gameEngine = gameEngine;
+                        }
+
+                        @Override
+                        public void onEnd(XEvent event) {
+                            gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
+                                @Override
+                                public void onEnd(XEvent event) {
+                                    XSceneManager sceneManager = gameEngine.getWorld().getManager(XSceneManager.class);
+                                    sceneManager.setScene(0, "default");
+                                }
+                            });
+                        }
+                    });
+                }
             }
         }
         catch(Throwable t) {
@@ -151,5 +153,11 @@ class XEditorManagerImpl implements XEditorManager, XManager {
     @Override
     public boolean shouldOverrideUICamera() {
         return overrideUICamera;
+    }
+
+    @Override
+    public void setGameEngineError() {
+        gameEngine.dispose();
+        gameEngine = null;
     }
 }

@@ -14,4 +14,5 @@ dependencies {
     implementation(project(":feature:lib:renderer:shaperenderer"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
+    implementation("com.github.xpenatan.gdx-multi-view:core:${LibExt.gdxMultiViewVersion}")
 }

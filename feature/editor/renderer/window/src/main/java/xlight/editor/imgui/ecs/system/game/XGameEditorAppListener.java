@@ -8,7 +8,9 @@ import xlight.editor.core.XEngineEvent;
 import xlight.editor.core.ecs.XGameState;
 import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;
+import xlight.engine.camera.PROJECTION_MODE;
 import xlight.engine.camera.XCamera;
+import xlight.engine.camera.controller.XCameraController;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
@@ -26,11 +28,19 @@ public class XGameEditorAppListener implements ApplicationListener {
 
     private XCamera editorGameCamera;
 
+    public XCameraController cameraController;
+
     public XGameEditorAppListener(XWorld editorWorld) {
         this.editorWorld = editorWorld;
 
         editorGameCamera = XCamera.newInstance();
         editorGameCamera.setViewport(new ScreenViewport());
+        editorGameCamera.setType(1);
+        editorGameCamera.setPosition(0, 0, 4);
+        editorGameCamera.setProjectionMode(PROJECTION_MODE.PERSPECTIVE);
+
+        cameraController = new XCameraController();
+        cameraController.setCamera(editorGameCamera);
     }
 
     @Override
@@ -61,8 +71,17 @@ public class XGameEditorAppListener implements ApplicationListener {
 
     @Override
     public void render() {
+        try {
+            renderInternal();
+        }
+        catch(Throwable t) {
+            editorManager.setGameEngineError();
+            t.printStackTrace();
+        }
+    }
+
+    private void renderInternal() {
         ScreenUtils.clear(0.2f, 0.2f, 0.2f, 1, true);
-        editorGameCamera.updateCamera();
 
         XEngine gameEngine = editorManager.getGameEngine();
         if(gameEngine != null) {
@@ -70,6 +89,7 @@ public class XGameEditorAppListener implements ApplicationListener {
             XWorld gameWorld = gameEngine.getWorld();
             float deltaTime = Gdx.graphics.getDeltaTime();
             if(gameState == XGameState.STOP) {
+                cameraController.update();
                 XCameraManager.XEditorCamera editorCameraManager = (XCameraManager.XEditorCamera)gameWorld.getManager(XCameraManager.class);
                 editorCameraManager.setGameEditorCam(editorGameCamera);
                 gameWorld.tickRender();
@@ -79,6 +99,7 @@ public class XGameEditorAppListener implements ApplicationListener {
                 boolean useEditorCamera = editorManager.shouldOverrideGameCamera();
                 XCameraManager.XEditorCamera editorCameraManager = (XCameraManager.XEditorCamera)gameWorld.getManager(XCameraManager.class);
                 if(useEditorCamera) {
+                    cameraController.update();
                     editorCameraManager.setGameEditorCam(editorGameCamera);
                 }
                 if(gameState == XGameState.PAUSE) {

@@ -38,7 +38,7 @@ public abstract class XEntitySystem implements XSystem {
         if(entities == null) {
             return;
         }
-        if(onBeginTick()) {
+        if(onBeginTick(world)) {
             return;
         }
         for(int i = 0; i < entities.size; i++) {
@@ -46,14 +46,14 @@ public abstract class XEntitySystem implements XSystem {
             XEntity entity = entityService.getEntity(entityId);
             onEntityTick(componentService, entity);
         }
-        onEndTick();
+        onEndTick(world);
     }
 
     /**
      * Returning true will skip processing all entities.
      */
-    protected boolean onBeginTick() { return false; }
-    protected void onEndTick() {}
+    protected boolean onBeginTick(XWorld world) { return false; }
+    protected void onEndTick(XWorld world) {}
 
     public abstract XComponentMatcher getMatcher(XComponentMatcherBuilder builder);
     public void onAttachSystem(XWorld world) {}
