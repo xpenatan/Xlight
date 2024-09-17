@@ -69,7 +69,7 @@ class XComponentServiceImpl implements XComponentService {
 
     @Override
     public <T extends XComponent> void attachComponent(XEntity entity, XComponent component) {
-        XComponentType componentType = getComponentInternal(component.getComponentType());
+        XComponentType componentType = getComponentInternal(component.getClassType());
         if(componentType != null) {
             int index = componentType.getIndex();
             XPair<XComponentType, XComponentArray> pair = components.get(index);
