@@ -7,6 +7,8 @@ import xlight.engine.ecs.XWorld;
  */
 public interface XSystem {
 
+    int DEFAULT_CONTROLLER = 941231;
+
     /**
      * Attach is used to initialize the system. It's called at the first frame step.
      */
@@ -25,5 +27,9 @@ public interface XSystem {
 
     default Class<?> getClassType() {
         return getClass();
+    }
+
+    default int getSystemController() {
+        return DEFAULT_CONTROLLER;
     }
 }
