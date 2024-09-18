@@ -1,6 +1,7 @@
 package xlight.editor;
 
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.files.FileHandle;
 import com.github.xpenatan.gdx.backends.teavm.config.AssetFileHandle;
 import com.github.xpenatan.gdx.backends.teavm.config.AssetFilter;
 import com.github.xpenatan.gdx.backends.teavm.config.plugins.TeaReflectionSupplier;
@@ -31,7 +32,13 @@ public class WebBuild {
         try {
             projectPathStr = new File("../../" + demoPath).getCanonicalPath().replace("\\", "/");
             String demoCompiledClassesPath = projectPathStr + "/core/build/classes/java/main";
-            System.out.println("Demo build path: " + demoCompiledClassesPath);
+            FileHandle buildPath = new FileHandle(demoCompiledClassesPath);
+            System.out.println("Demo build path: " + buildPath);
+
+            FileHandle[] list = buildPath.list();
+            for(int i = 0; i < list.length; i++) {
+                System.out.println("Dir: " + list[i]);
+            }
             AssetFilter filter = (file, isDirectory, op) -> {
                 if(file.contains(demoPath + "/core/") || file.contains(demoPath + "/desktop/") || file.contains(demoPath + "/teavm/")) {
                     return false;
