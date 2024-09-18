@@ -94,8 +94,15 @@ public class XGameEditorAppListener implements ApplicationListener {
 
     @Override
     public void render() {
+        ScreenUtils.clear(0.2f, 0.2f, 0.2f, 1, true);
+        XEngine gameEngine = editorManager.getGameEngine();
+
+        if(gameEngine == null) {
+            return;
+        }
+
         try {
-            renderInternal();
+            renderInternal(gameEngine);
         }
         catch(Throwable t) {
             editorManager.setGameEngineError();
@@ -117,40 +124,35 @@ public class XGameEditorAppListener implements ApplicationListener {
         editorCameraManager.setUIEditorCam(null);
     }
 
-    private void renderInternal() {
-        ScreenUtils.clear(0.2f, 0.2f, 0.2f, 1, true);
-
-        XEngine gameEngine = editorManager.getGameEngine();
-        if(gameEngine != null) {
-            XGameState gameState = editorManager.getGameState();
-            XWorld gameWorld = gameEngine.getWorld();
-            float deltaTime = Gdx.graphics.getDeltaTime();
-            if(gameState == XGameState.STOP) {
+    private void renderInternal(XEngine gameEngine) {
+        XGameState gameState = editorManager.getGameState();
+        XWorld gameWorld = gameEngine.getWorld();
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        if(gameState == XGameState.STOP) {
+            cameraController.update();
+            XCameraManager.XEditorCamera editorCameraManager = (XCameraManager.XEditorCamera)gameWorld.getManager(XCameraManager.class);
+            editorCameraManager.setGameEditorCam(editorGameCamera);
+            gameWorld.tickRender();
+            editorCameraManager.setGameEditorCam(null);
+        }
+        else {
+            boolean useEditorCamera = editorManager.shouldOverrideGameCamera();
+            XCameraManager.XEditorCamera editorCameraManager = (XCameraManager.XEditorCamera)gameWorld.getManager(XCameraManager.class);
+            if(useEditorCamera) {
                 cameraController.update();
-                XCameraManager.XEditorCamera editorCameraManager = (XCameraManager.XEditorCamera)gameWorld.getManager(XCameraManager.class);
                 editorCameraManager.setGameEditorCam(editorGameCamera);
-                gameWorld.tickRender();
-                editorCameraManager.setGameEditorCam(null);
             }
-            else {
-                boolean useEditorCamera = editorManager.shouldOverrideGameCamera();
-                XCameraManager.XEditorCamera editorCameraManager = (XCameraManager.XEditorCamera)gameWorld.getManager(XCameraManager.class);
-                if(useEditorCamera) {
-                    cameraController.update();
-                    editorCameraManager.setGameEditorCam(editorGameCamera);
-                }
-                if(gameState == XGameState.PAUSE) {
-                    gameWorld.tickRender();
-                    gameWorld.tickUI();
-                }
-                else if(gameState == XGameState.PLAY) {
-                    gameWorld.tickUpdate(deltaTime);
-                    gameWorld.tickRender();
-                    gameWorld.tickUI();
-                }
-                if(useEditorCamera) {
-                    editorCameraManager.setGameEditorCam(null);
-                }
+            if(gameState == XGameState.PAUSE) {
+                gameWorld.tickRender();
+                gameWorld.tickUI();
+            }
+            else if(gameState == XGameState.PLAY) {
+                gameWorld.tickUpdate(deltaTime);
+                gameWorld.tickRender();
+                gameWorld.tickUI();
+            }
+            if(useEditorCamera) {
+                editorCameraManager.setGameEditorCam(null);
             }
         }
     }
