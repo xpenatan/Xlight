@@ -8,6 +8,8 @@ import xlight.editor.core.XEngineEvent;
 import xlight.editor.core.ecs.XGameState;
 import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;
+import xlight.editor.window.gameeditor.ecs.system.XGameEditorSystem;
+import xlight.editor.window.gameeditor.ecs.system.XGizmoSystem;
 import xlight.engine.camera.PROJECTION_MODE;
 import xlight.engine.camera.XCamera;
 import xlight.engine.camera.controller.XCameraController;
@@ -16,6 +18,8 @@ import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
+import xlight.engine.ecs.system.XSystemController;
+import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.init.ecs.service.XInitFeature;
 import xlight.engine.init.ecs.service.XInitFeatureService;
 
@@ -27,8 +31,11 @@ public class XGameEditorAppListener implements ApplicationListener {
     private XEditorManager editorManager;
 
     private XCamera editorGameCamera;
+    private XCamera editorUICamera;
 
     public XCameraController cameraController;
+
+    private XSystemController systemController;
 
     public XGameEditorAppListener(XWorld editorWorld) {
         this.editorWorld = editorWorld;
@@ -39,8 +46,22 @@ public class XGameEditorAppListener implements ApplicationListener {
         editorGameCamera.setPosition(0, 0, 4);
         editorGameCamera.setProjectionMode(PROJECTION_MODE.PERSPECTIVE);
 
+        editorUICamera = XCamera.newInstance();
+        editorUICamera.setViewport(new ScreenViewport());
+        editorUICamera.setType(1);
+        editorUICamera.setPosition(0, 0, 0);
+        editorUICamera.setProjectionMode(PROJECTION_MODE.PERSPECTIVE);
+
         cameraController = new XCameraController();
         cameraController.setCamera(editorGameCamera);
+        XSystemService systemService = editorWorld.getSystemService();
+        systemController = systemService.getSystemController(XGameEditorSystem.SYSTEM_CONTROLLER);
+
+        setupSystems(systemService);
+    }
+
+    private void setupSystems(XSystemService systemService) {
+        systemService.attachSystem(new XGizmoSystem());
     }
 
     @Override
@@ -78,6 +99,20 @@ public class XGameEditorAppListener implements ApplicationListener {
             editorManager.setGameEngineError();
             t.printStackTrace();
         }
+
+        XCameraManager.XEditorCamera editorCameraManager = (XCameraManager.XEditorCamera)editorWorld.getManager(XCameraManager.class);
+        editorCameraManager.setGameEditorCam(editorGameCamera);
+        editorCameraManager.setUIEditorCam(editorUICamera);
+
+        editorUICamera.updateCamera();
+
+        systemController.tickTimeStepSystem();
+        systemController.tickUpdateSystem();
+        systemController.tickRenderSystem();
+        systemController.tickUISystem();
+
+        editorCameraManager.setGameEditorCam(null);
+        editorCameraManager.setUIEditorCam(null);
     }
 
     private void renderInternal() {

@@ -49,6 +49,6 @@ public interface XCameraManager {
 
     interface XEditorCamera {
         void setGameEditorCam(XCamera camera);
-        void setGuiEditorCam(XCamera camera);
+        void setUIEditorCam(XCamera camera);
     }
 }

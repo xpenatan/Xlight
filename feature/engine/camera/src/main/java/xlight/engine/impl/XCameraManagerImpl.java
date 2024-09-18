@@ -84,7 +84,7 @@ class XCameraManagerImpl implements XCameraManager, XCameraManager.XEditorCamera
     }
 
     @Override
-    public void setGuiEditorCam(XCamera camera) {
+    public void setUIEditorCam(XCamera camera) {
         this.guiEditorCamera = camera;
     }
 
