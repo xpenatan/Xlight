@@ -71,7 +71,7 @@ public class XEditorImpl implements XEditor {
         FileHandle projectPath;
         String path = "demos/g3d/basic";
         if(Gdx.app.getType() == Application.ApplicationType.WebGL) {
-            projectPath = Gdx.files.local(path);
+            projectPath = Gdx.files.internal(path);
         }
         else {
             try {

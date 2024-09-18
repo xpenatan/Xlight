@@ -23,7 +23,9 @@ public class XProjectOptions {
     public boolean loadProject(XPoolController poolController, FileHandle projectPath) {
         if(projectPath.exists() && projectPath.isDirectory()) {
             FileHandle projectFile = projectPath.child("project.x");
-            if(projectFile.exists() && !projectFile.isDirectory()) {
+            boolean exists = projectFile.exists();
+            boolean isDirectory = projectFile.isDirectory();
+            if(exists && !isDirectory) {
                 String jsonProject = projectFile.readString();
                 XJson xJson = XJson.create();
                 XJsonValue xJsonValue = xJson.loadJson(jsonProject);
