@@ -85,6 +85,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
                     applicationListener.onSetup(gameEngine);
                 }catch(Throwable t) {
                     error = true;
+                    System.err.println("Error setting up engine");
                     t.printStackTrace();
                 }
 
