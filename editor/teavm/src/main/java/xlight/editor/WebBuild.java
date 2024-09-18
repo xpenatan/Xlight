@@ -25,12 +25,13 @@ public class WebBuild {
     }
 
     private static void addDemo(XWebBuildConfiguration webConfiguration, String demoPath, String demoMainClass) {
+        System.out.println("Add Demo: " + demoPath + " " + demoMainClass);
         TeaReflectionSupplier.addReflectionClass(demoMainClass);
         String projectPathStr = null;
         try {
             projectPathStr = new File("../../" + demoPath).getCanonicalPath().replace("\\", "/");
             String demoCompiledClassesPath = projectPathStr + "/core/build/classes/java/main";
-            System.out.println("SemoCompiledClassesPath: " + demoCompiledClassesPath);
+            System.out.println("Demo build path: " + demoCompiledClassesPath);
             AssetFilter filter = (file, isDirectory, op) -> {
                 if(file.contains(demoPath + "/core/") || file.contains(demoPath + "/desktop/") || file.contains(demoPath + "/teavm/")) {
                     return false;
@@ -44,7 +45,7 @@ public class WebBuild {
             // Add the demo path build classes so teavm know what to compile
             webConfiguration.additionalClasspath.add(new File(demoCompiledClassesPath).toURL());
         } catch(IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error adding web demo", e);
         }
     }
 }
