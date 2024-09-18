@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="editor-run-teavm" />
+          <option value="web-run" />
         </list>
       </option>
       <option name="vmOptions" />

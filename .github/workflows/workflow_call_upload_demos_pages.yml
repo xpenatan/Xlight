@@ -1,0 +1,40 @@
+name: Dispatch Build
+
+on:
+  workflow_call:
+
+
+jobs:
+  upload_demos_linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: 11
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: Build everything
+        run: |
+          ./gradlew build
+
+      - name: Build web demos
+        run: |
+          ./gradlew :demos:g3d:teavm:web-build
+
+      - name: Build web editor
+        run: |
+          ./gradlew :editor:teavm:web-build

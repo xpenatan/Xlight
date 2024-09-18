@@ -19,18 +19,18 @@ dependencies {
 
 val mainClassName = "xlight.editor.WebBuild"
 
-tasks.register<JavaExec>("editor-build") {
+tasks.register<JavaExec>("web-build") {
     group = "example-teavm"
     description = "Build editor example"
     mainClass.set(mainClassName)
     classpath = sourceSets["main"].runtimeClasspath
 }
 
-tasks.register("editor-run-teavm") {
+tasks.register("web-run") {
     group = "example-teavm"
     description = "Run teavm app"
-    val list = listOf("editor-build", "jettyRun")
+    val list = listOf("web-build", "jettyRun")
     dependsOn(list)
 
-    tasks.findByName("jettyRun")?.mustRunAfter("editor-build")
+    tasks.findByName("jettyRun")?.mustRunAfter("web-build")
 }

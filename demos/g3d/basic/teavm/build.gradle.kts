@@ -23,7 +23,7 @@ tasks.register<JavaExec>("web-build") {
   classpath = sourceSets["main"].runtimeClasspath
 }
 
-tasks.register("teavm-run") {
+tasks.register("web-run") {
   group = "basic-demo"
   description = "Run teavm app"
   val list = listOf("web-build", "jettyRun")
