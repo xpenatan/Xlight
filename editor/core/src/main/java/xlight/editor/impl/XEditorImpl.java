@@ -84,9 +84,12 @@ public class XEditorImpl implements XEditor {
 
         XProjectOptions options = new XProjectOptions();
         XPoolController poolController = world.getManager(XPoolManager.class).getPoolController();
-        options.loadProject(poolController, projectPath);
-
-        XProjectManager projectManager = world.getManager(XProjectManager.class);
-        projectManager.newProject(options);
+        if(options.loadProject(poolController, projectPath)) {
+            XProjectManager projectManager = world.getManager(XProjectManager.class);
+            projectManager.newProject(options);
+        }
+        else {
+            System.err.println("Failed to load project");
+        }
     }
 }
