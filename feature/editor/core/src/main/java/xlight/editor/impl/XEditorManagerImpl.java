@@ -75,6 +75,9 @@ class XEditorManagerImpl implements XEditorManager, XManager {
 
     private void initEngine(XProjectOptions projectOptions, XEventService eventService, XEditorManagerImpl editorManager) {
         try {
+            if(projectOptions.buildPath.isEmpty()) {
+                throw new RuntimeException("XProjectOptions build path is empty");
+            }
             XAppLoader appLoader = new XAppLoader(projectOptions.buildPath);
             XApplication applicationListener = appLoader.create(projectOptions.mainApplication);
             if(applicationListener != null) {
