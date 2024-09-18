@@ -1,6 +1,7 @@
 package xlight.engine.impl;
 
-import xlight.editor.core.XEngineEvent;
+import xlight.engine.core.XEngineEvent;
+import xlight.engine.core.ecs.XPreferencesManager;
 import xlight.engine.asset.ecs.manager.XAssetManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.camera.ecs.component.XCameraComponent;
@@ -66,6 +67,7 @@ public class XEngineImpl implements XEngine {
         world.attachManager(XJsonManager.class, new XJsonManagerImpl());
         world.attachManager(XPoolManager.class, new XPoolManagerImpl());
         world.attachManager(XSceneManager.class, new XSceneManagerImpl());
+        world.attachManager(XPreferencesManager.class, new XPreferencesManagerImpl());
     }
 
     private void registerComponents() {

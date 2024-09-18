@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import xlight.editor.assets.XEditorAssets;
 import xlight.editor.core.XEditor;
+import xlight.engine.core.ecs.XPreferencesManager;
 import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
@@ -37,15 +38,19 @@ public class XEditorImpl implements XEditor {
 
         XEditorAssets.loadAssets();
 
+        XWorld world = editorEngine.getWorld();
+
         XEditorManagerImpl editorManager = new XEditorManagerImpl();
-        editorEngine.getWorld().attachManager(XEditorManager.class, editorManager);
-        editorEngine.getWorld().attachManager(XProjectManager.class, new XProjectManagerImpl());
-        editorEngine.getWorld().attachManager(XImGuiManager.class, new XImGuiManagerImpl());
-        editorEngine.getWorld().attachManager(XImGuiWindowsManager.class, new XImGuiWindowsManager());
+        world.attachManager(XEditorManager.class, editorManager);
+        world.attachManager(XProjectManager.class, new XProjectManagerImpl());
+        world.attachManager(XImGuiManager.class, new XImGuiManagerImpl());
+        world.attachManager(XImGuiWindowsManager.class, new XImGuiWindowsManager());
+
+        // Init preference
+        world.getManager(XPreferencesManager.class).setup("XlightEditor");
 
         editorEngine.update(1); // Do a single step to attach editor data
 
-        XWorld world = engine.getWorld();
         XEventService eventService = world.getEventService();
         eventService.addEventListener(XEditorEvents.EVENT_EDITOR_READY, event -> {
             onEditorReady(event.getWorld());

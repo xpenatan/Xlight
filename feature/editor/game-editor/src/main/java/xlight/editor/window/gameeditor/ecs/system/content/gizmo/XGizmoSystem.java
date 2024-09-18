@@ -18,7 +18,7 @@ public class XGizmoSystem extends XGameEditorSystem {
     private int gizmoPreviewSize = 140;
 
     @Override
-    public void onAttach(XWorld world) {
+    public void onSystemAttach(XWorld world) {
         batch = new SpriteBatch();
         batchCamera = new OrthographicCamera(); // TODO XCamera orthogonal not working correctly.
         batchCamera.setToOrtho(true);

@@ -13,7 +13,7 @@ public interface XEventService {
     boolean removeEventListener(int eventID, XEventListener listener);
 
     interface XSendEventListener {
-        default void onBegin(XEvent event) {}
-        default void onEnd(XEvent event) {}
+        default void onBeginEvent(XEvent event) {}
+        default void onEndEvent(XEvent event) {}
     }
 }

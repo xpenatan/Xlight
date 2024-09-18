@@ -13,7 +13,7 @@ public class XEventImpl implements XEvent, XPoolable {
     public XWorld world;
 
     @Override
-    public int getID() {
+    public int getId() {
         return id;
     }
 

@@ -4,7 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import xlight.editor.core.XEngineEvent;
+import xlight.engine.core.XEngineEvent;
 import xlight.editor.core.ecs.XGameState;
 import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;

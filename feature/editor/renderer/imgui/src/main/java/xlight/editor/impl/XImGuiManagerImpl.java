@@ -22,7 +22,7 @@ import imgui.ImGuiWindowFlags;
 import imgui.ImVec2;
 import imgui.gdx.ImGuiGdxImpl;
 import imgui.gdx.ImGuiGdxInputMultiplexer;
-import xlight.editor.core.XEngineEvent;
+import xlight.engine.core.XEngineEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.editor.imgui.window.XImGuiWindowContext;

@@ -119,9 +119,9 @@ class XEventServiceImpl implements XEventService {
     private void updateEvent(XEventImpl event) {
         XSendEventListener eventListener = event.listener;
         if(eventListener != null) {
-            eventListener.onBegin(event);
+            eventListener.onBeginEvent(event);
         }
-        Array<XEventListener> listeners = listenersMap.get(event.getID());
+        Array<XEventListener> listeners = listenersMap.get(event.getId());
         if(listeners != null) {
             for(int i = 0; i < listeners.size; i++) {
                 XEventListener listener = listeners.get(i);
@@ -132,7 +132,7 @@ class XEventServiceImpl implements XEventService {
             }
         }
         if(eventListener != null) {
-            eventListener.onEnd(event);
+            eventListener.onEndEvent(event);
         }
     }
 }

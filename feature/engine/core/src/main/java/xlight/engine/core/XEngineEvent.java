@@ -1,4 +1,4 @@
-package xlight.editor.core;
+package xlight.engine.core;
 
 public class XEngineEvent {
     public static final int EVENT_CREATE = 1;
@@ -9,4 +9,6 @@ public class XEngineEvent {
 
     public static final int EVENT_CLEAR_WORLD = 6;
     public static final int EVENT_SCENE_LOADED = 7;
+    public static final int EVENT_SAVE_PREFERENCE = 8;
+    public static final int EVENT_LOAD_PREFERENCE = 9;
 }

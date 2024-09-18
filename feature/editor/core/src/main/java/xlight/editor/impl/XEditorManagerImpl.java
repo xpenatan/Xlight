@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.github.xpenatan.gdx.multiview.EmuFiles;
-import xlight.editor.core.XEngineEvent;
+import xlight.engine.core.XEngineEvent;
 import xlight.editor.core.ecs.XGameState;
 import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.project.XAppLoader;
@@ -53,7 +53,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
                         gameEngine = null;
                         eventService.sendEvent(XEditorEvents.EVENT_ENGINE_DISPOSED, oldEngine, new XEventService.XSendEventListener() {
                             @Override
-                            public void onBegin(XEvent event) {
+                            public void onBeginEvent(XEvent event) {
                                 oldEngine.dispose();
                                 rootEmuFiles.setInternalPrefix("");
                                 if(projectOptions != null) {
@@ -97,15 +97,15 @@ class XEditorManagerImpl implements XEditorManager, XManager {
 
                     eventService.sendEvent(XEditorEvents.EVENT_ENGINE_CREATED, gameEngine, new XEventService.XSendEventListener() {
                         @Override
-                        public void onBegin(XEvent event) {
+                        public void onBeginEvent(XEvent event) {
                             editorManager.gameEngine = gameEngine;
                         }
 
                         @Override
-                        public void onEnd(XEvent event) {
+                        public void onEndEvent(XEvent event) {
                             gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
                                 @Override
-                                public void onEnd(XEvent event) {
+                                public void onEndEvent(XEvent event) {
                                     XSceneManager sceneManager = gameEngine.getWorld().getManager(XSceneManager.class);
                                     sceneManager.setScene(0, "default");
                                 }

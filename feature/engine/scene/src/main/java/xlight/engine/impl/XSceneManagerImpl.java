@@ -1,7 +1,7 @@
 package xlight.engine.impl;
 
 import com.badlogic.gdx.files.FileHandle;
-import xlight.editor.core.XEngineEvent;
+import xlight.engine.core.XEngineEvent;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEvent;
@@ -79,7 +79,7 @@ class XSceneManagerImpl implements XSceneManager, XManager {
         XEventService eventService = world.getEventService();
         eventService.sendEvent(XEngineEvent.EVENT_CLEAR_WORLD, null, new XEventService.XSendEventListener() {
             @Override
-            public void onEnd(XEvent event) {
+            public void onEndEvent(XEvent event) {
                 if(sceneListener != null) {
                     // It's a new scene so just call both listeners
                     sceneListener.onLoadSceneBegin(id);
@@ -95,7 +95,7 @@ class XSceneManagerImpl implements XSceneManager, XManager {
         XEventService eventService = world.getEventService();
         eventService.sendEvent(XEngineEvent.EVENT_CLEAR_WORLD, null, new XEventService.XSendEventListener() {
             @Override
-            public void onEnd(XEvent event) {
+            public void onEndEvent(XEvent event) {
                 int id = scene.getId();
                 if(sceneListener != null) {
                     sceneListener.onLoadSceneBegin(id);
