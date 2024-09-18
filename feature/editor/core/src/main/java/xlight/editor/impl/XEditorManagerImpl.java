@@ -1,5 +1,6 @@
 package xlight.editor.impl;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -70,7 +71,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
 
     private void initEngine(XProjectOptions projectOptions, XEventService eventService, XEditorManagerImpl editorManager) {
         try {
-            if(projectOptions.buildPath.isEmpty()) {
+            if(Gdx.app.getType() != Application.ApplicationType.WebGL && projectOptions.buildPath.isEmpty()) {
                 throw new RuntimeException("XProjectOptions build path is empty");
             }
             XAppLoader appLoader = new XAppLoader(projectOptions.buildPath);
