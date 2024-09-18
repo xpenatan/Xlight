@@ -46,7 +46,6 @@ class XEditorManagerImpl implements XEditorManager, XManager {
             public boolean onEvent(XEvent event) {
                 XProjectOptions projectOptions = event.getUserData();
                 if(projectOptions != null) {
-
                     XEngine oldEngine = gameEngine;
 
                     if(oldEngine != null) {
@@ -56,16 +55,12 @@ class XEditorManagerImpl implements XEditorManager, XManager {
                             public void onBeginEvent(XEvent event) {
                                 oldEngine.dispose();
                                 rootEmuFiles.setInternalPrefix("");
-                                if(projectOptions != null) {
-                                    initEngine(projectOptions, eventService, XEditorManagerImpl.this);
-                                }
+                                initEngine(projectOptions, eventService, XEditorManagerImpl.this);
                             }
                         });
                     }
                     else {
-                        if(projectOptions != null) {
-                            initEngine(projectOptions, eventService, XEditorManagerImpl.this);
-                        }
+                        initEngine(projectOptions, eventService, XEditorManagerImpl.this);
                     }
                 }
                 return false;
