@@ -18,7 +18,7 @@ import net.mgsx.gltf.scene3d.attributes.PBRColorAttribute;
 
 public class XShapeModelHelper {
 
-    public static Model createArrowUpAxis(float r, float g, float b, float axisWidth) {
+    public static Model createArrowUpAxis(float r, float g, float b, float axisWidth, float alpha) {
         ModelBuilder mb = new ModelBuilder();
         Material material = null;
 
@@ -32,7 +32,7 @@ public class XShapeModelHelper {
         nodeConeAxisX.calculateLocalTransform();
         nodeConeAxisX.calculateWorldTransform();
         material = new Material("coneAxisX",
-                ColorAttribute.createDiffuse(r, g, b, 0.8f),
+                ColorAttribute.createDiffuse(r, g, b, alpha),
                 PBRColorAttribute.createBaseColorFactor(new Color(r, g, b, 1.0f))
         );
         BlendingAttribute blending = new BlendingAttribute();
@@ -54,10 +54,10 @@ public class XShapeModelHelper {
         return mb.end();
     }
 
-    public static Model createPositionGizmo(float axisWidth, boolean createBox) {
-        Model axisXModel = XShapeModelHelper.createArrowUpAxis(1f, 0f, 0f, axisWidth);
-        Model axisYModel = XShapeModelHelper.createArrowUpAxis(0f, 1f, 0f, axisWidth);
-        Model axisZModel = XShapeModelHelper.createArrowUpAxis(0f, 0f, 1f, axisWidth);
+    public static Model createPositionGizmo(float axisWidth, boolean createBox, float alpha) {
+        Model axisXModel = XShapeModelHelper.createArrowUpAxis(1f, 0f, 0f, axisWidth, alpha);
+        Model axisYModel = XShapeModelHelper.createArrowUpAxis(0f, 1f, 0f, axisWidth, alpha);
+        Model axisZModel = XShapeModelHelper.createArrowUpAxis(0f, 0f, 1f, axisWidth, alpha);
 
         ModelBuilder mb = new ModelBuilder();
         mb.begin();

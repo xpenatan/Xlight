@@ -32,7 +32,7 @@ public class XGizmoApplication extends ApplicationAdapter {
         this.world = world;
         modelBatch = new ModelBatch();
 
-        positionGizmoModel = XShapeModelHelper.createPositionGizmo(0.4f, false);
+        positionGizmoModel = XShapeModelHelper.createPositionGizmo(0.4f, false, 0.9f);
         positionGizmoModelInstance = new XModelInstance(positionGizmoModel);
         positionGizmoModelInstance.initMeshDataCache();
 
