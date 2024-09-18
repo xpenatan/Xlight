@@ -1,6 +1,6 @@
 i:d:/models:0:1
 i:d:/models/DamagedHelmet:0:1
-i:b:/models/DamagedHelmet/DamagedHelmet.glb:3773875:1
+i:b:/models/DamagedHelmet/DamagedHelmet.glb:3773916:1
 c:b:/net/mgsx/gltf/shaders/pbr/lights.glsl:9214:1
 c:b:/net/mgsx/gltf/shaders/pbr/material.glsl:6993:1
 c:b:/net/mgsx/gltf/shaders/pbr/iridescence.glsl:5118:1
