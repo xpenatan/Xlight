@@ -9,7 +9,7 @@ import xlight.editor.core.ecs.XGameState;
 import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.window.gameeditor.ecs.system.XGameEditorSystem;
-import xlight.editor.window.gameeditor.ecs.system.XGizmoSystem;
+import xlight.editor.window.gameeditor.ecs.system.content.gizmo.XGizmoSystem;
 import xlight.engine.camera.PROJECTION_MODE;
 import xlight.engine.camera.XCamera;
 import xlight.engine.camera.controller.XCameraController;
