@@ -8,6 +8,8 @@ jobs:
   upload_demos_linux:
     name: Build Linux
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Cancel Previous Runs
