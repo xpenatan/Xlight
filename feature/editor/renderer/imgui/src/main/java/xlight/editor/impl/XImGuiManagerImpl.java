@@ -8,6 +8,7 @@ import imgui.ImFontAtlas;
 import imgui.ImGui;
 import imgui.ImGuiCol;
 import imgui.ImGuiConfigFlags;
+import imgui.ImGuiContext;
 import imgui.ImGuiDir;
 import imgui.ImGuiDockNodeFlags;
 import imgui.ImGuiHoveredFlags;
@@ -44,6 +45,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
     private InputMultiplexer input;
     private XImGuiWindowContext curWindowContext;
     private ImGuiGdxImpl impl;
+    private ImGuiContext editorContext;
     private XIntMap<XImGuiWindowContext> windowContexts;
     private ImGuiWindowClass rootWindowClass;
     private boolean init = false;
@@ -79,7 +81,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         XImGuiManager imguiManager = world.getManager(XImGuiManager.class);
         InputMultiplexer editorInput = editorManager.getDefaultMultiplexer();
 
-        ImGui.CreateContext();
+        editorContext = ImGui.CreateContext();
         ImGuiIO imGuiIO = ImGui.GetIO();
         imGuiIO.set_ConfigFlags(ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable);
         imGuiIO.SetDockingFlags(false, true, false, false);
@@ -152,6 +154,11 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         if(window != null) {
             window.dispose(world);
         }
+    }
+
+    @Override
+    public ImGuiContext getEditorContext() {
+        return editorContext;
     }
 
     @Override

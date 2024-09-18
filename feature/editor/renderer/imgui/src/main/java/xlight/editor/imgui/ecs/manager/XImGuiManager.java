@@ -1,6 +1,7 @@
 package xlight.editor.imgui.ecs.manager;
 
 import com.badlogic.gdx.InputMultiplexer;
+import imgui.ImGuiContext;
 import xlight.editor.imgui.window.XImGuiWindowContext;
 
 public interface XImGuiManager {
@@ -14,4 +15,5 @@ public interface XImGuiManager {
     boolean addWindowContext(int classID, XImGuiWindowContext windowContext);
     XImGuiWindowContext getWindowContext(int classID);
     void removeWindowContext(int classID);
+    ImGuiContext getEditorContext();
 }
