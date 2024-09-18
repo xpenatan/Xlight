@@ -13,3 +13,4 @@
 *.fbx binary
 *.bin binary
 *.g3db binary
+*.glb binary
