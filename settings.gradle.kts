@@ -18,7 +18,8 @@ include(":editor:teavm")
 include(":feature:lib:ecs")
 include(":feature:lib:renderer:g3d")
 include(":feature:lib:renderer:g2d")
-include(":feature:lib:renderer:shaperenderer")
+include(":feature:lib:renderer:debug:shaperenderer")
+include(":feature:lib:renderer:gizmo")
 include(":feature:lib:camera")
 include(":feature:lib:transform")
 include(":feature:lib:pool")
@@ -49,7 +50,6 @@ include(":feature:editor:core")
 include(":feature:editor:editor-assets")
 include(":feature:editor:renderer:imgui")
 include(":feature:editor:renderer:window")
-include(":feature:editor:renderer:model-util")
 
 include(":feature:editor:game-editor") // Classes used in game editor window
 

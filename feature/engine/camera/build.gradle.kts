@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":feature:lib:camera"))
     implementation(project(":feature:lib:transform"))
     implementation(project(":feature:lib:ecs"))
-    implementation(project(":feature:lib:renderer:shaperenderer"))
+    implementation(project(":feature:lib:renderer:debug:shaperenderer"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
     implementation("com.github.xpenatan.gdx-multi-view:core:${LibExt.gdxMultiViewVersion}")

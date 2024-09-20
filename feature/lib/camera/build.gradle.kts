@@ -5,7 +5,7 @@ plugins {
 dependencies {
     implementation(project(":feature:lib:transform"))
     implementation(project(":feature:lib:ecs"))
-    implementation(project(":feature:lib:renderer:shaperenderer"))
+    implementation(project(":feature:lib:renderer:debug:shaperenderer"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 }
