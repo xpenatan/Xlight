@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import net.mgsx.gltf.scene3d.model.ModelInstanceHack;
 import xlight.engine.math.XMath;
-import xlight.engine.debug.XShapeRenderer;
+import xlight.engine.glutils.XShapeRenderer;
 
 public class XModelInstance extends ModelInstanceHack {
 

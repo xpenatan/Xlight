@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import xlight.editor.assets.XEditorAssets;
 import xlight.editor.core.XEditor;
+import xlight.editor.core.ecs.manager.XEntitySelectionManager;
 import xlight.engine.core.ecs.XPreferencesManager;
 import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;
@@ -45,6 +46,7 @@ public class XEditorImpl implements XEditor {
         world.attachManager(XProjectManager.class, new XProjectManagerImpl());
         world.attachManager(XImGuiManager.class, new XImGuiManagerImpl());
         world.attachManager(XImGuiWindowsManager.class, new XImGuiWindowsManager());
+        world.attachManager(XEntitySelectionManager.class, new XEntitySelectionManagerImpl());
 
         // Init preference
         world.getManager(XPreferencesManager.class).setup("XlightEditor");

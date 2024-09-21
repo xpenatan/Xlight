@@ -10,8 +10,9 @@ class XEntityImpl implements XEntity {
     public int index;
     public XEntityState state;
     Bits componentMask;
-    Bits componentMaskReadOnly;
     IntArray componentsIndex;
+    private Bits componentMaskReadOnly;
+    private boolean isVisible;
 
     XEntityImpl(int index) {
         componentMask = new Bits();
@@ -48,8 +49,19 @@ class XEntityImpl implements XEntity {
         return state == XEntityState.DETACHED;
     }
 
+    @Override
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    @Override
+    public void setVisible(boolean flag) {
+        isVisible = flag;
+    }
+
     public void reset() {
         index = -1;
+        isVisible = true;
         state = XEntityState.RELEASE;
         componentMask.clear();
         componentMaskReadOnly.clear();

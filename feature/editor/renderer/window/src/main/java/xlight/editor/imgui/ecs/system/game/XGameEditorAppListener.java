@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import xlight.editor.impl.XGameEditorManagerImpl;
 import xlight.editor.window.gameeditor.ecs.manager.XGameEditorManager;
+import xlight.editor.window.gameeditor.ecs.system.content.selection.XSelectingSystem;
 import xlight.engine.core.XEngineEvent;
 import xlight.editor.core.ecs.XGameState;
 import xlight.editor.core.ecs.event.XEditorEvents;
@@ -67,6 +68,7 @@ public class XGameEditorAppListener implements ApplicationListener {
     private void setupSystems(XSystemService systemService) {
         systemService.attachSystem(new XGizmoSystem());
         systemService.attachSystem(new XFloatingButtonSystem());
+        systemService.attachSystem(new XSelectingSystem());
     }
     private void setupManagers(XWorld world) {
         world.attachManager(XGameEditorManager.class, new XGameEditorManagerImpl());

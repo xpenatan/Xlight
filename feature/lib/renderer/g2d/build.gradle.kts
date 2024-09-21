@@ -3,10 +3,8 @@ plugins {
     id("java-library")
 }
 
-group = LibExt.GROUP_ID
-
-val moduleName = "g2d"
-
 dependencies {
+    implementation(project(":feature:lib:transform"))
+
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 }

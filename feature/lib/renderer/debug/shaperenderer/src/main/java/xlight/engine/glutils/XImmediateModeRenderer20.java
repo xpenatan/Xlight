@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package xlight.engine.debug;
+package xlight.engine.glutils;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;

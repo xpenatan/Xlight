@@ -19,7 +19,7 @@ import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.CylinderShapeBuilder;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
-import xlight.engine.debug.XShapeRenderer;
+import xlight.engine.glutils.XShapeRenderer;
 import xlight.engine.g3d.model.XMeshData;
 import xlight.engine.g3d.model.XModelInstance;
 import xlight.engine.g3d.util.XShapeModelHelper;

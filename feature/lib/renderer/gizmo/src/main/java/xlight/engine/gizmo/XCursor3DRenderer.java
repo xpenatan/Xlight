@@ -20,7 +20,7 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Disposable;
-import xlight.engine.debug.XShapeRenderer;
+import xlight.engine.glutils.XShapeRenderer;
 import xlight.engine.math.XRotSeq;
 
 public class XCursor3DRenderer implements Disposable {

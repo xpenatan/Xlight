@@ -12,4 +12,7 @@ public interface XEntity {
 
     boolean isAttached();
     boolean isDetached();
+
+    boolean isVisible();
+    void setVisible(boolean flag);
 }
