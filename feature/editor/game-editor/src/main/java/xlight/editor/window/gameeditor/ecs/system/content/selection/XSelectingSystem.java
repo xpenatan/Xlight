@@ -81,8 +81,9 @@ public class XSelectingSystem extends XGameEditorSystem {
                     if(!gizmoRenderer.isHighlight() && (leftClick || rightClick)) {
                         onClickLogic(gameEngineWorld, gdxCamera, gameTree, leftClick, selectionManager);
                     }
-
-                    renderGizmo(camera);
+                    else {
+                        renderGizmo(camera);
+                    }
                 }
             }
         }
