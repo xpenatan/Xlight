@@ -70,4 +70,5 @@ public interface XTransform {
 
     boolean isDragging();
     void setDragging(boolean flag);
+    void forceChange();
 }

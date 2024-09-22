@@ -265,6 +265,11 @@ public class XTransformImpl implements XTransform {
         isDragging = false;
     }
 
+    @Override
+    public void forceChange() {
+        forceChanges = true;
+    }
+
     /**
      * Return read-only rotation.
      */
