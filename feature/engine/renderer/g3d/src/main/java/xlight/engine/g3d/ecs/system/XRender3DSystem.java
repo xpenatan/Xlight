@@ -10,6 +10,7 @@ import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
 import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.g3d.ecs.component.XRender3DComponent;
 import xlight.engine.g3d.model.XModelRenderer;
@@ -27,7 +28,7 @@ public class XRender3DSystem extends XEntitySystem {
     }
 
     @Override
-    public void onAttachSystem(XWorld world) {
+    public void onAttachSystem(XWorld world, XSystemData systemData) {
         cameraManager = world.getManager(XCameraManager.class);
     }
 

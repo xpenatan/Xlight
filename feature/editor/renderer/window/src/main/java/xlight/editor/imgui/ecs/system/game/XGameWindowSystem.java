@@ -11,6 +11,7 @@ import xlight.editor.imgui.window.XImGuiWindowContext;
 import xlight.editor.imgui.window.XMainWindow;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.system.XSystem;
+import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
 
 public class XGameWindowSystem implements XSystem {
@@ -25,7 +26,7 @@ public class XGameWindowSystem implements XSystem {
     private XGameEditorAppListener gameAppListener;
 
     @Override
-    public void onAttach(XWorld world) {
+    public void onAttach(XWorld world, XSystemData systemData) {
         XImGuiManager imguiManager = world.getManager(XImGuiManager.class);
         XEditorManager editorManager = world.getManager(XEditorManager.class);
         XImGuiWindowContext windowContext = imguiManager.getWindowContext(XMainWindow.CLASS_ID);

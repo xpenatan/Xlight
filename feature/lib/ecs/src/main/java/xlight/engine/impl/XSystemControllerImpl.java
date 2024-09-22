@@ -178,7 +178,7 @@ class XSystemControllerImpl implements XSystemController, XStepUpdate {
             XSystem system = data.system;
             if(data.callAttach) {
                 data.callAttach = false;
-                system.onAttach(world);
+                system.onAttach(world, data);
             }
 
             if(data.isEnabled) {

@@ -18,18 +18,18 @@ public abstract class XEntitySystem implements XSystem {
     protected IntArray entities;
 
     @Override
-    public final void onAttach(XWorld world) {
+    public final void onAttach(XWorld world, XSystemData systemData) {
         entityService = world.getEntityService();
         XComponentService componentService = world.getComponentService();
         XComponentMatcherBuilder matcherBuilder = componentService.getMatcherBuilder();
         XComponentMatcher matcher = getMatcher(matcherBuilder);
         entities = matcher.getEntities();
-        onAttachSystem(world);
+        onAttachSystem(world, systemData);
     }
 
     @Override
-    public final void onDetach(XWorld world) {
-        onDetachSystem(world);
+    public final void onDetach(XWorld world, XSystemData systemData) {
+        onDetachSystem(world, systemData);
     }
 
     @Override
@@ -55,7 +55,7 @@ public abstract class XEntitySystem implements XSystem {
     protected void onEndTick(XWorld world) {}
 
     public abstract XComponentMatcher getMatcher(XComponentMatcherBuilder builder);
-    public void onAttachSystem(XWorld world) {}
-    public void onDetachSystem(XWorld world) {}
+    public void onAttachSystem(XWorld world, XSystemData systemData) {}
+    public void onDetachSystem(XWorld world, XSystemData systemData) {}
     public abstract void onEntityTick(XEntity e);
 }

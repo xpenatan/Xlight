@@ -12,12 +12,12 @@ public interface XSystem {
     /**
      * Attach is used to initialize the system. It's called at the first frame step.
      */
-    default void onAttach(XWorld world) {}
+    default void onAttach(XWorld world, XSystemData systemData) {}
 
     /**
      * Detach is used to reset system state. It's called when the detach system is called.
      */
-    default void onDetach(XWorld world) {}
+    default void onDetach(XWorld world, XSystemData systemData) {}
 
     void onTick(XWorld world);
 

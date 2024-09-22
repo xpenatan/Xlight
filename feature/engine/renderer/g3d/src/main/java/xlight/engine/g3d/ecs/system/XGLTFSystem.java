@@ -22,6 +22,7 @@ import xlight.engine.ecs.component.XGameComponent;
 import xlight.engine.ecs.component.XUIComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.system.XEntitySystem;
+import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.g3d.XBatch3D;
 import xlight.engine.g3d.XBatch3DOp;
@@ -46,7 +47,7 @@ public class XGLTFSystem extends XEntitySystem implements XBatch3D {
     }
 
     @Override
-    public void onAttachSystem(XWorld world) {
+    public void onAttachSystem(XWorld world, XSystemData systemData) {
         cameraManager = world.getManager(XCameraManager.class);
 
         setupSceneManager();

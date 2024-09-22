@@ -12,6 +12,7 @@ import xlight.engine.camera.XCamera;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.glutils.XShapeRenderer;
 import xlight.engine.math.XMath;
@@ -22,7 +23,8 @@ public class XAABBDebugSystem extends XGameEditorSystem {
     private XShapeRenderer shapeRenderer;
 
     @Override
-    public void onSystemAttach(XWorld world) {
+    public void onSystemAttach(XWorld world, XSystemData systemData) {
+        systemData.setEnabled(false);
         editorManager = world.getManager(XEditorManager.class);
         shapeRenderer = new XShapeRenderer();
     }

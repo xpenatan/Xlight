@@ -48,6 +48,7 @@ class XSystemServiceImpl implements XSystemService {
         if(systemData == null) {
             return null;
         }
+        systemData.system.onDetach(world, systemData);
         int systemControllerKey = systemData.system.getSystemController();
         XSystemControllerImpl systemController = getOrCreate(systemControllerKey);
         systemController.detachSystem(systemData);

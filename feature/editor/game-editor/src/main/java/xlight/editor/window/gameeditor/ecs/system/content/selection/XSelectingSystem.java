@@ -21,6 +21,7 @@ import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
+import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.gizmo.XCursor3DRenderer;
 import xlight.engine.gizmo.XGizmoRenderer;
@@ -46,7 +47,7 @@ public class XSelectingSystem extends XGameEditorSystem {
     private boolean targetLock = false;
 
     @Override
-    public void onSystemAttach(XWorld world) {
+    public void onSystemAttach(XWorld world, XSystemData systemData) {
         selectionManager = world.getManager(XEntitySelectionManager.class);
         editorManager = world.getManager(XEditorManager.class);
         selectionRenderer = new XSelectionRenderer();

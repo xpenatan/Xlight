@@ -1,8 +1,6 @@
 package xlight.editor.window.gameeditor.ecs.system.content.entity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.IntArray;
@@ -20,6 +18,7 @@ import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
+import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.glutils.XShapeRenderer;
 import xlight.engine.transform.XTransform;
@@ -33,7 +32,9 @@ public class XBoundingBoxDebugSystem extends XGameEditorSystem {
     private XShapeRenderer shapeRenderer;
 
     @Override
-    public void onSystemAttach(XWorld world) {
+    public void onSystemAttach(XWorld world, XSystemData systemData) {
+        systemData.setEnabled(false);
+
         editorManager = world.getManager(XEditorManager.class);
 
         XEngine gameEngine = editorManager.getGameEngine();

@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.xpenatan.gdx.multiview.EmuApplicationWindow;
 import xlight.editor.window.gameeditor.ecs.system.XGameEditorSystem;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
 
 public class XGizmoSystem extends XGameEditorSystem {
@@ -18,7 +19,7 @@ public class XGizmoSystem extends XGameEditorSystem {
     private int gizmoPreviewSize = 140;
 
     @Override
-    public void onSystemAttach(XWorld world) {
+    public void onSystemAttach(XWorld world, XSystemData systemData) {
         batch = new SpriteBatch();
         batchCamera = new OrthographicCamera(); // TODO XCamera orthogonal not working correctly.
         batchCamera.setToOrtho(true);
