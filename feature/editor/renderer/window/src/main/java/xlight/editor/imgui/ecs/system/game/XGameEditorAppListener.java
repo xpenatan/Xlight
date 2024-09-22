@@ -70,9 +70,9 @@ public class XGameEditorAppListener implements ApplicationListener {
     private void setupSystems(XSystemService systemService) {
         systemService.attachSystem(new XGizmoSystem());
         systemService.attachSystem(new XFloatingButtonSystem());
-        systemService.attachSystem(new XSelectingSystem());
         systemService.attachSystem(new XBoundingBoxDebugSystem());
         systemService.attachSystem(new XAABBDebugSystem());
+        systemService.attachSystem(new XSelectingSystem());
     }
     private void setupManagers(XWorld world) {
         world.attachManager(XGameEditorManager.class, new XGameEditorManagerImpl());
