@@ -29,4 +29,7 @@ public interface XEntity {
      * Quick way to detach component. Same as using ComponentService.
      */
     <T extends XComponent> void detachComponent(Class<T> type);
+
+    void setName(String name);
+    String getName();
 }

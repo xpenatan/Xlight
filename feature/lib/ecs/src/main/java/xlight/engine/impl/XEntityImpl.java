@@ -8,7 +8,7 @@ import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityState;
 
 class XEntityImpl implements XEntity {
-
+    private static String EMPTY_NAME = "NoName";
     public int index;
     public XEntityState state;
     Bits componentMask;
@@ -16,6 +16,7 @@ class XEntityImpl implements XEntity {
     private Bits componentMaskReadOnly;
     private boolean isVisible;
     private XComponentService componentService;
+    private String name;
 
     XEntityImpl(int index, XComponentService componentService) {
         componentMask = new Bits();
@@ -78,7 +79,22 @@ class XEntityImpl implements XEntity {
         componentService.detachComponent(this, type);
     }
 
+    @Override
+    public void setName(String name) {
+        String trim = name.trim();
+        if(trim.isEmpty()) {
+            trim = EMPTY_NAME;
+        }
+        this.name = trim;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
     public void reset() {
+        name = EMPTY_NAME;
         index = -1;
         isVisible = true;
         state = XEntityState.RELEASE;

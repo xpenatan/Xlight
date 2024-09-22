@@ -1,7 +1,9 @@
 package xlight.demo.basic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import xlight.engine.camera.PROJECTION_MODE;
 import xlight.engine.core.XApplication;
 import xlight.engine.core.XEngine;
@@ -43,14 +45,35 @@ public class MainApp implements XApplication {
             @Override
             public void onLoadSceneBegin(int sceneId) {
                 if(sceneId == 0) {
-                    createCameraEntity(es, cs);
-                    createBox3DEntity(es, cs);
+                    createCameraEntity(es, 0, 0, 3.0f);
+                    createModelEntity(es, "models/DamagedHelmet.glb", 0, 0, 0);
+
+                    Array<String> models = new Array<>();
+                    models.add("models/compare/CompareSpecular.glb");
+                    models.add("models/compare/CompareRoughness.glb");
+                    models.add("models/compare/CompareMetallic.glb");
+                    models.add("models/compare/CompareSheen.glb");
+                    models.add("models/compare/CompareNormal.glb");
+                    models.add("models/compare/CompareIridescence.glb");
+                    models.add("models/compare/CompareEmissiveStrength.glb");
+                    models.add("models/compare/CompareTransmission.glb");
+                    models.add("models/compare/CompareVolume.glb");
+                    models.add("models/compare/CompareIor.glb");
+                    models.add("models/compare/CompareDispersion.glb");
+                    models.add("models/compare/CompareAnisotropy.glb");
+                    models.add("models/compare/CompareBaseColor.glb");
+                    float x = 2.5f;
+                    for(int i = 0; i < models.size; i++) {
+                        String modelPath = models.get(i);
+                        createModelEntity(es, modelPath, x, 0, 0);
+                        x += 3.0f;
+                    }
                 }
             }
         });
     }
 
-    public void createCameraEntity(XEntityService es, XComponentService cs) {
+    public void createCameraEntity(XEntityService es, float x, float y, float z) {
         XEntity e = es.obtain();
 
         XCameraComponent cameraComponent = new XCameraComponent();
@@ -58,23 +81,26 @@ public class MainApp implements XApplication {
         cameraComponent.camera.setNear(0.1f);
         cameraComponent.camera.setFar(1000f);
 
-        cs.attachComponent(e, new XTransformComponent().position(0, 0, 3.0f));
-        cs.attachComponent(e, cameraComponent);
-        cs.attachComponent(e, new XGameComponent());
+        e.attachComponent(new XTransformComponent().position(x, y, z));
+        e.attachComponent(cameraComponent);
+        e.attachComponent(new XGameComponent());
         es.attachEntity(e);
     }
 
-    public void createBox3DEntity(XEntityService es, XComponentService cs) {
+    public void createModelEntity(XEntityService es, String asset, float x, float y, float z) {
         XEntity e = es.obtain();
-//        cs.attachComponent(e, new XBox3DComponent(new Vector3(1, 1, 1)));
-        cs.attachComponent(e, new XGLTFComponent(Gdx.files.internal("models/DamagedHelmet/DamagedHelmet.glb")));
-        cs.attachComponent(e, new XTransformComponent().position(0, 0, 0));
-        cs.attachComponent(e, new XGameComponent());
+        FileHandle assetFile = Gdx.files.internal(asset);
+        String name = assetFile.name();
+        e.setName(name);
+        e.attachComponent(new XGLTFComponent(assetFile));
+        e.attachComponent(new XTransformComponent().position(x, y, z));
+        e.attachComponent(new XGameComponent());
         es.attachEntity(e);
     }
 
     public void createGroundEntity(XEntityService es, XComponentService cs) {
         XEntity e = es.obtain();
+        e.setName("Ground");
         cs.attachComponent(e, new XBox3DComponent(new Vector3(50, 1, 50)));
         cs.attachComponent(e, new XTransformComponent().position(0, 0, 0));
         cs.attachComponent(e, new XGameComponent());
