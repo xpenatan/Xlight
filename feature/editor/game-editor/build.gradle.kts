@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":feature:engine:aabb"))
     implementation(project(":feature:lib:aabb:core"))
     implementation(project(":feature:lib:renderer:debug:shaperenderer"))
+    implementation(project(":feature:lib:renderer:gizmo"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 

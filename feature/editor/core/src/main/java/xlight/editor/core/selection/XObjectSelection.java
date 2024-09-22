@@ -72,6 +72,14 @@ public abstract class XObjectSelection<T, NODE extends XDataArray.XDataArrayNode
         return selectedTargets.getList();
     }
 
+    public XList<NODE> getSelectedTargetsNode() {
+        return selectedTargets.getNodeList();
+    }
+
+    public NODE getSelectedIndex(int index) {
+        return selectedTargets.getNode(index);
+    }
+
     public boolean changeCurrentSelectedTarget(T target) {
         for(int i = 1; i < selectedTargets.getSize(); i++) {
             T selectedTarget = selectedTargets.get(i);

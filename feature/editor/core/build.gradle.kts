@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation(project(":engine:core"))
     implementation(project(":feature:engine:aabb"))
+    implementation(project(":feature:lib:renderer:gizmo"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 

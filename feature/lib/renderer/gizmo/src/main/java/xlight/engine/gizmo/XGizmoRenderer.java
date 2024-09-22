@@ -113,6 +113,10 @@ public class XGizmoRenderer {
         modelBatch = new ModelBatch();
     }
 
+    public boolean isHighlight() {
+        return meshData != null;
+    }
+
     private Model createRotationGizmo() {
         ModelBuilder mb = new ModelBuilder();
         mb.begin();
@@ -329,7 +333,7 @@ public class XGizmoRenderer {
             gizmoAngle.set(objectAngle);
         }
 
-        if(isDebug) {
+        if(isDebug && renderer != null) {
             float size = 0.1f;
             float halfSize = size / 2f;
 
