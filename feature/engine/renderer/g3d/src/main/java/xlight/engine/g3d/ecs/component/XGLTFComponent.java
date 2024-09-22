@@ -27,6 +27,7 @@ public class XGLTFComponent extends XRender3DComponent{
             sceneAsset = new GLTFLoader().load(path);
         }
         scene = new Scene(sceneAsset.scene);
+        flags.put(FLAG_CALCULATE_BOUNDING_BOX);
     }
 
     public XGLTFComponent(FileHandle path) {

@@ -54,6 +54,12 @@ public class XAABBTreeDefault implements XAABBTree {
         return nodes;
     }
 
+    @Override
+    public int getSize() {
+        return nodes.size;
+    }
+
+    @Override
     public XAABBTreeNodeDefault getNodeID(int id) {
         int index = idIndexMap.get(id, XAABBTreeNodeDefault.NULL_NODE);
         if(index == XAABBTreeNodeDefault.NULL_NODE)
@@ -61,6 +67,7 @@ public class XAABBTreeDefault implements XAABBTree {
         return nodes.get(index);
     }
 
+    @Override
     public XAABBTreeNodeDefault getNodeIndex(int index) {
         if(index == XAABBTreeNodeDefault.NULL_NODE)
             return null;

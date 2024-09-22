@@ -34,7 +34,6 @@ public class XSelectingSystem extends XGameEditorSystem {
         selectionManager = world.getManager(XEntitySelectionManager.class);
         editorManager = world.getManager(XEditorManager.class);
         selectionRenderer = new XSelectionRenderer();
-
     }
 
     @Override

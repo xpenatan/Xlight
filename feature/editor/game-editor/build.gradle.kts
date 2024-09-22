@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":feature:editor:editor-assets"))
     implementation(project(":feature:engine:aabb"))
     implementation(project(":feature:lib:aabb:core"))
+    implementation(project(":feature:lib:renderer:debug:shaperenderer"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 
