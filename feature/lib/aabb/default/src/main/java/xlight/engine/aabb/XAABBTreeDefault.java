@@ -156,12 +156,12 @@ public class XAABBTreeDefault implements XAABBTree {
 
     @Override
     public void rayCast(Ray ray, Array<XAABBTreeNode> out) {
-        rayCast(rootIndex, ray, out, true, 0, 0, false);
+        rayCast(rootIndex, ray, out, true, 0, 0, true);
     }
 
     @Override
-    public void rayCast(Ray ray, Array<XAABBTreeNode> out, boolean sort, float maxDistance, int total, boolean debug) {
-        rayCast(rootIndex, ray, out, sort, maxDistance, total, debug);
+    public void rayCast(Ray ray, Array<XAABBTreeNode> out, boolean sort, float maxDistance, int total) {
+        rayCast(rootIndex, ray, out, sort, maxDistance, total, true);
     }
 
     private void rayCast(int startNodeIndex, Ray ray, Array<XAABBTreeNode> out, boolean sort, float maxDistance, int total, boolean debug) {

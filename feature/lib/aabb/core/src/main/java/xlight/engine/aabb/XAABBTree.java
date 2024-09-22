@@ -12,7 +12,7 @@ public interface XAABBTree {
     void update();
 
     void rayCast(Ray ray, Array<XAABBTreeNode> out);
-    void rayCast(Ray ray, Array<XAABBTreeNode> out, boolean sort, float maxDistance, int total, boolean debug);
+    void rayCast(Ray ray, Array<XAABBTreeNode> out, boolean sort, float maxDistance, int total);
     XAABBTreeNode getRoot();
     XAABBTreeNode getNodeIndex(int index);
     XAABBTreeNode getNodeID(int id);

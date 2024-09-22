@@ -173,7 +173,7 @@ public class XSelectingSystem extends XGameEditorSystem {
         int y = Gdx.input.getY();
         hit = false;
         Ray ray = camera.getPickRay(x, y);
-        tree.rayCast(ray, hitList, true, 0f, 10, leftClick);
+        tree.rayCast(ray, hitList, true, 0f, 10);
         if(hitList.size > 0) {
             hit = true;
         }

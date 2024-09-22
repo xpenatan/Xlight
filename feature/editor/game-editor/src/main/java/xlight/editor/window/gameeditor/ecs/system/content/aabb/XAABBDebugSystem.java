@@ -44,11 +44,17 @@ public class XAABBDebugSystem extends XGameEditorSystem {
                 int size = gameTree.getSize();
 
                 for(int i = 0; i < size; i++) {
-                    XAABBTreeNode nodeIndex = gameTree.getNodeIndex(i);
-                    Vector3 fatMax = nodeIndex.getFatMax();
-                    Vector3 fatMin = nodeIndex.getFatMin();
+                    XAABBTreeNode node = gameTree.getNodeIndex(i);
+                    Vector3 fatMax = node.getFatMax();
+                    Vector3 fatMin = node.getFatMin();
                     XMath.BOUNDING_BOX_1.set(fatMin, fatMax);
-                    shapeRenderer.setColor(Color.GREEN);
+
+                    if(node.isDebug()) {
+                        shapeRenderer.setColor(Color.YELLOW);
+                    }
+                    else {
+                        shapeRenderer.setColor(Color.GREEN);
+                    }
                     shapeRenderer.boundingBox(XMath.BOUNDING_BOX_1);
                 }
                 shapeRenderer.endDepth();

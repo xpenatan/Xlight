@@ -25,4 +25,5 @@ public interface XAABBTreeNode {
      */
     Vector3 getFatMax();
 
+    boolean isDebug();
 }

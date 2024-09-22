@@ -58,6 +58,11 @@ public class XAABBTreeNodeDefault implements XAABBTreeNode, XPoolable {
         return fatAABB.getMax();
     }
 
+    @Override
+    public boolean isDebug() {
+        return debugHighlight;
+    }
+
     public void updatePosition() {
         if(data != null) {
             BoundingBox boundingBox = data.getBoundingBox();
