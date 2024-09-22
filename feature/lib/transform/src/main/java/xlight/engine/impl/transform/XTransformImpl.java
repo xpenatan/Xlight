@@ -35,6 +35,8 @@ public class XTransformImpl implements XTransform {
     private boolean negAxis = true;
     private int scalenRoundScale = 4;
 
+    private boolean isDragging;
+
     public XTransformImpl() {
         reset();
     }
@@ -62,6 +64,8 @@ public class XTransformImpl implements XTransform {
         negAxis = true;
         scalenRoundScale = 4;
         rotationSequence = XRotSeq.yxz;
+
+        isDragging = false;
     }
 
     @Override
@@ -249,6 +253,16 @@ public class XTransformImpl implements XTransform {
     @Override
     public XRotSeq getRotationSequence() {
         return rotationSequence;
+    }
+
+    @Override
+    public boolean isDragging() {
+        return isDragging;
+    }
+
+    @Override
+    public void setDragging(boolean flag) {
+        isDragging = false;
     }
 
     /**

@@ -67,4 +67,7 @@ public interface XTransform {
     BoundingBox getLocalBoundingBox();
     BoundingBox getBoundingBox();
     XRotSeq getRotationSequence();
+
+    boolean isDragging();
+    void setDragging(boolean flag);
 }
