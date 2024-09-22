@@ -3,6 +3,7 @@ package xlight.engine.glutils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -17,6 +18,8 @@ import xlight.engine.math.XRotSeq;
 import xlight.engine.math.XRotationUtils;
 
 public class XShapeRenderer implements Disposable {
+
+    private boolean isDepthTest;
 
     public void boundingBox(BoundingBox boundingBox) {
         float width = boundingBox.getWidth();
@@ -222,6 +225,21 @@ public class XShapeRenderer implements Disposable {
             matrixDirty = false;
         }
         renderer.begin(combinedMatrix, shapeType.getGlType());
+    }
+
+    public void beginDepth(ShapeType type) {
+        isDepthTest = Gdx.gl.glIsEnabled(GL20.GL_DEPTH_TEST);
+        if(!isDepthTest) {
+            Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+        }
+        begin(type);
+    }
+
+    public void endDepth() {
+        end();
+        if(!isDepthTest) {
+            Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+        }
     }
 
     public void set(ShapeType type) {

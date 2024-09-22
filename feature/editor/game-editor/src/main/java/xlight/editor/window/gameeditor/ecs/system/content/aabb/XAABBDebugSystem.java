@@ -3,9 +3,6 @@ package xlight.editor.window.gameeditor.ecs.system.content.aabb;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.utils.IntArray;
-import xlight.editor.core.ecs.event.XEditorEvents;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.window.gameeditor.ecs.system.XGameEditorSystem;
 import xlight.engine.aabb.XAABBTree;
@@ -15,18 +12,9 @@ import xlight.engine.camera.XCamera;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
-import xlight.engine.ecs.component.XComponentMatcher;
-import xlight.engine.ecs.component.XComponentMatcherBuilder;
-import xlight.engine.ecs.component.XGameComponent;
-import xlight.engine.ecs.entity.XEntity;
-import xlight.engine.ecs.entity.XEntityService;
-import xlight.engine.ecs.event.XEvent;
-import xlight.engine.ecs.event.XEventListener;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.glutils.XShapeRenderer;
 import xlight.engine.math.XMath;
-import xlight.engine.transform.XTransform;
-import xlight.engine.transform.ecs.component.XTransformComponent;
 
 public class XAABBDebugSystem extends XGameEditorSystem {
 
@@ -49,7 +37,7 @@ public class XAABBDebugSystem extends XGameEditorSystem {
             if(camera != null && aabbService != null) {
                 XAABBTree gameTree = aabbService.getGameTree();
                 shapeRenderer.setProjectionMatrix(camera.getCombined());
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                shapeRenderer.beginDepth(ShapeRenderer.ShapeType.Line);
 
                 int size = gameTree.getSize();
 
@@ -61,9 +49,7 @@ public class XAABBDebugSystem extends XGameEditorSystem {
                     shapeRenderer.setColor(Color.GREEN);
                     shapeRenderer.boundingBox(XMath.BOUNDING_BOX_1);
                 }
-
-                gameTree.getRoot();
-                shapeRenderer.end();
+                shapeRenderer.endDepth();
             }
         }
     }

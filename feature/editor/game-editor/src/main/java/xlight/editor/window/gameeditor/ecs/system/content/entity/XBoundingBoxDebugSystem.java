@@ -74,22 +74,15 @@ public class XBoundingBoxDebugSystem extends XGameEditorSystem {
             XWorld gameEngineWorld = gameEngine.getWorld();
             if(camera != null && entities != null) {
                 XEntityService es = gameEngineWorld.getEntityService();
-                boolean isDepthTest = Gdx.gl.glIsEnabled(GL20.GL_DEPTH_TEST);
-                if(!isDepthTest) {
-                    Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-                }
 
                 shapeRenderer.setProjectionMatrix(camera.getCombined());
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                shapeRenderer.beginDepth(ShapeRenderer.ShapeType.Line);
                 for(int i = 0; i < entities.size; i++) {
                     int entityIndex = entities.get(i);
                     XEntity e = es.getEntity(entityIndex);
                     onTickEntity(e);
                 }
-                shapeRenderer.end();
-                if(!isDepthTest) {
-                    Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-                }
+                shapeRenderer.endDepth();
             }
         }
     }
