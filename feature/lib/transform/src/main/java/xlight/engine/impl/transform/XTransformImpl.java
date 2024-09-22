@@ -28,7 +28,7 @@ public class XTransformImpl implements XTransform {
     final private Vector3 tmpOffset = new Vector3();
     final private Quaternion tmpQuaternion = new Quaternion();
     private XRotSeq rotationSequence;
-    private boolean forceChanges;
+    private boolean forceUpdate;
 
     private boolean enableX = true, enableY = true, enableZ = true;
     private boolean enableRotateX = true, enableRotateY = true, enableRotateZ = true;
@@ -51,7 +51,7 @@ public class XTransformImpl implements XTransform {
         quaternion.idt();
         offset.set(0, 0, 0);
 
-        forceChanges = false;
+        forceUpdate = false;
         enableX = true;
         enableY = true;
         enableZ = true;
@@ -266,8 +266,8 @@ public class XTransformImpl implements XTransform {
     }
 
     @Override
-    public void forceChange() {
-        forceChanges = true;
+    public void forceUpdate() {
+        forceUpdate = true;
     }
 
     /**
@@ -292,7 +292,7 @@ public class XTransformImpl implements XTransform {
             tmpQuaternion.set(x1, y1, z1, w1);
             XRotationUtils.convertQuatToEuler(rotationSequence, tmpQuaternion, XMath.VEC3_1, true, negAxis);
             quaternion.set(tmpQuaternion);
-            forceChanges = true;
+            forceUpdate = true;
             setRotationInternal(XMath.VEC3_1.x, XMath.VEC3_1.y, XMath.VEC3_1.z, false);
         }
     }
@@ -317,8 +317,8 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public void setPosition(float x, float y, float z) {
-        boolean forceChange = forceChanges;
-        forceChanges = false;
+        boolean forceChange = forceUpdate;
+        forceUpdate = false;
 
         boolean toUpdate = false;
         if(forceChange) {
@@ -361,8 +361,8 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public void setScale(float scaleX, float scaleY, float scaleZ) {
-        boolean forceChange = forceChanges;
-        forceChanges = false;
+        boolean forceChange = forceUpdate;
+        forceUpdate = false;
 
         boolean toUpdate = false;
         if(forceChange) {
@@ -383,8 +383,8 @@ public class XTransformImpl implements XTransform {
     }
 
     private void setRotationInternal(float rotationX, float rotationY, float rotationZ, boolean convertToQuat) {
-        boolean forceChange = forceChanges;
-        forceChanges = false;
+        boolean forceChange = forceUpdate;
+        forceUpdate = false;
 
         boolean toUpdate = false;
         if(forceChange) {
