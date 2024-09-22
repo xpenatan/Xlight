@@ -95,22 +95,25 @@ public class XFloatingButtonSystem extends XGameEditorSystem {
     }
 
     private void renderConfigMenu(XWorld world) {
-        XSystemData aabbSystemData = world.getSystemService().getSystemData(XAABBDebugSystem.class);
-        XSystemData boundingBoxSystemData = world.getSystemService().getSystemData(XBoundingBoxDebugSystem.class);
+        if(ImGui.BeginMenu("Debug")) {
+            XSystemData aabbSystemData = world.getSystemService().getSystemData(XAABBDebugSystem.class);
+            XSystemData boundingBoxSystemData = world.getSystemService().getSystemData(XBoundingBoxDebugSystem.class);
 
-        if(aabbSystemData != null) {
-            boolean enabled = aabbSystemData.isEnabled();
-            if(ImGui.MenuItem("Debug AABB", "", enabled)) {
-                aabbSystemData.setEnabled(!enabled);
+            if(aabbSystemData != null) {
+                boolean enabled = aabbSystemData.isEnabled();
+                if(ImGui.MenuItem("AABB Tree", "", enabled)) {
+                    aabbSystemData.setEnabled(!enabled);
+                }
             }
-        }
 
-        if(boundingBoxSystemData != null) {
-            ImGui.Separator();
-            boolean enabled = boundingBoxSystemData.isEnabled();
-            if(ImGui.MenuItem("Debug bounding box", "", enabled)) {
-                boundingBoxSystemData.setEnabled(!enabled);
+            if(boundingBoxSystemData != null) {
+                ImGui.Separator();
+                boolean enabled = boundingBoxSystemData.isEnabled();
+                if(ImGui.MenuItem("Entity bounding box", "", enabled)) {
+                    boundingBoxSystemData.setEnabled(!enabled);
+                }
             }
+            ImGui.EndMenu();
         }
     }
 
