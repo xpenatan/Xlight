@@ -2,6 +2,7 @@ package xlight.engine.impl;
 
 
 import com.badlogic.gdx.utils.IntArray;
+import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntityState;
 
 class XEntityArray {
@@ -9,8 +10,11 @@ class XEntityArray {
 
     private IntArray reusableIds;
 
-    public XEntityArray(int capacity) {
+    private XComponentService componentService;
+
+    public XEntityArray(int capacity, XComponentService componentService) {
         reusableIds = new IntArray(false, capacity);
+        this.componentService = componentService;
         items = new XEntityImpl[capacity];
         fillEntities(items);
     }
@@ -134,7 +138,7 @@ class XEntityArray {
         for(int i = 0; i < items.length; i++) {
             XEntityImpl item = items[i];
             if(item == null) {
-                items[i] = new XEntityImpl(i);
+                items[i] = new XEntityImpl(i, componentService);
                 reusableIds.add(i);
             }
         }

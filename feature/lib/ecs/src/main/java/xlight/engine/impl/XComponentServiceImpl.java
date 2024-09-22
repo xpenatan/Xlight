@@ -19,10 +19,10 @@ class XComponentServiceImpl implements XComponentService {
 
     private XECSWorldImpl world;
 
-    public XComponentServiceImpl(XECSWorldImpl world, XEntityServiceImpl entityService) {
+    public void init(XECSWorldImpl world, XEntityServiceImpl entityService) {
+        this.entityService = entityService;
         this.world = world;
         components = new Array<>();
-        this.entityService = entityService;
         matcher = new XComponentMatcherBuilderImpl(this, entityService);
     }
 

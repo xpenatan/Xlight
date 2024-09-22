@@ -18,7 +18,6 @@ import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
-import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.component.XGameComponent;
 import xlight.engine.ecs.component.XUIComponent;
 import xlight.engine.ecs.entity.XEntity;
@@ -79,9 +78,9 @@ public class XGLTFSystem extends XEntitySystem implements XBatch3D {
     }
 
     @Override
-    public void onEntityTick(XComponentService cs, XEntity e) {
-        XRender3DComponent modelComponent = cs.getComponent(e, XRender3DComponent.class);
-        XTransformComponent transformComponent = cs.getComponent(e, XTransformComponent.class);
+    public void onEntityTick(XEntity e) {
+        XRender3DComponent modelComponent = e.getComponent(XRender3DComponent.class);
+        XTransformComponent transformComponent = e.getComponent(XTransformComponent.class);
         modelComponent.onUpdate(transformComponent.transform);
         modelComponent.onRender(0, this);
     }

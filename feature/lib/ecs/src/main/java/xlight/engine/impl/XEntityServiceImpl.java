@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.OrderedMap;
 import java.util.Objects;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentMatcher;
+import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.math.XMath;
@@ -16,8 +17,12 @@ class XEntityServiceImpl implements XEntityService {
     OrderedMap<String, XComponentMatcherImpl> matchersMap;
 
     public XEntityServiceImpl() {
+
+    }
+
+    public void init(XComponentService componentService) {
         int initialSize = 100;
-        entities = new XEntityArray(initialSize);
+        entities = new XEntityArray(initialSize, componentService);
         matchersMap = new OrderedMap<>();
     }
 

@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.github.xpenatan.gdx.multiview.EmuFiles;
+import xlight.engine.aabb.ecs.service.XAABBService;
+import xlight.engine.aabb.ecs.service.XAABBServiceDefault;
 import xlight.engine.core.XEngineEvent;
 import xlight.editor.core.ecs.XGameState;
 import xlight.editor.core.ecs.event.XEditorEvents;
@@ -95,6 +97,8 @@ class XEditorManagerImpl implements XEditorManager, XManager {
                     // Update 1 time so all systems are created
                     gameEngine.update(1);
 
+                    setupGameWorld(gameEngine.getWorld());
+
                     eventService.sendEvent(XEditorEvents.EVENT_ENGINE_CREATED, gameEngine, new XEventService.XSendEventListener() {
                         @Override
                         public void onBeginEvent(XEvent event) {
@@ -117,6 +121,14 @@ class XEditorManagerImpl implements XEditorManager, XManager {
         }
         catch(Throwable t) {
             t.printStackTrace();
+        }
+    }
+
+    private void setupGameWorld(XWorld gameWorld) {
+        // This setup game engine world to be used by the editor
+        if(gameWorld.getService(XAABBService.class) == null) {
+            // Add AABB Service if its not set
+            gameWorld.attachService(XAABBService.class, new XAABBServiceDefault());
         }
     }
 

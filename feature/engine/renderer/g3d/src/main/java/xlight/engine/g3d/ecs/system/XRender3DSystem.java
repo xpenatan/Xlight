@@ -9,7 +9,6 @@ import xlight.engine.ecs.system.XEntitySystem;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
-import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.g3d.ecs.component.XRender3DComponent;
@@ -57,9 +56,9 @@ public class XRender3DSystem extends XEntitySystem {
     }
 
     @Override
-    public void onEntityTick(XComponentService cs, XEntity e) {
-        XRender3DComponent modelComponent = cs.getComponent(e, XRender3DComponent.class);
-        XTransformComponent transformComponent = cs.getComponent(e, XTransformComponent.class);
+    public void onEntityTick(XEntity e) {
+        XRender3DComponent modelComponent = e.getComponent(XRender3DComponent.class);
+        XTransformComponent transformComponent = e.getComponent(XTransformComponent.class);
         modelComponent.onUpdate(transformComponent.transform);
         modelComponent.onRender(0, renderer);
     }

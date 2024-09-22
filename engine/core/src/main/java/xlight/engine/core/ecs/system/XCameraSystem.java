@@ -9,7 +9,6 @@ import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.ecs.component.XUIComponent;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
-import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.system.XEntitySystem;
 import xlight.engine.ecs.system.XSystemType;
@@ -36,9 +35,9 @@ public class XCameraSystem extends XEntitySystem {
     }
 
     @Override
-    public void onEntityTick(XComponentService cs, XEntity e) {
-        XCameraComponent cameraComponent = cs.getComponent(e, XCameraComponent.class);
-        XTransformComponent transformComponent = cs.getComponent(e, XTransformComponent.class);
+    public void onEntityTick(XEntity e) {
+        XCameraComponent cameraComponent = e.getComponent(XCameraComponent.class);
+        XTransformComponent transformComponent = e.getComponent(XTransformComponent.class);
 
         XCamera camera = cameraComponent.camera;
         XTransform transform = transformComponent.transform;

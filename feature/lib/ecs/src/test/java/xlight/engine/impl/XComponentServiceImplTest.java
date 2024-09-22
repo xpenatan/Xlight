@@ -17,7 +17,8 @@ public class XComponentServiceImplTest {
     public void setUp() {
         XECSWorldImpl world = new XECSWorldImpl();
         XEntityServiceImpl entityService = new XEntityServiceImpl();
-        service = new XComponentServiceImpl(world, entityService);
+        service = new XComponentServiceImpl();
+        service.init(world, entityService);
     }
 
     @Test
@@ -66,8 +67,8 @@ public class XComponentServiceImplTest {
         ComponentB e2cB = new ComponentB();
         ComponentC e2cC = new ComponentC();
 
-        XEntityImpl e1 = new XEntityImpl(0);
-        XEntityImpl e2 = new XEntityImpl(1);
+        XEntityImpl e1 = new XEntityImpl(0, null);
+        XEntityImpl e2 = new XEntityImpl(1, null);
 
         service.attachComponent(e1, e1cA);
         service.attachComponent(e1, e1cC);

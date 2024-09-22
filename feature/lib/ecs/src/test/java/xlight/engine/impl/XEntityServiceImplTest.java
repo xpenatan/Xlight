@@ -1,6 +1,5 @@
 package xlight.engine.impl;
 
-import com.google.common.truth.Truth;
 import org.junit.Before;
 import org.junit.Test;
 
