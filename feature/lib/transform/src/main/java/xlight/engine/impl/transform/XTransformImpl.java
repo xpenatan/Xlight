@@ -315,7 +315,17 @@ public class XTransformImpl implements XTransform {
         boolean forceChange = forceChanges;
         forceChanges = false;
 
-        if(forceChange || (position.x != x || position.y != y || position.z != z)) {
+        boolean toUpdate = false;
+        if(forceChange) {
+            toUpdate = true;
+        }
+        else {
+            if(!isDragging && (position.x != x || position.y != y || position.z != z)) {
+                toUpdate = true;
+            }
+        }
+
+        if(toUpdate) {
             boolean flag = false;
             if(enableX || forceChange) {
                 flag = true;
@@ -349,7 +359,17 @@ public class XTransformImpl implements XTransform {
         boolean forceChange = forceChanges;
         forceChanges = false;
 
-        if(forceChange || (scale.x != scaleX || scale.y != scaleY || scale.z != scaleZ)) {
+        boolean toUpdate = false;
+        if(forceChange) {
+            toUpdate = true;
+        }
+        else {
+            if(!isDragging && (scale.x != scaleX || scale.y != scaleY || scale.z != scaleZ)) {
+                toUpdate = true;
+            }
+        }
+
+        if(toUpdate) {
             scale.x = scaleX;
             scale.y = scaleY;
             scale.z = scaleZ;
@@ -361,7 +381,17 @@ public class XTransformImpl implements XTransform {
         boolean forceChange = forceChanges;
         forceChanges = false;
 
-        if(forceChange || (rotation.x != rotationX || rotation.y != rotationY || rotation.z != rotationZ)) {
+        boolean toUpdate = false;
+        if(forceChange) {
+            toUpdate = true;
+        }
+        else {
+            if(!isDragging && (rotation.x != rotationX || rotation.y != rotationY || rotation.z != rotationZ)) {
+                toUpdate = true;
+            }
+        }
+
+        if(toUpdate) {
             boolean flag = false;
             if(enableX || forceChange) {
                 flag = true;
