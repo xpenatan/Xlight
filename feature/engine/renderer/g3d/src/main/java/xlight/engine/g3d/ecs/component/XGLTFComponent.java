@@ -16,30 +16,30 @@ public class XGLTFComponent extends XRender3DComponent{
     private SceneAsset sceneAsset;
     private Scene scene;
 
-    public void setAsset(FileHandle path) {
-        if(sceneAsset != null) {
-            sceneAsset.dispose();
-        }
-        if(path.extension().equals("glb")) {
-            sceneAsset = new GLBLoader().load(path);
-        }
-        else {
-            sceneAsset = new GLTFLoader().load(path);
-        }
-        scene = new Scene(sceneAsset.scene);
-        flags.put(FLAG_CALCULATE_BOUNDING_BOX);
-    }
+    private FileHandle assetToLoad;
+
+    private boolean componentAttached;
 
     public XGLTFComponent(FileHandle path) {
-        setAsset(path);
+        setAssetInternal(path);
     }
 
     @Override
-    public void onAttach(XWorld world, XEntity entity) {
+    protected void onComponentAttach(XWorld world, XEntity entity) {
+        componentAttached = true;
+        if(assetToLoad != null) {
+            setAssetInternal(assetToLoad);
+            assetToLoad = null;
+        }
     }
 
     @Override
-    public void onDetach(XWorld world, XEntity entity) {
+    protected void onComponentDetach(XWorld world, XEntity entity) {
+        componentAttached = false;
+    }
+
+    public void setAsset(FileHandle path) {
+        setAssetInternal(path);
     }
 
     @Override
@@ -61,5 +61,25 @@ public class XGLTFComponent extends XRender3DComponent{
         if(scene != null) {
             scene.modelInstance.transform.set(transform);
         }
+    }
+
+    private void setAssetInternal(FileHandle path) {
+        if(!componentAttached) {
+            assetToLoad = path;
+            return;
+        }
+
+        if(sceneAsset != null) {
+            sceneAsset.dispose();
+        }
+        if(path.extension().equals("glb")) {
+            sceneAsset = new GLBLoader().load(path);
+        }
+        else {
+            sceneAsset = new GLTFLoader().load(path);
+        }
+        scene = new Scene(sceneAsset.scene);
+        flags.put(FLAG_CALCULATE_BOUNDING_BOX);
+        updateModelInstance(scene.modelInstance);
     }
 }

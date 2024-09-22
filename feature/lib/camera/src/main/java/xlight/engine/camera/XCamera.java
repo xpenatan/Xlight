@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import xlight.engine.impl.XCameraImpl;
 
@@ -62,4 +63,5 @@ public interface XCamera {
 
     void setType(int type);
     int getType();
+    Ray getPickRay(float x, float y);
 }

@@ -2,7 +2,9 @@ package xlight.engine.g2d.ecs.component;
 
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
+import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.g2d.XBatch2D;
 import xlight.engine.g2d.XRender2D;
 import xlight.engine.list.XIntSet;
@@ -16,10 +18,26 @@ public abstract class XRender2DComponent implements XComponent, XRender2D, XPool
 
     public final XIntSet flags;
 
+    private int renderID;
+
     public XRender2DComponent() {
         flags = new XIntSet();
         onReset();
     }
+
+    @Override
+    public final void onAttach(XWorld world, XEntity entity) {
+        renderID = entity.getId();
+        onComponentAttach(world, entity);
+    }
+
+    @Override
+    public final void onDetach(XWorld world, XEntity entity) {
+        onComponentDetach(world, entity);
+    }
+
+    protected void onComponentAttach(XWorld world, XEntity entity) {}
+    protected void onComponentDetach(XWorld world, XEntity entity) {}
 
     public abstract void calculateBoundingBox(BoundingBox boundingBox);
     public abstract void onRender(XBatch2D batch);
@@ -44,5 +62,10 @@ public abstract class XRender2DComponent implements XComponent, XRender2D, XPool
     @Override
     public void onReset() {
         flags.clear();
+    }
+
+    @Override
+    public final int getRenderId() {
+        return renderID;
     }
 }

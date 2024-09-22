@@ -3,6 +3,7 @@ package xlight.editor.window.gameeditor.ecs.system.content.selection;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g3d.RenderableProvider;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
@@ -23,10 +24,14 @@ import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
+import xlight.engine.g3d.XBatch3DAdapter;
+import xlight.engine.g3d.ecs.component.XRender3DComponent;
 import xlight.engine.gizmo.XCursor3DRenderer;
 import xlight.engine.gizmo.XGizmoRenderer;
 import xlight.engine.math.XMath;
 import xlight.engine.math.XRotSeq;
+import xlight.engine.outline.XPicker2DFrameBuffer;
+import xlight.engine.outline.XPicker3DFrameBuffer;
 import xlight.engine.transform.XTransform;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 
@@ -37,6 +42,10 @@ public class XSelectingSystem extends XGameEditorSystem {
     private XEntitySelectionManager selectionManager;
     private XGizmoRenderer gizmoRenderer;
     private XCursor3DRenderer cursor3DRenderer;
+    private XPicker3DFrameBuffer shader3DPicker;
+    private XPicker2DFrameBuffer shader2DPicker;
+
+    private Array<RenderableProvider> tmp3dArray = new Array<>();
 
     private boolean hit;
     private final Array<XAABBTreeNode> hitList = new Array<>();
@@ -52,6 +61,8 @@ public class XSelectingSystem extends XGameEditorSystem {
         editorManager = world.getManager(XEditorManager.class);
         selectionRenderer = new XSelectionRenderer();
         gizmoRenderer = new XGizmoRenderer();
+        shader3DPicker = new XPicker3DFrameBuffer();
+        shader2DPicker = new XPicker2DFrameBuffer();
 
         cursor3DRenderer = new XCursor3DRenderer();
         XMath.QUAT_1.idt();
@@ -162,23 +173,25 @@ public class XSelectingSystem extends XGameEditorSystem {
         int y = Gdx.input.getY();
         hit = false;
         Ray ray = camera.getPickRay(x, y);
-        tree.rayCast(ray, hitList, true, 0f, 1, leftClick);
+        tree.rayCast(ray, hitList, true, 0f, 10, leftClick);
         if(hitList.size > 0) {
             hit = true;
         }
         if(leftClick) {
-            updateClickLogic(gameEngineWorld, hitList, selectionManager);
+            updateClickLogic(gameEngineWorld, camera, selectionManager, hitList, x, y);
         }
     }
 
-    private void updateClickLogic(XWorld gameEngineWorld, Array<XAABBTreeNode> raycastList, XEntitySelectionManager selectionManager) {
+    private void updateClickLogic(XWorld gameEngineWorld, Camera camera, XEntitySelectionManager selectionManager, Array<XAABBTreeNode> raycastList, int clickX, int clickY) {
         XEntityService entityService = gameEngineWorld.getEntityService();
         boolean leftCtrl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
         if(raycastList.size > 0) {
-            XAABBTreeNode node = raycastList.get(0);
-            XEntity entity = entityService.getEntity(node.getId());
+            XEntity entity = validateEntitySelected(camera, raycastList, entityService, clickX, clickY);
             if(entity != null) {
                 selectionManager.selectTarget(entity, leftCtrl);
+            }
+            else {
+                selectionManager.unselectAllTargets();
             }
         }
         else {
@@ -186,5 +199,43 @@ public class XSelectingSystem extends XGameEditorSystem {
                 selectionManager.unselectAllTargets();
             }
         }
+    }
+
+    XBatch3DAdapter batch3DWrapper = new XBatch3DAdapter() {
+        @Override
+        public void drawModel(RenderableProvider renderableProvider) {
+            tmp3dArray.add(renderableProvider);
+        }
+    };
+
+    private XEntity validateEntitySelected(Camera camera, Array<XAABBTreeNode> rayCastList, XEntityService es, int clickX, int clickY) {
+        boolean useAABBSelection = true;
+        XEntity entity = null;
+        for(int i = 0; i < rayCastList.size; i++) {
+            XAABBTreeNode node = rayCastList.get(i);
+            int entityId = node.getId();
+            XEntity e = es.getEntity(entityId);
+            XRender3DComponent render3DComponent = e.getComponent(XRender3DComponent.class);
+            if(render3DComponent != null) {
+                render3DComponent.onRender(batch3DWrapper);
+            }
+        }
+
+        if(tmp3dArray.size > 0) {
+            useAABBSelection = false;
+            int entityId = shader3DPicker.getShaderRayPickingID(camera, tmp3dArray, clickX, clickY);
+            if(entityId >= 0) {
+                entity = es.getEntity(entityId);
+            }
+            tmp3dArray.clear();
+        }
+
+        if(useAABBSelection) {
+            // If improved selection is not implemented use bounding box
+            XAABBTreeNode node = rayCastList.get(0);
+            int entityId = node.getId();
+            entity = es.getEntity(entityId);
+        }
+        return entity;
     }
 }
