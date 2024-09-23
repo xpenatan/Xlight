@@ -89,7 +89,7 @@ public class MainApp implements XApplication {
     public void createModelEntity(XEntityService es, String asset, float x, float y, float z) {
         XEntity e = es.obtain();
         FileHandle assetFile = Gdx.files.internal(asset);
-        String name = assetFile.name();
+        String name = assetFile.nameWithoutExtension();
         e.setName(name);
         e.attachComponent(new XGLTFComponent(assetFile));
         e.attachComponent(new XTransformComponent().position(x, y, z));
