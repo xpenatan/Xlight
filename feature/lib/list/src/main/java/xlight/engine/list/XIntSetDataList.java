@@ -18,9 +18,9 @@ public class XIntSetDataList<NODE_TYPE extends XIntDataMapListNode<Object, NODE_
         linkedList = new XLinkedDataList<>(pool);
     }
 
-    public void put(int key) {
+    public boolean put(int key) {
         if(map.containsKey(key)) {
-            return;
+            return false;
         }
         NODE_TYPE node = linkedList.addTail(null);
         node.key = key;
@@ -28,6 +28,7 @@ public class XIntSetDataList<NODE_TYPE extends XIntDataMapListNode<Object, NODE_
         if(oldNode != null) {
             linkedList.removeNode(oldNode);
         }
+        return true;
     }
 
     public boolean remove(int key) {
