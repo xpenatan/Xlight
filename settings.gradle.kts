@@ -11,7 +11,7 @@ include(":engine:web")
 
 include(":editor:core")
 include(":editor:desktop")
-include(":editor:teavm")
+include(":editor:web")
 
 // Libs
 
@@ -61,7 +61,7 @@ include(":feature:editor:game-editor") // Classes used in game editor window
 
 include(":demos:g3d:basic:core")
 include(":demos:g3d:basic:desktop")
-include(":demos:g3d:basic:teavm")
+include(":demos:g3d:basic:web")
 
 
 //includeBuild("E:\\Dev\\Projects\\java\\gdx-teavm") {

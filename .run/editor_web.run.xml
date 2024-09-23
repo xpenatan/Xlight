@@ -2,7 +2,7 @@
   <configuration default="false" name="editor_web" type="GradleRunConfiguration" factoryName="Gradle" folderName="Editor">
     <ExternalSystemSettings>
       <option name="executionName" />
-      <option name="externalProjectPath" value="$PROJECT_DIR$/editor/teavm" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/editor/web" />
       <option name="externalSystemIdString" value="GRADLE" />
       <option name="scriptParameters" value="" />
       <option name="taskDescriptions">
