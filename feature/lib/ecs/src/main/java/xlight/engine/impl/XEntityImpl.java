@@ -1,11 +1,16 @@
 package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.Bits;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.entity.XEntityState;
+import xlight.engine.list.XIntSet;
+import xlight.engine.list.XList;
 
 class XEntityImpl implements XEntity {
     private static String EMPTY_NAME = "NoName";
@@ -15,15 +20,22 @@ class XEntityImpl implements XEntity {
     IntArray componentsIndex;
     private Bits componentMaskReadOnly;
     private boolean isVisible;
-    private XComponentService componentService;
     private String name;
+    private boolean isSavable;
 
-    XEntityImpl(int index, XComponentService componentService) {
+    private int parentId;
+
+    private XIntSet children;
+
+    private XWorld world;
+
+    XEntityImpl(int index, XWorld world) {
+        this.world = world;
         componentMask = new Bits();
         componentMaskReadOnly = new Bits();
         componentsIndex = new IntArray();
-        this.componentService = componentService;
-        reset();
+        children = new XIntSet();
+        reset(true);
         this.index = index;
     }
 
@@ -66,16 +78,19 @@ class XEntityImpl implements XEntity {
 
     @Override
     public <T extends XComponent> T getComponent(Class<T> type) {
+        XComponentService componentService = world.getComponentService();
         return componentService.getComponent(this, type);
     }
 
     @Override
     public <T extends XComponent> void attachComponent(XComponent component) {
+        XComponentService componentService = world.getComponentService();
         componentService.attachComponent(this, component);
     }
 
     @Override
     public <T extends XComponent> void detachComponent(Class<T> type) {
+        XComponentService componentService = world.getComponentService();
         componentService.detachComponent(this, type);
     }
 
@@ -93,13 +108,129 @@ class XEntityImpl implements XEntity {
         return name;
     }
 
-    public void reset() {
+    @Override
+    public boolean isSavable() {
+        return isSavable;
+    }
+
+    @Override
+    public void setSavable(boolean flag) {
+        isSavable = flag;
+    }
+
+    @Override
+    public XEntity getParent() {
+        if(parentId == -1) {
+            return null;
+        }
+        XEntityService entityService = world.getEntityService();
+        return entityService.getEntity(parentId);
+    }
+
+    @Override
+    public boolean setParent(XEntity parent) {
+        if(parent != null && parent.getId() == index) {
+            throw new GdxRuntimeException("Cannot add the same entity");
+        }
+        if(parentId == -1 && parent == null) {
+            return false;
+        }
+
+        XEntityService entityService = world.getEntityService();
+        XEntity thisParent = null;
+        if(parentId != -1) {
+            thisParent = entityService.getEntity(parentId);
+        }
+
+        if(containsParentChild(parent, this) || thisParent == parent || parent != null && children.contains(parent.getId())) {
+            return false;
+        }
+
+        if(thisParent != null) {
+            thisParent.removeChild(index);
+        }
+        if(parent != null) {
+            parentId = parent.getId();
+            XEntityImpl e = (XEntityImpl)parent;
+            e.children.put(index);
+        }
+        else {
+            parentId = -1;
+        }
+        return true;
+    }
+
+    @Override
+    public XEntity getChild(int id) {
+        if(children.containsKey(id)) {
+            XEntityService entityService = world.getEntityService();
+            return entityService.getEntity(id);
+        }
+        return null;
+    }
+
+    @Override
+    public XList<XIntSet.XIntSetNode> getChildList() {
+        return children.getNodeList();
+    }
+
+    @Override
+    public XIntSet.XIntSetNode getChildHead() {
+        return children.getHead();
+    }
+
+    @Override
+    public boolean putChild(XEntity entity) {
+        return children.put(entity.getId());
+    }
+
+    @Override
+    public XEntity removeChild(int id) {
+        if(children.remove(id)) {
+            XEntityService entityService = world.getEntityService();
+            XEntityImpl entity = (XEntityImpl)entityService.getEntity(id);
+            entity.parentId = -1;
+            return entity;
+        }
+        return null;
+    }
+
+    @Override
+    public void clearChildren() {
+        XList<XIntSet.XIntSetNode> nodeList = children.getNodeList();
+        for(XIntSet.XIntSetNode node : children.getNodeList()) {
+            int id = node.getKey();
+            XEntityService entityService = world.getEntityService();
+            XEntityImpl entity = (XEntityImpl)entityService.getEntity(id);
+            entity.parentId = -1;
+        }
+        children.clear();
+    }
+
+    public void reset(boolean isFirst) {
+        if(!isFirst) {
+            clearChildren();
+            setParent(null);
+        }
+
         name = EMPTY_NAME;
         index = -1;
         isVisible = true;
+        parentId = -1;
+        isSavable = false;
         state = XEntityState.RELEASE;
         componentMask.clear();
         componentMaskReadOnly.clear();
         componentsIndex.clear();
+    }
+
+    private static boolean containsParentChild(XEntity cur, XEntity parent) {
+        while(cur != null) {
+            if(cur == parent) {
+                return true;
+            }
+            cur = cur.getParent();
+        }
+        return false;
     }
 }

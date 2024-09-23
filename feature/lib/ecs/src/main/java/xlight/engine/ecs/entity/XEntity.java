@@ -2,6 +2,8 @@ package xlight.engine.ecs.entity;
 
 import com.badlogic.gdx.utils.Bits;
 import xlight.engine.ecs.component.XComponent;
+import xlight.engine.list.XIntSet;
+import xlight.engine.list.XList;
 
 public interface XEntity {
     int getId();
@@ -32,4 +34,28 @@ public interface XEntity {
 
     void setName(String name);
     String getName();
+
+    boolean isSavable();
+    void setSavable(boolean flag);
+
+    XEntity getParent();
+    boolean setParent(XEntity parent);
+
+    /**
+     * Return child entity. null if not found
+     */
+    XEntity getChild(int id);
+
+    /**
+     * Return children list
+     */
+    XList<XIntSet.XIntSetNode> getChildList();
+
+    XIntSet.XIntSetNode getChildHead();
+
+    boolean putChild(XEntity entity);
+
+    XEntity removeChild(int id);
+
+    void clearChildren();
 }

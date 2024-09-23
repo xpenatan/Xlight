@@ -1,8 +1,7 @@
 package xlight.engine.impl;
 
-
 import com.badlogic.gdx.utils.IntArray;
-import xlight.engine.ecs.component.XComponentService;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.entity.XEntityState;
 
 class XEntityArray {
@@ -10,11 +9,11 @@ class XEntityArray {
 
     private IntArray reusableIds;
 
-    private XComponentService componentService;
+    private XWorld world;
 
-    public XEntityArray(int capacity, XComponentService componentService) {
+    public XEntityArray(int capacity, XWorld world) {
         reusableIds = new IntArray(false, capacity);
-        this.componentService = componentService;
+        this.world = world;
         items = new XEntityImpl[capacity];
         fillEntities(items);
     }
@@ -32,7 +31,7 @@ class XEntityArray {
             return false;
         }
         XEntityImpl entity = items[id];
-        if(entity.state == XEntityState.DETACHED) {
+        if(entity.state == XEntityState.DETACHED || entity.state == XEntityState.RELEASE) {
             return false;
         }
         entity.state = XEntityState.DETACHED;
@@ -44,7 +43,7 @@ class XEntityArray {
             return false;
         }
         XEntityImpl entity = items[id];
-        if(entity.state == XEntityState.ATTACHED) {
+        if(entity.state == XEntityState.ATTACHED || entity.state == XEntityState.RELEASE) {
             return false;
         }
         entity.state = XEntityState.ATTACHED;
@@ -56,11 +55,11 @@ class XEntityArray {
             return false;
         }
         XEntityImpl entity = items[id];
-        if(entity.state == XEntityState.RELEASE) {
+        if(entity.state == XEntityState.RELEASE || entity.state == XEntityState.ATTACHED) {
             return false;
         }
         reusableIds.insert(0, id);
-        entity.reset();
+        entity.reset(false);
         return true;
     }
 
@@ -73,6 +72,20 @@ class XEntityArray {
             return entity;
         }
         return null;
+    }
+
+    public int getIndexOrNext(int index) {
+        if(index < 0 || index >= items.length) {
+            return -1;
+        }
+        while(index < items.length) {
+            XEntityImpl entity = items[index];
+            if(entity.state == XEntityState.ATTACHED) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 
     public void resize(int newSize) {
@@ -138,7 +151,7 @@ class XEntityArray {
         for(int i = 0; i < items.length; i++) {
             XEntityImpl item = items[i];
             if(item == null) {
-                items[i] = new XEntityImpl(i, componentService);
+                items[i] = new XEntityImpl(i, world);
                 reusableIds.add(i);
             }
         }

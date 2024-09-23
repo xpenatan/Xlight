@@ -11,11 +11,12 @@ import xlight.engine.esc.component.ComponentD;
 
 public class XComponentServiceImplTest {
 
+    XECSWorldImpl world;
     XComponentServiceImpl service;
 
     @Before
     public void setUp() {
-        XECSWorldImpl world = new XECSWorldImpl();
+        world = new XECSWorldImpl();
         XEntityServiceImpl entityService = new XEntityServiceImpl();
         service = new XComponentServiceImpl();
         service.init(world, entityService);
@@ -67,8 +68,8 @@ public class XComponentServiceImplTest {
         ComponentB e2cB = new ComponentB();
         ComponentC e2cC = new ComponentC();
 
-        XEntityImpl e1 = new XEntityImpl(0, null);
-        XEntityImpl e2 = new XEntityImpl(1, null);
+        XEntityImpl e1 = new XEntityImpl(0, world);
+        XEntityImpl e2 = new XEntityImpl(1, world);
 
         service.attachComponent(e1, e1cA);
         service.attachComponent(e1, e1cC);

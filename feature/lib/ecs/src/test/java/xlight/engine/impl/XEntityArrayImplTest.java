@@ -11,7 +11,8 @@ public class XEntityArrayImplTest {
 
     @Before
     public void setUp() {
-        entities = new XEntityArray(2, null);
+        XECSWorldImpl world = new XECSWorldImpl();
+        entities = new XEntityArray(2, world);
     }
 
     @Test

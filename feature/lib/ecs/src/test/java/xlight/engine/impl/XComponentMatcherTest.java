@@ -23,7 +23,7 @@ public class XComponentMatcherTest {
         XECSWorldImpl world = new XECSWorldImpl();
         XEntityServiceImpl entityService = new XEntityServiceImpl();
         XComponentServiceImpl componentService = new XComponentServiceImpl();
-        entityService.init(componentService);
+        entityService.init(world);
         componentService.init(world, entityService);
         XEntity playerEntity = entityService.obtain();
 
@@ -126,7 +126,7 @@ public class XComponentMatcherTest {
         XECSWorldImpl world = new XECSWorldImpl();
         XEntityServiceImpl entityService = new XEntityServiceImpl();
         XComponentServiceImpl componentService = new XComponentServiceImpl();
-        entityService.init(componentService);
+        entityService.init(world);
         componentService.init(world, entityService);
 
         componentService.registerComponent(PlayerComponent.class);

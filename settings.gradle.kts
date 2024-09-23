@@ -32,6 +32,7 @@ include(":feature:lib:datamap")
 include(":feature:lib:properties")
 include(":feature:lib:aabb:core")
 include(":feature:lib:aabb:default")
+include(":feature:lib:string")
 
 // Engine features
 

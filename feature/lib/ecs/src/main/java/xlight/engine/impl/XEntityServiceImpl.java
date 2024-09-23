@@ -3,27 +3,60 @@ package xlight.engine.impl;
 import com.badlogic.gdx.utils.Bits;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
+import java.util.Iterator;
 import java.util.Objects;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentMatcher;
-import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
+import xlight.engine.list.XList;
 import xlight.engine.math.XMath;
 
 class XEntityServiceImpl implements XEntityService {
 
-    XEntityArray entities;
-    OrderedMap<String, XComponentMatcherImpl> matchersMap;
+    private XEntityArray entities;
+    private OrderedMap<String, XComponentMatcherImpl> matchersMap;
+    private XList<XEntity> entityList;
+    private int entitySize;
 
     public XEntityServiceImpl() {
-
     }
 
-    public void init(XComponentService componentService) {
+    public void init(XWorld world) {
         int initialSize = 100;
-        entities = new XEntityArray(initialSize, componentService);
+        entities = new XEntityArray(initialSize, world);
         matchersMap = new OrderedMap<>();
+
+        entityList = new XList<>() {
+            private int index;
+            private final Iterator<XEntity> iterator = new Iterator<>() {
+                @Override
+                public boolean hasNext() {
+                    return entities.getIndexOrNext(index) >= 0;
+                }
+
+                @Override
+                public XEntity next() {
+                    int indexOrNext = entities.getIndexOrNext(index);
+                    XEntityImpl entity = entities.get(indexOrNext);
+                    index = indexOrNext + 1;
+                    return entity;
+                }
+            };
+
+
+            @Override
+            public int getSize() {
+                return entitySize;
+            }
+
+            @Override
+            public Iterator<XEntity> iterator() {
+                index = 0;
+                return iterator;
+            }
+        };
     }
 
     @Override
@@ -32,13 +65,17 @@ class XEntityServiceImpl implements XEntityService {
     }
 
     @Override
-    public void releaseEntity(XEntity entity) {
-        entities.releaseEntity(entity.getId());
+    public boolean releaseEntity(XEntity entity) {
+        if(detachEntity(entity)) {
+            return entities.releaseEntity(entity.getId());
+        }
+        return false;
     }
 
     @Override
     public boolean attachEntity(XEntity entity) {
         if(entities.attachEntity(entity.getId())) {
+            entitySize++;
             // Loop all matchers if entity mask bits match
             updateEntityAdded((XEntityImpl)entity);
             return true;
@@ -50,10 +87,13 @@ class XEntityServiceImpl implements XEntityService {
     public boolean detachEntity(XEntity entity) {
         boolean flag = entities.detachEntity(entity.getId());
         if(flag) {
+            entitySize--;
             XEntityImpl e = (XEntityImpl)entity;
             // Loop all matchers if entity mask bits match
             XMath.BITS_1.clear();
             updateEntityRemove(e, e.componentMask, XMath.BITS_1);
+            entity.clearChildren();
+            entity.setParent(null);
         }
         return flag;
     }
@@ -61,6 +101,11 @@ class XEntityServiceImpl implements XEntityService {
     @Override
     public XEntity getEntity(int id) {
         return entities.get(id);
+    }
+
+    @Override
+    public XList<XEntity> getEntities() {
+        return entityList;
     }
 
     @Override

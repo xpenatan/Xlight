@@ -13,4 +13,6 @@ public interface XEntitySelectionManager {
 
     void moveAndStartDragging(XGizmoRenderer.TRANSFORM_TYPE transformType, int transformMode, Vector3 position, Vector3 rotation);
     void removeDragging();
+
+    boolean isSelected(XEntity target);
 }
