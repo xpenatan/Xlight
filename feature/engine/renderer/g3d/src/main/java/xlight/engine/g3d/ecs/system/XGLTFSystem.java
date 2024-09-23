@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
+import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
+import net.mgsx.gltf.scene3d.scene.CascadeShadowMap;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
@@ -41,6 +43,7 @@ public class XGLTFSystem extends XEntitySystem implements XBatch3D {
     private Texture brdfLUT;
     private SceneSkybox skybox;
     private DirectionalLightEx light;
+    private CascadeShadowMap csm;
 
     public XGLTFSystem(XSystemType systemType) {
         this.systemType = systemType;
@@ -67,6 +70,13 @@ public class XGLTFSystem extends XEntitySystem implements XBatch3D {
         }
         gameCamera.updateCamera();
         Camera gdxCamera = gameCamera.asGDXCamera();
+
+        DirectionalShadowLight shadowLight = sceneManager.getFirstDirectionalShadowLight();
+        if(shadowLight != null){
+            if(csm != null){
+                csm.setCascades(gdxCamera, shadowLight, 0, 6f);
+            }
+        }
         sceneManager.setCamera(gdxCamera);
         return false;
     }
@@ -125,9 +135,10 @@ public class XGLTFSystem extends XEntitySystem implements XBatch3D {
         sceneManager = new SceneManager();
 
         // setup light
-        light = new DirectionalLightEx();
-        light.direction.set(1, -3, 1).nor();
+        light = new DirectionalShadowLight();
+        light.direction.set(-1f, -2f, -1f).nor();
         light.color.set(Color.WHITE);
+        light.intensity = 5.0f;
         sceneManager.environment.add(light);
 
         // setup quick IBL (image based lighting)
@@ -140,7 +151,7 @@ public class XGLTFSystem extends XEntitySystem implements XBatch3D {
         // This texture is provided by the library, no need to have it in your assets.
         brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
 
-        sceneManager.setAmbientLight(1f);
+        sceneManager.setAmbientLight(0.4f);
         sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
         sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
         sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
@@ -148,5 +159,7 @@ public class XGLTFSystem extends XEntitySystem implements XBatch3D {
         // setup skybox
         skybox = new SceneSkybox(environmentCubemap);
         sceneManager.setSkyBox(skybox);
+
+        sceneManager.setCascadeShadowMap(csm = new CascadeShadowMap(3));
     }
 }
