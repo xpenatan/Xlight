@@ -24,7 +24,7 @@ class XEntityServiceImpl implements XEntityService {
     }
 
     public void init(XWorld world) {
-        int initialSize = 100;
+        int initialSize = 200;
         entities = new XEntityArray(initialSize, world);
         matchersMap = new OrderedMap<>();
 

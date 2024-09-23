@@ -1,18 +1,18 @@
 package xlight.engine.impl;
 
-import com.badlogic.gdx.utils.IntArray;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.entity.XEntityState;
+import xlight.engine.list.XIntSet;
 
 class XEntityArray {
     public XEntityImpl[] items;
 
-    private IntArray reusableIds;
+    private XIntSet reusableIds;
 
     private XWorld world;
 
     public XEntityArray(int capacity, XWorld world) {
-        reusableIds = new IntArray(false, capacity);
+        reusableIds = new XIntSet();
         this.world = world;
         items = new XEntityImpl[capacity];
         fillEntities(items);
@@ -58,7 +58,9 @@ class XEntityArray {
         if(entity.state == XEntityState.RELEASE || entity.state == XEntityState.ATTACHED) {
             return false;
         }
-        reusableIds.insert(0, id);
+        if(!reusableIds.put(id)) {
+            throw new RuntimeException("Multiple reusable ids: " + id);
+        }
         entity.reset(false);
         return true;
     }
@@ -132,19 +134,23 @@ class XEntityArray {
                 count++;
             }
         }
-        if(count != reusableIds.size) {
+        int size = reusableIds.getSize();
+        if(count != size) {
             throw new RuntimeException("[DEBUG] Wrong reusable size");
         }
-        return reusableIds.size;
+        return size;
     }
 
     private int getNextId() {
-        if(reusableIds.size == 0) {
+        if(reusableIds.getSize() == 0) {
             int newSize = (int)(items.length * 1.75f);
             resize(newSize);
             fillEntities(items);
         }
-        return reusableIds.removeIndex(0);
+        XIntSet.XIntSetNode head = reusableIds.getHead();
+        int key = head.getKey();
+        reusableIds.removeNode(head);
+        return key;
     }
 
     private void fillEntities(XEntityImpl[] items) {
@@ -152,7 +158,7 @@ class XEntityArray {
             XEntityImpl item = items[i];
             if(item == null) {
                 items[i] = new XEntityImpl(i, world);
-                reusableIds.add(i);
+                reusableIds.put(i);
             }
         }
     }
