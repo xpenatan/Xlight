@@ -35,22 +35,22 @@ jobs:
 
       - name: Build web demos
         run: |
-          ./gradlew :demos:g3d:basic:teavm:web-build
+          ./gradlew :demos:g3d:basic:web:web-build
 
       - name: Build web editor
         run: |
-          ./gradlew :editor:teavm:web-build
+          ./gradlew :editor:web:web-build
 
       - name: Upload g3d/basic demo to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./demos/g3d/basic/teavm/build/dist/webapp
+          publish_dir: ./demos/g3d/basic/web/build/dist/webapp
           destination_dir: ./web/demos/g3d/basic
 
       - name: Upload editor to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./editor/teavm/build/dist/webapp
+          publish_dir: ./editor/web/build/dist/webapp
           destination_dir: ./web/editor
