@@ -52,6 +52,7 @@ public class XGameEditorAppListener implements ApplicationListener {
         editorGameCamera.setType(XCameraType.EDITOR_CAMERA_TYPE);
         editorGameCamera.setPosition(0, 0, 4);
         editorGameCamera.setProjectionMode(PROJECTION_MODE.PERSPECTIVE);
+        editorGameCamera.setNear(0.2f);
 
         editorUICamera = XCamera.newInstance();
         editorUICamera.setViewport(new ScreenViewport());
