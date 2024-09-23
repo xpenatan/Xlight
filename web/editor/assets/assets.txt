@@ -33,7 +33,7 @@ i:d:/demos/g3d/basic/web/build/tmp:0:1
 i:d:/demos/g3d/basic/web/build/tmp/jar:0:1
 i:b:/demos/g3d/basic/web/build/tmp/jar/MANIFEST.MF:25:1
 i:d:/demos/g3d/basic/web/build/tmp/compileJava:0:1
-i:b:/demos/g3d/basic/web/build/tmp/compileJava/previous-compilation-data.bin:3342:1
+i:b:/demos/g3d/basic/web/build/tmp/compileJava/previous-compilation-data.bin:3341:1
 i:d:/demos/g3d/basic/web/build/libs:0:1
 i:b:/demos/g3d/basic/web/build/libs/web-1.0.0-SNAPSHOT.jar:2211:1
 i:d:/demos/g3d/basic/web/build/dist:0:1
@@ -55,6 +55,11 @@ i:b:/demos/g3d/basic/web/build/dist/webapp/assets/models/compare/CompareTransmis
 i:b:/demos/g3d/basic/web/build/dist/webapp/assets/models/compare/CompareMetallic.glb:172180:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/assets/models/compare/CompareSpecular.glb:1408364:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/assets/models/compare/CompareAnisotropy.glb:1015836:1
+i:d:/demos/g3d/basic/web/build/dist/webapp/assets/models/ground:0:1
+i:b:/demos/g3d/basic/web/build/dist/webapp/assets/models/ground/ground.bin:840:1
+i:b:/demos/g3d/basic/web/build/dist/webapp/assets/models/ground/ground.gltf:3090:1
+i:b:/demos/g3d/basic/web/build/dist/webapp/assets/models/ground/ground0.png:134:1
+i:b:/demos/g3d/basic/web/build/dist/webapp/assets/models/ground/Image_0.png:6046:1
 i:d:/demos/g3d/basic/web/build/dist/webapp/assets/com:0:1
 i:d:/demos/g3d/basic/web/build/dist/webapp/assets/com/badlogic:0:1
 i:d:/demos/g3d/basic/web/build/dist/webapp/assets/com/badlogic/gdx:0:1
@@ -97,7 +102,7 @@ i:b:/demos/g3d/basic/web/build/dist/webapp/assets/net/mgsx/gltf/shaders/pbr/ligh
 i:b:/demos/g3d/basic/web/build/dist/webapp/assets/net/mgsx/gltf/shaders/pbr/compat.vs.glsl:276:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/assets/net/mgsx/gltf/shaders/ibl-sun.fs.glsl:492:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/assets/net/mgsx/gltf/shaders/ibl-sun.vs.glsl:185:1
-i:b:/demos/g3d/basic/web/build/dist/webapp/assets/assets.txt:2305:1
+i:b:/demos/g3d/basic/web/build/dist/webapp/assets/assets.txt:2477:1
 i:d:/demos/g3d/basic/web/build/dist/webapp/WEB-INF:0:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/WEB-INF/web.xml:281:1
 i:d:/demos/g3d/basic/web/build/dist/webapp/scripts:0:1
@@ -106,7 +111,7 @@ i:b:/demos/g3d/basic/web/build/dist/webapp/scripts/gdx.wasm.js:190549:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/startup-logo.png:12214:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/index.html:2063:1
 i:d:/demos/g3d/basic/web/build/dist/webapp/teavm:0:1
-i:b:/demos/g3d/basic/web/build/dist/webapp/teavm/app.js:13512446:1
+i:b:/demos/g3d/basic/web/build/dist/webapp/teavm/app.js:13513963:1
 i:d:/demos/g3d/basic/web/build/generated:0:1
 i:d:/demos/g3d/basic/web/build/generated/sources:0:1
 i:d:/demos/g3d/basic/web/build/generated/sources/annotationProcessor:0:1
@@ -133,6 +138,11 @@ i:b:/demos/g3d/basic/assets_raw/models/compare/CompareTransmission.glb:402572:1
 i:b:/demos/g3d/basic/assets_raw/models/compare/CompareMetallic.glb:172180:1
 i:b:/demos/g3d/basic/assets_raw/models/compare/CompareSpecular.glb:1408364:1
 i:b:/demos/g3d/basic/assets_raw/models/compare/CompareAnisotropy.glb:1015836:1
+i:d:/demos/g3d/basic/assets_raw/models/ground:0:1
+i:b:/demos/g3d/basic/assets_raw/models/ground/ground.bin:840:1
+i:b:/demos/g3d/basic/assets_raw/models/ground/ground.gltf:3090:1
+i:b:/demos/g3d/basic/assets_raw/models/ground/ground0.png:134:1
+i:b:/demos/g3d/basic/assets_raw/models/ground/Image_0.png:6046:1
 c:b:/net/mgsx/gltf/shaders/pbr/lights.glsl:9214:1
 c:b:/net/mgsx/gltf/shaders/default.vs.glsl:8824:1
 c:b:/editor/images/menu/ic_stop.png:157:1

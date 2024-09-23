@@ -14,6 +14,11 @@ i:b:/models/compare/CompareTransmission.glb:402572:1
 i:b:/models/compare/CompareMetallic.glb:172180:1
 i:b:/models/compare/CompareSpecular.glb:1408364:1
 i:b:/models/compare/CompareAnisotropy.glb:1015836:1
+i:d:/models/ground:0:1
+i:b:/models/ground/ground.bin:840:1
+i:b:/models/ground/ground.gltf:3090:1
+i:b:/models/ground/ground0.png:134:1
+i:b:/models/ground/Image_0.png:6046:1
 c:b:/net/mgsx/gltf/shaders/pbr/lights.glsl:9214:1
 c:b:/net/mgsx/gltf/shaders/pbr/material.glsl:6993:1
 c:b:/net/mgsx/gltf/shaders/pbr/iridescence.glsl:5118:1
