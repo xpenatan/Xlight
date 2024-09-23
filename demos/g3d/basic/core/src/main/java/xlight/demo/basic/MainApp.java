@@ -45,6 +45,7 @@ public class MainApp implements XApplication {
             public void onLoadSceneBegin(int sceneId) {
                 if(sceneId == 0) {
                     createCameraEntity(es, 0, 0, 3.0f);
+                    createGroundEntity(es);
                     createModelEntity(es, "models/DamagedHelmet.glb", 0, 0, 0);
 
                     Array<String> models = new Array<>();
@@ -97,12 +98,13 @@ public class MainApp implements XApplication {
         es.attachEntity(e);
     }
 
-    public void createGroundEntity(XEntityService es, XComponentService cs) {
+    public void createGroundEntity(XEntityService es) {
         XEntity e = es.obtain();
         e.setName("Ground");
-        cs.attachComponent(e, new XBox3DComponent(new Vector3(50, 1, 50)));
-        cs.attachComponent(e, new XTransformComponent().position(0, 0, 0));
-        cs.attachComponent(e, new XGameComponent());
+        FileHandle assetFile = Gdx.files.internal("models/ground/ground.gltf");
+        e.attachComponent(new XGLTFComponent(assetFile));
+        e.attachComponent(new XTransformComponent().position(0, -2, 0).scale(5, 1, 5));
+        e.attachComponent(new XGameComponent());
         es.attachEntity(e);
     }
 }
