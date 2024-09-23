@@ -114,7 +114,7 @@ public class XECSWorldImpl implements XWorld {
     }
 
     @Override
-    public void tickUpdate(float deltaTime) {
+    public void update(float deltaTime) {
         this.deltaTime = deltaTime;
 
         if(initServices.size > 0) {
@@ -134,6 +134,10 @@ public class XECSWorldImpl implements XWorld {
             service.onTick(this);
         }
         eventService.update();
+    }
+
+    @Override
+    public void tickUpdate() {
         systemService.tickStepSystem();
         systemService.tickUpdateSystem();
     }

@@ -29,10 +29,10 @@ class XEditorManagerImpl implements XEditorManager, XManager {
     public InputMultiplexer defaultMultiplexer;
     public EmuFiles rootEmuFiles;
 
-    boolean overrideGameCamera = true;
-    boolean overrideUICamera = true;
+    boolean overrideGameCamera = false;
+    boolean overrideUICamera = false;
 
-    public XGameState gameState = XGameState.PLAY;
+    public XGameState gameState = XGameState.STOP;
 
     @Override
     public void onAttach(XWorld world) {

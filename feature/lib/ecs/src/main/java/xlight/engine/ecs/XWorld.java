@@ -22,7 +22,8 @@ public interface XWorld {
     XEventService getEventService();
 
     float getDeltaTime();
-    void tickUpdate(float deltaTime);
+    void update(float deltaTime);
+    void tickUpdate();
     void tickUI();
     void tickRender();
 

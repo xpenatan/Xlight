@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import xlight.editor.core.XCameraType;
 import xlight.editor.impl.XGameEditorManagerImpl;
 import xlight.editor.window.gameeditor.ecs.manager.XGameEditorManager;
 import xlight.editor.window.gameeditor.ecs.system.content.aabb.XAABBDebugSystem;
@@ -48,13 +49,13 @@ public class XGameEditorAppListener implements ApplicationListener {
 
         editorGameCamera = XCamera.newInstance();
         editorGameCamera.setViewport(new ScreenViewport());
-        editorGameCamera.setType(1);
+        editorGameCamera.setType(XCameraType.EDITOR_CAMERA_TYPE);
         editorGameCamera.setPosition(0, 0, 4);
         editorGameCamera.setProjectionMode(PROJECTION_MODE.PERSPECTIVE);
 
         editorUICamera = XCamera.newInstance();
         editorUICamera.setViewport(new ScreenViewport());
-        editorUICamera.setType(1);
+        editorUICamera.setType(XCameraType.EDITOR_CAMERA_TYPE);
         editorUICamera.setPosition(0, 0, 0);
         editorUICamera.setProjectionMode(PROJECTION_MODE.PERSPECTIVE);
 
@@ -125,12 +126,15 @@ public class XGameEditorAppListener implements ApplicationListener {
         editorCameraManager.setGameEditorCam(editorGameCamera);
         editorCameraManager.setUIEditorCam(editorUICamera);
 
-        editorUICamera.updateCamera();
+        XGameState gameState = editorManager.getGameState();
+        boolean useEditorCamera = editorManager.shouldOverrideGameCamera();
 
-        systemController.tickTimeStepSystem();
-        systemController.tickUpdateSystem();
-        systemController.tickRenderSystem();
-        systemController.tickUISystem();
+        if(useEditorCamera || gameState == XGameState.STOP) {
+            systemController.tickTimeStepSystem();
+            systemController.tickUpdateSystem();
+            systemController.tickRenderSystem();
+            systemController.tickUISystem();
+        }
 
         editorCameraManager.setGameEditorCam(null);
         editorCameraManager.setUIEditorCam(null);
@@ -144,6 +148,7 @@ public class XGameEditorAppListener implements ApplicationListener {
             cameraController.update();
             XCameraManager.XEditorCamera editorCameraManager = (XCameraManager.XEditorCamera)gameWorld.getManager(XCameraManager.class);
             editorCameraManager.setGameEditorCam(editorGameCamera);
+            gameWorld.update(deltaTime);
             gameWorld.tickRender();
             editorCameraManager.setGameEditorCam(null);
         }
@@ -155,11 +160,13 @@ public class XGameEditorAppListener implements ApplicationListener {
                 editorCameraManager.setGameEditorCam(editorGameCamera);
             }
             if(gameState == XGameState.PAUSE) {
+                gameWorld.update(deltaTime);
                 gameWorld.tickRender();
                 gameWorld.tickUI();
             }
             else if(gameState == XGameState.PLAY) {
-                gameWorld.tickUpdate(deltaTime);
+                gameWorld.update(deltaTime);
+                gameWorld.tickUpdate();
                 gameWorld.tickRender();
                 gameWorld.tickUI();
             }

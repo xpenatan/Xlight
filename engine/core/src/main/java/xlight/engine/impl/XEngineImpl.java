@@ -32,7 +32,8 @@ public class XEngineImpl implements XEngine {
 
     @Override
     public void update(float deltaTime) {
-        world.tickUpdate(deltaTime);
+        world.update(deltaTime);
+        world.tickUpdate();
     }
 
     @Override

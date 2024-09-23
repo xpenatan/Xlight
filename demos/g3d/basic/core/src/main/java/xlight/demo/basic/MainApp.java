@@ -37,7 +37,6 @@ public class MainApp implements XApplication {
         systemService.attachSystem(new XGLTFSystem(XSystemType.RENDER));
 
         XEntityService es = world.getEntityService();
-        XComponentService cs = world.getComponentService();
 
         XSceneManager sceneManager = world.getManager(XSceneManager.class);
 
