@@ -19,6 +19,9 @@ public class XIntSetDataList<NODE_TYPE extends XIntDataMapListNode<Object, NODE_
     }
 
     public void put(int key) {
+        if(map.containsKey(key)) {
+            return;
+        }
         NODE_TYPE node = linkedList.addTail(null);
         node.key = key;
         NODE_TYPE oldNode = map.put(key, node);
