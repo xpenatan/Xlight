@@ -90,6 +90,9 @@ public class XGLTFSystem extends XEntitySystem implements XBatch3D {
 
     @Override
     public void onEntityTick(XEntity e) {
+        if(!e.isVisible()) {
+            return;
+        }
         XRender3DComponent modelComponent = e.getComponent(XRender3DComponent.class);
         XTransformComponent transformComponent = e.getComponent(XTransformComponent.class);
         modelComponent.onUpdate(transformComponent.transform);
