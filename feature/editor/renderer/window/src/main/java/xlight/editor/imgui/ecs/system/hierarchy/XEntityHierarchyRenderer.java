@@ -137,9 +137,10 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
             ImGuiContext currentContext = ImGui.GetCurrentContext();
             ImGuiWindow imGuiWindow = currentContext.get_HoveredWindow();
             if(imGuiWindow != null) {
+                int hoveredId = currentContext.get_HoveredId();
                 int ActiveId = currentContext.get_ActiveId();
-                int HoveredId = imGuiWindow.get_ID();
-                if(childId == HoveredId && ActiveId == 0) {
+                int windowId = imGuiWindow.get_ID();
+                if(windowId == childId && ActiveId == 0 && hoveredId == 0) {
                     selectionManager.unselectAllTargets();
                 }
             }
