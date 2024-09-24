@@ -2,6 +2,7 @@ package xlight.engine.impl;
 
 import org.junit.Before;
 import org.junit.Test;
+import xlight.engine.ecs.XWorld;
 
 public class XEntityServiceImplTest {
 
@@ -9,7 +10,8 @@ public class XEntityServiceImplTest {
 
     @Before
     public void setUp() {
-        service = new XEntityServiceImpl();
+        XWorld world = new XECSWorldImpl();
+        service = new XEntityServiceImpl(world);
     }
 
     @Test

@@ -6,7 +6,7 @@ import imgui.ImGuiDir;
 import imgui.ImGuiInternal;
 import imgui.ImGuiViewport;
 import imgui.idl.helper.IDLInt;
-import xlight.editor.core.ecs.event.XEditorEvents;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.imgui.ecs.system.XContentBrowserWindowSystem;
 import xlight.editor.imgui.ecs.system.game.XGameEditorAppListener;
 import xlight.editor.imgui.ecs.system.game.XGameWindowSystem;
@@ -42,7 +42,7 @@ public class XImGuiWindowsManager implements XManager {
 
         featureService.addFeatureDependency(() -> {
             // When all imgui windows are ready we send a editor ready event
-            world.getEventService().sendEvent(XEditorEvents.EVENT_EDITOR_READY);
+            world.getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_READY);
         }, XGameEditorAppListener.FEATURE);
     }
 

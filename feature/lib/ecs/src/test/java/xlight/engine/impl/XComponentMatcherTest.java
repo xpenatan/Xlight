@@ -21,7 +21,7 @@ public class XComponentMatcherTest {
     @Test
     public void should_match_matcher() {
         XECSWorldImpl world = new XECSWorldImpl();
-        XEntityServiceImpl entityService = new XEntityServiceImpl();
+        XEntityServiceImpl entityService = new XEntityServiceImpl(world);
         XComponentServiceImpl componentService = new XComponentServiceImpl();
         entityService.init(world);
         componentService.init(world, entityService);
@@ -124,7 +124,7 @@ public class XComponentMatcherTest {
     @Test
     public void test_matcher_hash() {
         XECSWorldImpl world = new XECSWorldImpl();
-        XEntityServiceImpl entityService = new XEntityServiceImpl();
+        XEntityServiceImpl entityService = new XEntityServiceImpl(world);
         XComponentServiceImpl componentService = new XComponentServiceImpl();
         entityService.init(world);
         componentService.init(world, entityService);

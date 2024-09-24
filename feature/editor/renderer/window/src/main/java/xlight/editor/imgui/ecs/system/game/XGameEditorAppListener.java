@@ -12,7 +12,7 @@ import xlight.editor.window.gameeditor.ecs.system.content.entity.XBoundingBoxDeb
 import xlight.editor.window.gameeditor.ecs.system.content.selection.XSelectingSystem;
 import xlight.engine.core.XEngineEvent;
 import xlight.editor.core.ecs.XGameState;
-import xlight.editor.core.ecs.event.XEditorEvents;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.window.gameeditor.ecs.system.XGameEditorSystem;
 import xlight.editor.window.gameeditor.ecs.system.content.buttons.XFloatingButtonSystem;
@@ -86,14 +86,14 @@ public class XGameEditorAppListener implements ApplicationListener {
 
         editorManager = editorWorld.getManager(XEditorManager.class);
 
-        editorWorld.getEventService().addEventListener(XEditorEvents.EVENT_ENGINE_CREATED, new XEventListener() {
+        editorWorld.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 return false;
             }
         });
 
-        editorWorld.getEventService().addEventListener(XEditorEvents.EVENT_ENGINE_DISPOSED, new XEventListener() {
+        editorWorld.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 return false;

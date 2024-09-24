@@ -17,7 +17,7 @@ public class XComponentServiceImplTest {
     @Before
     public void setUp() {
         world = new XECSWorldImpl();
-        XEntityServiceImpl entityService = new XEntityServiceImpl();
+        XEntityServiceImpl entityService = new XEntityServiceImpl(world);
         service = new XComponentServiceImpl();
         service.init(world, entityService);
     }

@@ -1,6 +1,6 @@
 package xlight.editor.impl;
 
-import xlight.editor.core.ecs.event.XEditorEvents;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.editor.core.project.XProjectOptions;
 import xlight.engine.ecs.XWorld;
@@ -28,7 +28,7 @@ public class XProjectManagerImpl implements XProjectManager, XManager {
         if(world != null&& options != null) {
             XEventService eventService = world.getEventService();
             this.project = options;
-            eventService.sendEvent(XEditorEvents.EVENT_NEW_PROJECT, options);
+            eventService.sendEvent(XEditorEvent.EVENT_NEW_PROJECT, options);
         }
     }
 }

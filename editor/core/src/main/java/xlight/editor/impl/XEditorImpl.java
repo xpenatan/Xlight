@@ -9,7 +9,7 @@ import xlight.editor.assets.XEditorAssets;
 import xlight.editor.core.XEditor;
 import xlight.editor.core.ecs.manager.XEntitySelectionManager;
 import xlight.engine.core.ecs.XPreferencesManager;
-import xlight.editor.core.ecs.event.XEditorEvents;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.editor.core.project.XProjectOptions;
@@ -54,11 +54,11 @@ public class XEditorImpl implements XEditor {
         editorEngine.update(1); // Do a single step to attach editor data
 
         XEventService eventService = world.getEventService();
-        eventService.addEventListener(XEditorEvents.EVENT_EDITOR_READY, event -> {
+        eventService.addEventListener(XEditorEvent.EVENT_EDITOR_READY, event -> {
             onEditorReady(event.getWorld());
             return false;
         });
-        eventService.addEventListener(XEditorEvents.EVENT_ENGINE_DISPOSED, event -> {
+        eventService.addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, event -> {
             XEditorAssets.disposeAssets();
             return false;
         });

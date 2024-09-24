@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.IntArray;
-import xlight.editor.core.ecs.event.XEditorEvents;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.window.gameeditor.ecs.system.XGameEditorSystem;
 import xlight.engine.camera.XCamera;
@@ -42,7 +42,7 @@ public class XBoundingBoxDebugSystem extends XGameEditorSystem {
         if(gameEngine != null) {
             init(gameEngine);
         }
-        world.getEventService().addEventListener(XEditorEvents.EVENT_ENGINE_CREATED, new XEventListener() {
+        world.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 XEngine engine = event.getUserData();
@@ -50,7 +50,7 @@ public class XBoundingBoxDebugSystem extends XGameEditorSystem {
                 return false;
             }
         });
-        world.getEventService().addEventListener(XEditorEvents.EVENT_ENGINE_DISPOSED, new XEventListener() {
+        world.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 entities = null;

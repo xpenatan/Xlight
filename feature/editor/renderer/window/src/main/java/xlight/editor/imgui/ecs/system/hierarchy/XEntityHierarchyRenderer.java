@@ -16,11 +16,12 @@ import imgui.ImVec2;
 import imgui.ImVec4;
 import imgui.extension.imlayout.ImLayout;
 import xlight.editor.assets.XEditorAssets;
-import xlight.editor.core.ecs.event.XEditorEvents;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XEntitySelectionManager;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.core.XEngine;
+import xlight.engine.core.XEngineEvent;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XGameComponent;
@@ -29,7 +30,7 @@ import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
 import xlight.engine.ecs.event.XEventService;
-import xlight.engine.list.XIntMapListNode;
+import xlight.engine.ecs.event.XWorldEvent;
 import xlight.engine.list.XIntSet;
 import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
@@ -62,20 +63,23 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
         selectionManager = world.getManager(XEntitySelectionManager.class);
 
-        eventService.addEventListener(XEditorEvents.EVENT_ENGINE_CREATED, new XEventListener() {
-            @Override
-            public boolean onEvent(XEvent event) {
-                XEngine gameEngine = event.getUserData();
-                renderTree = true;
-                return false;
-            }
+        eventService.addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, event -> {
+            XEngine gameEngine = event.getUserData();
+            XWorld gameEngineWorld = gameEngine.getWorld();
+            gameEngineWorld.getEventService().addEventListener(XWorldEvent.EVENT_DETACH_ENTITY, new XEventListener() {
+                @Override
+                public boolean onEvent(XEvent event) {
+                    XEntity entity = event.getUserData();
+                    selectionManager.unselectTarget(entity);
+                    return false;
+                }
+            });
+            renderTree = true;
+            return false;
         });
-        eventService.addEventListener(XEditorEvents.EVENT_ENGINE_DISPOSED, new XEventListener() {
-            @Override
-            public boolean onEvent(XEvent event) {
-                renderTree = false;
-                return false;
-            }
+        eventService.addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, event -> {
+            renderTree = false;
+            return false;
         });
     }
 

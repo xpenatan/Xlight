@@ -10,6 +10,7 @@ public interface XEntitySelectionManager {
     void unselectAllTargets();
     XEntity getCurrentSelectedTarget();
     XList<XEntity> getSelectedTargets();
+    void unselectTarget(XEntity target);
 
     void moveAndStartDragging(XGizmoRenderer.TRANSFORM_TYPE transformType, int transformMode, Vector3 position, Vector3 rotation);
     void removeDragging();

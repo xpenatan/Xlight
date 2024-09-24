@@ -9,7 +9,7 @@ import xlight.engine.aabb.ecs.service.XAABBService;
 import xlight.engine.aabb.ecs.service.XAABBServiceDefault;
 import xlight.engine.core.XEngineEvent;
 import xlight.editor.core.ecs.XGameState;
-import xlight.editor.core.ecs.event.XEditorEvents;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.project.XAppLoader;
 import xlight.editor.core.project.XProjectOptions;
 import xlight.engine.core.XApplication;
@@ -44,7 +44,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
         defaultInput.setInputProcessor(defaultMultiplexer);
 
         XEventService eventService = world.getEventService();
-        eventService.addEventListener(XEditorEvents.EVENT_NEW_PROJECT, new XEventListener() {
+        eventService.addEventListener(XEditorEvent.EVENT_NEW_PROJECT, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 XProjectOptions projectOptions = event.getUserData();
@@ -53,7 +53,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
 
                     if(oldEngine != null) {
                         gameEngine = null;
-                        eventService.sendEvent(XEditorEvents.EVENT_ENGINE_DISPOSED, oldEngine, new XEventService.XSendEventListener() {
+                        eventService.sendEvent(XEditorEvent.EVENT_ENGINE_DISPOSED, oldEngine, new XEventService.XSendEventListener() {
                             @Override
                             public void onBeginEvent(XEvent event) {
                                 oldEngine.dispose();
@@ -99,7 +99,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
 
                     setupGameWorld(gameEngine.getWorld());
 
-                    eventService.sendEvent(XEditorEvents.EVENT_ENGINE_CREATED, gameEngine, new XEventService.XSendEventListener() {
+                    eventService.sendEvent(XEditorEvent.EVENT_ENGINE_CREATED, gameEngine, new XEventService.XSendEventListener() {
                         @Override
                         public void onBeginEvent(XEvent event) {
                             editorManager.gameEngine = gameEngine;

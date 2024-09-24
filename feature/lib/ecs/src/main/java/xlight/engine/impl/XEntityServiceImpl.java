@@ -10,6 +10,7 @@ import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
+import xlight.engine.ecs.event.XWorldEvent;
 import xlight.engine.list.XList;
 import xlight.engine.math.XMath;
 
@@ -19,8 +20,10 @@ class XEntityServiceImpl implements XEntityService {
     private OrderedMap<String, XComponentMatcherImpl> matchersMap;
     private XList<XEntity> entityList;
     private int entitySize;
+    private XWorld world;
 
-    public XEntityServiceImpl() {
+    public XEntityServiceImpl(XWorld world) {
+        this.world = world;
     }
 
     public void init(XWorld world) {
@@ -78,6 +81,9 @@ class XEntityServiceImpl implements XEntityService {
             entitySize++;
             // Loop all matchers if entity mask bits match
             updateEntityAdded((XEntityImpl)entity);
+
+            // Send event as soon as possible.
+            world.getEventService().sendEvent(XWorldEvent.EVENT_ATTACH_ENTITY, entity, null, false);
             return true;
         }
         return false;
@@ -87,6 +93,8 @@ class XEntityServiceImpl implements XEntityService {
     public boolean detachEntity(XEntity entity) {
         boolean flag = entities.detachEntity(entity.getId());
         if(flag) {
+            // Send event as soon as possible.
+            world.getEventService().sendEvent(XWorldEvent.EVENT_DETACH_ENTITY, entity, null, false);
             entitySize--;
             XEntityImpl e = (XEntityImpl)entity;
             // Loop all matchers if entity mask bits match

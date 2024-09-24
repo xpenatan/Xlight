@@ -61,6 +61,10 @@ public abstract class XObjectSelection<T, NODE extends XDataArray.XDataArrayNode
         }
     }
 
+    public void unselectTarget(T t) {
+        removeSelectedTargetInternal(t);
+    }
+
     public T getCurrentSelectedTarget() {
         if(selectedTargets.getSize() > 0) {
             return selectedTargets.get(0);
