@@ -313,34 +313,47 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
         ImLayout.BeginAlign("imlayout2", ImLayout.MATCH_PARENT, ImLayout.MATCH_PARENT, 1, 0.5f, -4, 0);
         {
-            ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, Color.toIntBits(0, 0, 0, 0));
 
+            ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, Color.toIntBits(0, 0, 0, 0));
             boolean savable = entity.isSavable();
-            float alpha = savable ? 1.0f : 0.4f;
-            if(ImGui.ImageButton("savable", XEditorAssets.saveTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(14, 15), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(0.9f, 1), ImVec4.TMP_1.set(0, 0, 0, 0), ImVec4.TMP_2.set(1, 1, 1, alpha))) {
-                entity.setSavable(!savable);
+            ImLayout.BeginAlign("saveID", ImLayout.WRAP_PARENT, ImLayout.MATCH_PARENT, 0, 0.5f);
+            {
+                float alpha = savable ? 1.0f : 0.4f;
+                if(ImGui.ImageButton("savable", XEditorAssets.saveTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(14, 15), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(0.9f, 1), ImVec4.TMP_1.set(0, 0, 0, 0), ImVec4.TMP_2.set(1, 1, 1, alpha))) {
+                    entity.setSavable(!savable);
+                }
             }
+            ImLayout.EndAlign();
             if (ImGui.BeginItemTooltip()) {
                 ImGui.Text("Savable " + savable);
                 ImGui.EndTooltip();
             }
-            ImGui.SameLine(0, 1);
+            ImGui.SameLine(0, 0);
 
             boolean visible = entity.isVisible();
             int tex = visible ? XEditorAssets.ic_eyeOpenTexture.getTextureObjectHandle() : XEditorAssets.ic_eyeCloseTexture.getTextureObjectHandle();
-            if(ImGui.ImageButton("visibility", tex, ImVec2.TMP_1.set(15, 15))) {
-                entity.setVisible(!visible);
+
+            ImLayout.BeginAlign("saveID", ImLayout.WRAP_PARENT, ImLayout.MATCH_PARENT, 0, 0.5f);
+            {
+                if(ImGui.ImageButton("visibility", tex, ImVec2.TMP_1.set(15, 15))) {
+                    entity.setVisible(!visible);
+                }
             }
+            ImLayout.EndAlign();
             if (ImGui.BeginItemTooltip()) {
                 ImGui.Text("Visibility " + visible);
                 ImGui.EndTooltip();
             }
 
-            ImGui.SameLine(0, 1);
-            if(ImGui.ImageButton("entityTrash", XEditorAssets.ic_trashTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(15, 15))) {
-                XEntityService entityService = gameWorld.getEntityService();
-                entityService.releaseEntity(entity);
+            ImGui.SameLine(0, 0);
+            ImLayout.BeginAlign("saveID", ImLayout.WRAP_PARENT, ImLayout.MATCH_PARENT, 0, 0.5f);
+            {
+                if(ImGui.ImageButton("entityTrash", XEditorAssets.ic_trashTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(15, 15))) {
+                    XEntityService entityService = gameWorld.getEntityService();
+                    entityService.releaseEntity(entity);
+                }
             }
+            ImLayout.EndAlign();
             if (ImGui.BeginItemTooltip()) {
                 ImGui.Text("Delete entity");
                 ImGui.EndTooltip();
