@@ -3,6 +3,7 @@ package xlight.editor.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.IntMap;
 import imgui.ImDrawData;
 import imgui.ImFontAtlas;
 import imgui.ImGui;
@@ -27,10 +28,15 @@ import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.editor.imgui.window.XImGuiWindowContext;
 import xlight.editor.imgui.window.XMainWindow;
+import xlight.engine.core.editor.ui.XUIData;
+import xlight.engine.core.editor.ui.XUIDataTypeListener;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.component.XComponent;
+import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
 import xlight.engine.ecs.manager.XManager;
+import xlight.engine.ecs.system.XSystem;
 import xlight.engine.ecs.system.XSystemBeginEndListener;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.ecs.system.XSystemType;
@@ -51,8 +57,17 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
     private boolean init = false;
     int rootDockspaceID;
 
+
+    private XUIDataTypeListener<XEntity> entityListener;
+    private IntMap<XUIDataTypeListener<? extends XComponent>> componentListenerMap;
+    private IntMap<XUIDataTypeListener<? extends XManager>> managerListenerMap;
+    private IntMap<XUIDataTypeListener<? extends XSystem>> systemListenerMap;
+
     public XImGuiManagerImpl() {
         windowContexts = new XIntMap<>();
+        componentListenerMap = new IntMap<>();
+        managerListenerMap = new IntMap<>();
+        systemListenerMap = new IntMap<>();
     }
 
     @Override
@@ -80,6 +95,8 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         XEditorManager editorManager = world.getManager(XEditorManager.class);
         XImGuiManager imguiManager = world.getManager(XImGuiManager.class);
         InputMultiplexer editorInput = editorManager.getDefaultMultiplexer();
+
+        world.registerGlobalData(XUIData.class, new XUIDataImpl());
 
         editorContext = ImGui.CreateContext();
         ImGuiIO imGuiIO = ImGui.GetIO();
@@ -159,6 +176,46 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
     @Override
     public ImGuiContext getEditorContext() {
         return editorContext;
+    }
+
+    @Override
+    public void registerEntityUIListener(XUIDataTypeListener<XEntity> listener) {
+        entityListener = listener;
+    }
+
+    @Override
+    public XUIDataTypeListener<XEntity> getEntityUIListener() {
+        return entityListener;
+    }
+
+    @Override
+    public <T extends XComponent> void registerUIComponentListener(Class<T> type, XUIDataTypeListener<T> listener) {
+        componentListenerMap.put(type.hashCode(), listener);
+    }
+
+    @Override
+    public <T extends XComponent> XUIDataTypeListener<T> getUIComponentListener(Class<T> type) {
+        return (XUIDataTypeListener<T>)componentListenerMap.get(type.hashCode());
+    }
+
+    @Override
+    public <T extends XSystem> void registerUISystemListener(Class<T> type, XUIDataTypeListener<T> listener) {
+
+    }
+
+    @Override
+    public <T extends XSystem> XUIDataTypeListener<T> getUISystemListener(Class<T> type) {
+        return null;
+    }
+
+    @Override
+    public <T extends XManager> void registerUIManagerListener(Class<T> type, XUIDataTypeListener<T> listener) {
+
+    }
+
+    @Override
+    public <T extends XManager> XUIDataTypeListener<T> getUIManagerListener(Class<T> type) {
+        return null;
     }
 
     @Override

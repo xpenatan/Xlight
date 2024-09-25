@@ -1,10 +1,12 @@
 package xlight.engine.core.editor.ui.options;
 
-public class XUIEditText3Op {
+import com.badlogic.gdx.math.Vector3;
 
-    private static final XUIEditText3Op op = new XUIEditText3Op();
+public class XUIOpEditText3 {
 
-    public static XUIEditText3Op get() {
+    private static final XUIOpEditText3 op = new XUIOpEditText3();
+
+    public static XUIOpEditText3 get() {
         op.reset();
         return op;
     }
@@ -16,6 +18,8 @@ public class XUIEditText3Op {
     public String tooltip1;
     public String tooltip2;
     public String tooltip3;
+
+    public final Vector3 value = new Vector3();
 
     public void reset() {
         label1 = "X:";

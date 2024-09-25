@@ -1,10 +1,10 @@
 package xlight.engine.core.editor.ui.options;
 
-public class XUIEditText4Op {
+public class XUIOpEditText4 {
 
-    private static final XUIEditText4Op op = new XUIEditText4Op();
+    private static final XUIOpEditText4 op = new XUIOpEditText4();
 
-    public static XUIEditText4Op get() {
+    public static XUIOpEditText4 get() {
         op.reset();
         return op;
     }

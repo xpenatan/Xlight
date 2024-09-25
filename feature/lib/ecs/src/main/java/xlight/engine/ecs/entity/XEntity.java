@@ -32,6 +32,9 @@ public interface XEntity {
      */
     <T extends XComponent> void detachComponent(Class<T> type);
 
+    int getComponentsSize();
+    XComponent getComponentAt(int index);
+
     void setName(String name);
     String getName();
 

@@ -27,5 +27,10 @@ public interface XWorld {
     void tickUI();
     void tickRender();
 
+    void registerGlobalData(Class<?> type, Object data);
+    boolean removeGlobalData(Class<?> type);
+    boolean containsGlobalData(Class<?> type);
+    <T> T getGlobalData(Class<?> type);
+
     static XWorld newInstance() { return new XECSWorldImpl(); }
 }

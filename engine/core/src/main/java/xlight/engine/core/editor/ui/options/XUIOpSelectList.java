@@ -1,15 +1,17 @@
 package xlight.engine.core.editor.ui.options;
 
-public class XUISelectListOp {
+public class XUIOpSelectList {
 
-    private static final XUISelectListOp op = new XUISelectListOp();
+    private static final XUIOpSelectList op = new XUIOpSelectList();
 
-    public static XUISelectListOp get() {
+    public static XUIOpSelectList get() {
         op.reset();
         return op;
     }
 
     public String tooltip;
+
+    public int value;
 
     public void reset() {
         tooltip = "";

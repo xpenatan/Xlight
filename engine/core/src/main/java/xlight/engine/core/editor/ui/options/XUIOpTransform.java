@@ -1,10 +1,10 @@
 package xlight.engine.core.editor.ui.options;
 
-public class XUITransformOp {
+public class XUIOpTransform {
 
-    private static final XUITransformOp op = new XUITransformOp();
+    private static final XUIOpTransform op = new XUIOpTransform();
 
-    public static XUITransformOp get() {
+    public static XUIOpTransform get() {
         op.reset();
         return op;
     }

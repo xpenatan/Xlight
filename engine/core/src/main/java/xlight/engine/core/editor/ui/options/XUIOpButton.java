@@ -1,10 +1,10 @@
 package xlight.engine.core.editor.ui.options;
 
-public class XUIButtonOp {
+public class XUIOpButton {
 
-    private static final XUIButtonOp op = new XUIButtonOp();
+    private static final XUIOpButton op = new XUIOpButton();
 
-    public static XUIButtonOp get() {
+    public static XUIOpButton get() {
         op.reset();
         return op;
     }

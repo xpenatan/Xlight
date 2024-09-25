@@ -1,10 +1,10 @@
 package xlight.engine.core.editor.ui.options;
 
-public class XUICheckboxOp {
+public class XUIOpCheckbox {
 
-    private static final XUICheckboxOp op = new XUICheckboxOp();
+    private static final XUIOpCheckbox op = new XUIOpCheckbox();
 
-    public static XUICheckboxOp get() {
+    public static XUIOpCheckbox get() {
         op.reset();
         return op;
     }
@@ -13,8 +13,11 @@ public class XUICheckboxOp {
 
     public String tooltip;
 
+    public boolean value;
+
     public void reset() {
         label = "###input";
         tooltip = "";
+        value = false;
     }
 }

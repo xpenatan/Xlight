@@ -25,7 +25,10 @@ public class XECSWorldImpl implements XWorld {
     XSystemServiceImpl systemService;
     XEventServiceImpl eventService;
 
+    private final IntMap<Object> globalData;
+
     public XECSWorldImpl() {
+        globalData = new IntMap<>();
         services = new XIntMap<>();
         managers = new IntMap<>();
         entityService = new XEntityServiceImpl(this);
@@ -150,5 +153,25 @@ public class XECSWorldImpl implements XWorld {
     @Override
     public void tickRender() {
         systemService.tickRenderSystem();
+    }
+
+    @Override
+    public void registerGlobalData(Class<?> type, Object data) {
+        globalData.put(type.hashCode(), data);
+    }
+
+    @Override
+    public boolean removeGlobalData(Class<?> type) {
+        return globalData.remove(type.hashCode()) != null;
+    }
+
+    @Override
+    public boolean containsGlobalData(Class<?> type) {
+        return globalData.containsKey(type.hashCode());
+    }
+
+    @Override
+    public <T> T getGlobalData(Class<?> type) {
+        return (T)globalData.get(type.hashCode());
     }
 }

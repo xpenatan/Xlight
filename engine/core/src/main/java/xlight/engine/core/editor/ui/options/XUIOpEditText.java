@@ -1,10 +1,12 @@
 package xlight.engine.core.editor.ui.options;
 
-public class XUIEditTextOp {
+import com.badlogic.gdx.math.Vector3;
 
-    private static final XUIEditTextOp op = new XUIEditTextOp();
+public class XUIOpEditText {
 
-    public static XUIEditTextOp get() {
+    private static final XUIOpEditText op = new XUIOpEditText();
+
+    public static XUIOpEditText get() {
         op.reset();
         return op;
     }
@@ -16,6 +18,8 @@ public class XUIEditTextOp {
     /** Only for int and float */
     public boolean enableStep;
     public float step;
+
+    public float value;
 
     public void reset() {
         label = "";

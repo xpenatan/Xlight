@@ -33,6 +33,8 @@ include(":feature:lib:properties")
 include(":feature:lib:aabb:core")
 include(":feature:lib:aabb:default")
 include(":feature:lib:string")
+include(":feature:lib:imgui:ui:core")
+include(":feature:lib:imgui:ui:file-browser")
 
 // Engine features
 

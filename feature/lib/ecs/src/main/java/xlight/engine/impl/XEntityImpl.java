@@ -95,6 +95,20 @@ class XEntityImpl implements XEntity {
     }
 
     @Override
+    public int getComponentsSize() {
+        return componentsIndex.size;
+    }
+
+    @Override
+    public XComponent getComponentAt(int index) {
+        if(index < 0 || index >= componentsIndex.size) {
+            return null;
+        }
+        int i = componentsIndex.get(index);
+        return world.getComponentService().getComponentIndex(this, i);
+    }
+
+    @Override
     public void setName(String name) {
         String trim = name.trim();
         if(trim.isEmpty()) {

@@ -75,6 +75,5 @@ public interface XTransform {
     class XTransformMode {
         final public static int GLOBAL = 0;
         final public static int LOCAL = 1;
-        final public static int DEFAULT = 2;
     }
 }

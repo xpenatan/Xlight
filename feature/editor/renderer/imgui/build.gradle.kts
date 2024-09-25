@@ -15,6 +15,7 @@ dependencies {
 
     implementation(project(":feature:lib:ecs"))
     implementation(project(":feature:lib:list"))
+    implementation(project(":feature:lib:imgui:ui:core"))
 
     implementation(project(":feature:engine:init"))
 
