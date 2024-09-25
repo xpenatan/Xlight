@@ -21,16 +21,12 @@ import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XEntitySelectionManager;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.core.XEngine;
-import xlight.engine.core.XEngineEvent;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XGameComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
-import xlight.engine.ecs.event.XEvent;
-import xlight.engine.ecs.event.XEventListener;
 import xlight.engine.ecs.event.XEventService;
-import xlight.engine.ecs.event.XWorldEvent;
 import xlight.engine.list.XIntSet;
 import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
@@ -64,16 +60,6 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
         selectionManager = world.getManager(XEntitySelectionManager.class);
 
         eventService.addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, event -> {
-            XEngine gameEngine = event.getUserData();
-            XWorld gameEngineWorld = gameEngine.getWorld();
-            gameEngineWorld.getEventService().addEventListener(XWorldEvent.EVENT_DETACH_ENTITY, new XEventListener() {
-                @Override
-                public boolean onEvent(XEvent event) {
-                    XEntity entity = event.getUserData();
-                    selectionManager.unselectTarget(entity);
-                    return false;
-                }
-            });
             renderTree = true;
             return false;
         });

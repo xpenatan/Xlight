@@ -76,25 +76,35 @@ class XComponentServiceImpl implements XComponentService {
     }
 
     @Override
-    public <T extends XComponent> void attachComponent(XEntity entity, XComponent component) {
+    public boolean attachComponent(XEntity entity, XComponent component) {
         XComponentType componentType = getComponentInternal(component.getClassType());
         if(componentType != null) {
             int index = componentType.getIndex();
             XPair<XComponentType, XComponentArray> pair = components.get(index);
             XComponentArray componentList = pair.b;
-            setComponent((XEntityImpl)entity, componentList, componentType, component);
+            return setComponent((XEntityImpl)entity, componentList, componentType, component);
         }
+        return false;
     }
 
     @Override
-    public <T extends XComponent> void detachComponent(XEntity entity, Class<T> type) {
+    public <T extends XComponent> boolean detachComponent(XEntity entity, Class<T> type) {
         XComponentType componentType = getComponentInternal(type);
         if(componentType != null) {
             int index = componentType.getIndex();
             XPair<XComponentType, XComponentArray> pair = components.get(index);
             XComponentArray componentList = pair.b;
-            setComponent((XEntityImpl)entity, componentList, componentType, null);
+            return setComponent((XEntityImpl)entity, componentList, componentType, null);
         }
+        return false;
+    }
+
+    @Override
+    public boolean detachComponent(XEntity entity, XComponent component) {
+        if(component == null) {
+            return false;
+        }
+        return detachComponent(entity, component.getClassType());
     }
 
     @Override
@@ -122,8 +132,9 @@ class XComponentServiceImpl implements XComponentService {
         return (T)component;
     }
 
-    private void setComponent(XEntityImpl entity, XComponentArray componentList, XComponentType componentType, XComponent component) {
+    private boolean setComponent(XEntityImpl entity, XComponentArray componentList, XComponentType componentType, XComponent component) {
         int entityIndex = entity.getId();
+        boolean ret = false;
         if(entityIndex >= 0) {
             componentList.ensureCapacity(entityIndex + 1);
             int componentIndex = componentType.getIndex();
@@ -134,6 +145,7 @@ class XComponentServiceImpl implements XComponentService {
                     entity.componentsIndex.add(componentIndex);
                     entityService.onComponentAdded(entity, component);
                     component.onAttach(world, entity);
+                    ret = true;
                 }
             }
             else {
@@ -146,9 +158,11 @@ class XComponentServiceImpl implements XComponentService {
                     entityService.onComponentRemoved(entity, tmpBits, entity.componentMask);
                     entity.componentsIndex.removeValue(componentIndex);
                     componentFound.onDetach(world, entity);
+                    ret = true;
                 }
             }
             componentList.set(entityIndex, component);
         }
+        return ret;
     }
 }

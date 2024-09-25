@@ -19,6 +19,7 @@ import xlight.engine.camera.XCamera;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
@@ -56,11 +57,17 @@ public class XSelectingSystem extends XGameEditorSystem {
 
     private boolean targetLock = false;
 
+    private final Class<? extends XComponent> worldType;
+
+    public XSelectingSystem(Class<? extends XComponent> worldType) {
+        this.worldType = worldType;
+    }
+
     @Override
     public void onSystemAttach(XWorld world, XSystemData systemData) {
         selectionManager = world.getManager(XEntitySelectionManager.class);
         editorManager = world.getManager(XEditorManager.class);
-        selectionRenderer = new XSelectionRenderer();
+        selectionRenderer = new XSelectionRenderer(worldType);
         gizmoRenderer = new XGizmoRenderer();
         shader3DPicker = new XPicker3DFrameBuffer();
         shader2DPicker = new XPicker2DFrameBuffer();
@@ -104,7 +111,13 @@ public class XSelectingSystem extends XGameEditorSystem {
     private void renderGizmo(XCamera camera) {
         XEntity currentSelectedTarget = selectionManager.getCurrentSelectedTarget();
         if(currentSelectedTarget != null) {
-            XTransform transform = currentSelectedTarget.getComponent(XTransformComponent.class).transform;
+            XTransformComponent transformComponent = currentSelectedTarget.getComponent(XTransformComponent.class);
+            if(transformComponent == null) {
+                // Not possible to render gizmo without transform component
+                return;
+            }
+
+            XTransform transform = transformComponent.transform;
             Quaternion quaternion = transform.getQuaternion();
             Vector3 position = transform.getPosition();
             XRotSeq rotationSequence = transform.getRotationSequence();

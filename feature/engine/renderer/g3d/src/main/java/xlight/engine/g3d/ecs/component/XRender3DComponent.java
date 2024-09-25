@@ -77,7 +77,7 @@ public abstract class XRender3DComponent implements XComponent, XRender3D, XPool
     }
 
     @Override
-    public final Class<?> getClassType() {
+    public final Class<XRender3DComponent> getClassType() {
         return XRender3DComponent.class;
     }
 }

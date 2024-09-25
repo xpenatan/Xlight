@@ -16,5 +16,5 @@ public interface XComponent {
      */
     default void onDetach(XWorld world, XEntity entity) {}
 
-    default Class<?> getClassType() { return getClass(); }
+     default Class<? extends XComponent> getClassType() { return getClass(); }
 }

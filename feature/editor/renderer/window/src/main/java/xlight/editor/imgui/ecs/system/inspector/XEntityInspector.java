@@ -6,12 +6,15 @@ import imgui.extension.imlayout.ImGuiCollapseLayoutOptions;
 import xlight.editor.assets.XEditorAssets;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.engine.core.editor.ui.XUIData;
+import xlight.engine.core.editor.ui.XUIDataListener;
 import xlight.engine.core.editor.ui.XUIDataTypeListener;
 import xlight.engine.core.editor.ui.options.XUIOpCheckbox;
 import xlight.engine.core.editor.ui.options.XUIOpStringEditText;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.ecs.event.XEvent;
+import xlight.engine.ecs.event.XEventService;
 import xlight.engine.imgui.ui.XCollapseWidget;
 import xlight.engine.imgui.ui.XUITableUtil;
 
@@ -36,7 +39,6 @@ public class XEntityInspector {
         XCollapseWidget.CollaspeWidgetData widgetData = XCollapseWidget.begin(id, groupName, XCollapseWidget.WHITE_COLOR, texturesArray, defaultOptions);
         if(widgetData.isOpen) {
 
-            uiData.beginTable();
             {
                 // TODO improve getting id as string
                 uiData.text("ID:", "" + entity.getId());
@@ -57,11 +59,11 @@ public class XEntityInspector {
                 XEntity parent = entity.getParent();
                 uiData.text("Parent:", parent != null ? parent.getName() : "-1");
             }
-            uiData.endTable();
 
             if(entityUIListener != null) {
                 entityUIListener.onUIDraw(entity, uiData);
             }
+            uiData.endTable();
 
             renderComponents(editorWorld, gameWorld, entity, uiData);
         }
@@ -100,7 +102,46 @@ public class XEntityInspector {
     }
 
     private void renderComponent(XWorld editorWorld, XWorld gameWorld, XEntity entity, XUIData uiData, XComponent component) {
+        String groupName = component.getClass().getSimpleName();
+        Texture[] texturesArray = XCollapseWidget.getTexturesArray();
+        texturesArray[0] = XEditorAssets.ic_trashTexture;
 
+        ImGuiCollapseLayoutOptions defaultOptions = XCollapseWidget.defaultOptions;
+        defaultOptions.set_paddingBottom(0);
+        XCollapseWidget.defaultOptions.set_openDefault(true);
+        int id = groupName.hashCode();
+        XCollapseWidget.CollaspeWidgetData widgetData = XCollapseWidget.begin(id, groupName, XCollapseWidget.WHITE_COLOR, texturesArray, defaultOptions);
 
+        if(widgetData.buttonIndex == 0) {
+            gameWorld.getEventService().sendEvent(-1, null, new XEventService.XSendEventListener() {
+                @Override
+                public void onEndEvent(XEvent event) {
+                    entity.detachComponent(component);
+                }
+            });
+//            if(entity.detachComponent(component)) {
+//                componentRemove = true;
+//                if(metaClass.isRegistered()) {
+//                    if(component instanceof XPoolable) {
+//                        poolController.releaseObject(metaClass.getType(), component);
+//                    }
+//                }
+//            }
+        }
+
+        if(widgetData.isOpen) {
+            if(component instanceof XUIDataListener) {
+                XUIDataListener dataListener = (XUIDataListener)component;
+                dataListener.onUIDraw(uiData);
+            }
+            Class<XComponent> classType = (Class<XComponent>)component.getClassType();
+            XUIDataTypeListener<XComponent> uiListener = imguiManager.getUIComponentListener(classType);
+            if(uiListener != null) {
+                uiListener.onUIDraw(component, uiData);
+            }
+            uiData.endTable();
+        }
+
+        XCollapseWidget.end();
     }
 }

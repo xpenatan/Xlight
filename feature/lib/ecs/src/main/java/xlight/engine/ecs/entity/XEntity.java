@@ -23,14 +23,21 @@ public interface XEntity {
      * Quick way to get component. Same as using ComponentService.
      */
     <T extends XComponent> T getComponent(Class<T> type);
+
     /**
      * Quick way to attach component. Same as using ComponentService.
      */
-    <T extends XComponent> void attachComponent(XComponent component);
+    boolean attachComponent(XComponent component);
+
     /**
      * Quick way to detach component. Same as using ComponentService.
      */
-    <T extends XComponent> void detachComponent(Class<T> type);
+    <T extends XComponent> boolean detachComponent(Class<T> type);
+
+    /**
+     * Quick way to detach component. Same as using ComponentService.
+     */
+    boolean detachComponent(XComponent component);
 
     int getComponentsSize();
     XComponent getComponentAt(int index);

@@ -4,9 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XEntitySelectionManager;
 import xlight.editor.core.selection.XObjectSelection;
+import xlight.engine.core.XEngine;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.ecs.event.XEvent;
+import xlight.engine.ecs.event.XEventListener;
+import xlight.engine.ecs.event.XWorldEvent;
 import xlight.engine.ecs.manager.XManager;
 import xlight.engine.list.XDataArray;
 import xlight.engine.list.XList;
@@ -15,8 +21,8 @@ import xlight.engine.math.XMatrix4Utils;
 import xlight.engine.math.XRotSeq;
 import xlight.engine.math.XRotationUtils;
 import xlight.engine.pool.XPool;
-import xlight.engine.transform.XTransform;
 import xlight.engine.transform.XGizmoType;
+import xlight.engine.transform.XTransform;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 
 class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelectionManagerImpl.XEntitySelectionNode> implements XEntitySelectionManager, XManager {
@@ -27,6 +33,23 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
             protected XEntitySelectionNode newObject() {
                 return new XEntitySelectionNode();
             }
+        });
+    }
+
+    @Override
+    public void onAttach(XWorld world) {
+        world.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, event -> {
+            XEngine gameEngine = event.getUserData();
+            XWorld gameEngineWorld = gameEngine.getWorld();
+            gameEngineWorld.getEventService().addEventListener(XWorldEvent.EVENT_DETACH_ENTITY, new XEventListener() {
+                @Override
+                public boolean onEvent(XEvent event) {
+                    XEntity entity = event.getUserData();
+                    unselectTarget(entity);
+                    return false;
+                }
+            });
+            return false;
         });
     }
 

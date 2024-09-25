@@ -85,6 +85,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public void text(String line, String text) {
+        beginTable();
         boolean addLine = !beginLine;
         if(addLine) {
             beginLine(line);
@@ -104,6 +105,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean button(String line, String buttonName, XUIOpButton op) {
+        beginTable();
         boolean addLine = !beginLine;
         if(addLine) {
             beginLine(line);
@@ -122,6 +124,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean editText(String line, float value, XUIOpEditText op) {
+        beginTable();
         FLOAT_D_1.clear();
         FLOAT_D_1.getValue().set(value);
         FLOAT_D_1.tooltip = op.tooltip;
@@ -152,6 +155,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean editText2(String line, float x, float y, XUIOpEditText2 op) {
+        beginTable();
         FLOAT_D_1.clear();
         FLOAT_D_2.clear();
         FLOAT_D_1.getValue().set(x);
@@ -182,6 +186,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean editText3(String line, float x, float y, float z, XUIOpEditText3 op) {
+        beginTable();
         FLOAT_D_1.clear();
         FLOAT_D_2.clear();
         FLOAT_D_3.clear();
@@ -216,6 +221,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean editText(String line, int value, XUIOpEditText op) {
+        beginTable();
         INT_D_1.clear();
         INT_D_1.getValue().set(value);
         INT_D_1.tooltip = op.tooltip;
@@ -245,6 +251,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean editText2(String line, int x, int y, XUIOpEditText2 op) {
+        beginTable();
         INT_D_1.clear();
         INT_D_2.clear();
         INT_D_1.getValue().set(x);
@@ -275,6 +282,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean editText3(String line, int x, int y, int z, XUIOpEditText3 op) {
+        beginTable();
         INT_D_1.clear();
         INT_D_2.clear();
         INT_D_3.clear();
@@ -310,6 +318,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean editText(String line, String value, XUIOpStringEditText op) {
+        beginTable();
         if(value == null) {
             value = "";
         }
@@ -348,6 +357,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean selectList(String line, Array<String> items, int selectedIndex, XUIOpSelectList op) {
+        beginTable();
         boolean itemSelect = false;
         if(selectedIndex >= 0 && selectedIndex < items.size) {
             String selectedText = items.get(selectedIndex);
@@ -389,6 +399,7 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean checkbox(String line, boolean value, XUIOpCheckbox op) {
+        beginTable();
         IDLBool.TMP_1.set(value);
 
         boolean addLine = !beginLine;
