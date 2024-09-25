@@ -43,7 +43,7 @@ public class XEntityInspector {
                 // TODO improve getting id as string
                 uiData.text("ID:", "" + entity.getId());
                 XUIOpStringEditText strOp = XUIOpStringEditText.get();
-                if(uiData.editText("ID:", entity.getName(), strOp)) {
+                if(uiData.editText("Name:", entity.getName(), strOp)) {
                     entity.setName(strOp.value);
                 }
                 XUIOpCheckbox op = XUIOpCheckbox.get();
@@ -54,10 +54,9 @@ public class XEntityInspector {
                 if(uiData.checkbox("Is Savable:", entity.isSavable(), op)) {
                     entity.setSavable(op.value);
                 }
-                uiData.text("Components Size:", "" + entity.getComponentsSize());
-
                 XEntity parent = entity.getParent();
                 uiData.text("Parent:", parent != null ? parent.getName() : "-1");
+                uiData.text("Components Size:", "" + entity.getComponentsSize());
             }
 
             if(entityUIListener != null) {
