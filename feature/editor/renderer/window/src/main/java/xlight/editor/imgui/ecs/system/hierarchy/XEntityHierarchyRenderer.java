@@ -99,12 +99,14 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                 XList<XEntity> entities = entityService.getEntities();
                 entitySize = entities.getSize();
                 boolean leftControl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
+                ImLayout.BeginGlobalTree();
                 for(XEntity entity : entities) {
                     if(entity.getParent() != null) {
                         continue;
                     }
                     renderEntityItem(gameEngineWorld, entity, leftControl);
                 }
+                ImLayout.EndGlobalTree();
             }
         }
         ImGui.EndChild();
