@@ -11,7 +11,7 @@ public class WebMain {
         config.useDebugGL = false;
         config.width = 0;
         config.height = 0;
-        config.usePhysicalPixels = false;
+        config.usePhysicalPixels = true;
         config.useGL30 = false;
         config.showDownloadLogs = true;
         new XWebApp(XEditor.newInstance(), config);
