@@ -394,6 +394,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                     if(draggedEntity != null) {
                         if(draggedEntity.getParent() == entity) {
                             draggedEntity.setParent(null);
+                            treeOpen = false;
                         }
                         else {
                             draggedEntity.setParent(entity);
