@@ -255,7 +255,7 @@ public class XGizmoRenderer {
 
         Node node = mb.node();
         node.id = "axisXY";
-        material = new Material("axisXY", ColorAttribute.createDiffuse(r, g, b, 0.8f));
+        material = new Material("axisXY", ColorAttribute.createDiffuse(r, g, b, 0.9f));
         BlendingAttribute blending = new BlendingAttribute();
         material.set(blending);
         MeshPartBuilder meshBuilderXY = mb.part("axisXY", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, material);
