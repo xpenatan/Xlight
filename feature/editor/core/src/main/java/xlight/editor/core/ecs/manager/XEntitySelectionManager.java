@@ -11,9 +11,10 @@ public interface XEntitySelectionManager {
     XEntity getCurrentSelectedTarget();
     XList<XEntity> getSelectedTargets();
     void unselectTarget(XEntity target);
+    boolean isSelected(XEntity target);
+    boolean changeCurrentSelectedTarget(XEntity target);
 
     void moveAndStartDragging(XGizmoType transformType, int transformMode, Vector3 position, Vector3 rotation);
     void removeDragging();
 
-    boolean isSelected(XEntity target);
 }

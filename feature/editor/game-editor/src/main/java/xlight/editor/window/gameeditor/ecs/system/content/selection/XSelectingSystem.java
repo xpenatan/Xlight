@@ -49,7 +49,6 @@ public class XSelectingSystem extends XGameEditorSystem {
 
     private Array<RenderableProvider> tmp3dArray = new Array<>();
 
-    private boolean hit;
     private final Array<XAABBTreeNode> hitList = new Array<>();
 
     private XGizmoType transformType = XGizmoType.POSITION;
@@ -101,7 +100,7 @@ public class XSelectingSystem extends XGameEditorSystem {
                     boolean leftClick = Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
                     boolean rightClick = Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT);
                     if(!gizmoRenderer.isHighlight() && (leftClick || rightClick)) {
-                        onClickLogic(gameEngineWorld, gdxCamera, gameTree, leftClick, selectionManager);
+                        onClickLogic(gameEngineWorld, gdxCamera, gameTree, leftClick, rightClick, selectionManager);
                     }
                     else {
                         renderGizmo(camera);
@@ -186,25 +185,30 @@ public class XSelectingSystem extends XGameEditorSystem {
         return transformType;
     }
 
-    private void onClickLogic(XWorld gameEngineWorld, Camera camera, XAABBTree tree, boolean leftClick, XEntitySelectionManager selectionManager) {
+    private void onClickLogic(XWorld gameEngineWorld, Camera camera, XAABBTree tree, boolean leftClick, boolean rightClick, XEntitySelectionManager selectionManager) {
         int x = Gdx.input.getX();
         int y = Gdx.input.getY();
-        hit = false;
         Ray ray = camera.getPickRay(x, y);
         tree.rayCast(ray, hitList, true, 0f, 10);
-        if(hitList.size > 0) {
-            hit = true;
-        }
         if(leftClick) {
             updateClickLogic(gameEngineWorld, camera, selectionManager, hitList, x, y);
+        }
+        else if(rightClick) {
+            if(hitList.size > 0) {
+                XEntityService entityService = gameEngineWorld.getEntityService();
+                XEntity entity = validateEntitySelected(camera, hitList, entityService, x, y, true, selectionManager);
+                if(entity != null) {
+                    selectionManager.changeCurrentSelectedTarget(entity);
+                }
+            }
         }
     }
 
     private void updateClickLogic(XWorld gameEngineWorld, Camera camera, XEntitySelectionManager selectionManager, Array<XAABBTreeNode> raycastList, int clickX, int clickY) {
-        XEntityService entityService = gameEngineWorld.getEntityService();
         boolean leftCtrl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
         if(raycastList.size > 0) {
-            XEntity entity = validateEntitySelected(camera, raycastList, entityService, clickX, clickY);
+            XEntityService entityService = gameEngineWorld.getEntityService();
+            XEntity entity = validateEntitySelected(camera, raycastList, entityService, clickX, clickY, false, selectionManager);
             if(entity != null) {
                 selectionManager.selectTarget(entity, leftCtrl);
             }
@@ -226,7 +230,7 @@ public class XSelectingSystem extends XGameEditorSystem {
         }
     };
 
-    private XEntity validateEntitySelected(Camera camera, Array<XAABBTreeNode> rayCastList, XEntityService es, int clickX, int clickY) {
+    private XEntity validateEntitySelected(Camera camera, Array<XAABBTreeNode> rayCastList, XEntityService es, int clickX, int clickY, boolean mustBeSelected, XEntitySelectionManager selectionManager) {
         boolean useAABBSelection = true;
         XEntity entity = null;
         for(int i = 0; i < rayCastList.size; i++) {
@@ -236,6 +240,19 @@ public class XSelectingSystem extends XGameEditorSystem {
             XRender3DComponent render3DComponent = e.getComponent(XRender3DComponent.class);
             if(render3DComponent != null) {
                 render3DComponent.onRender(batch3DWrapper);
+            }
+        }
+
+        if(mustBeSelected && tmp3dArray.size > 0) {
+            for(int i = 0; i < tmp3dArray.size; i++) {
+                // remove objects that is not selected
+                int entityId = shader3DPicker.getShaderRayPickingID(camera, tmp3dArray, clickX, clickY);
+                if(entityId >= 0) {
+                    XEntity e = es.getEntity(entityId);
+                    if(!selectionManager.isSelected(e)) {
+                        tmp3dArray.removeIndex(0);
+                    }
+                }
             }
         }
 
