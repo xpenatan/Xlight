@@ -1,5 +1,7 @@
 package xlight.engine.g3d.ecs.component;
 
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -7,29 +9,34 @@ import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.loaders.gltf.GLTFLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
+import xlight.engine.core.editor.ui.XUIData;
+import xlight.engine.core.editor.ui.XUIDataListener;
+import xlight.engine.core.editor.ui.options.XUIOpStringEditText;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.g3d.XBatch3D;
 
-public class XGLTFComponent extends XRender3DComponent{
+public class XGLTFComponent extends XRender3DComponent implements XUIDataListener {
 
     private SceneAsset sceneAsset;
     private Scene scene;
 
-    private FileHandle assetToLoad;
+    private boolean assetToLoad;
+    private String assetPath = "";
 
     private boolean componentAttached;
 
-    public XGLTFComponent(FileHandle path) {
+    Files.FileType fileType = Files.FileType.Internal;
+
+    public XGLTFComponent(String path) {
         setAssetInternal(path);
     }
 
     @Override
     protected void onComponentAttach(XWorld world, XEntity entity) {
         componentAttached = true;
-        if(assetToLoad != null) {
-            setAssetInternal(assetToLoad);
-            assetToLoad = null;
+        if(assetToLoad) {
+            setAssetInternal(assetPath);
         }
     }
 
@@ -38,7 +45,7 @@ public class XGLTFComponent extends XRender3DComponent{
         componentAttached = false;
     }
 
-    public void setAsset(FileHandle path) {
+    public void setAsset(String path) {
         setAssetInternal(path);
     }
 
@@ -63,23 +70,67 @@ public class XGLTFComponent extends XRender3DComponent{
         }
     }
 
-    private void setAssetInternal(FileHandle path) {
+    private void setAssetInternal(String path) {
         if(!componentAttached) {
-            assetToLoad = path;
+            assetToLoad = true;
+            assetPath = path;
+            return;
+        }
+        assetToLoad = false;
+        clearAsset();
+
+        FileHandle fileHandle = Gdx.files.getFileHandle(path, fileType);
+
+        if(path == null || !fileHandle.exists() || fileHandle.isDirectory()) {
+            return;
+        }
+        String extension = fileHandle.extension();
+
+        try {
+            if(extension.equals("glb")) {
+                sceneAsset = new GLBLoader().load(fileHandle);
+            }
+            else if(extension.equals("gltf")) {
+                sceneAsset = new GLTFLoader().load(fileHandle);
+            }
+            else {
+                return;
+            }
+        }
+        catch(Throwable t) {
+            t.printStackTrace();
             return;
         }
 
-        if(sceneAsset != null) {
-            sceneAsset.dispose();
-        }
-        if(path.extension().equals("glb")) {
-            sceneAsset = new GLBLoader().load(path);
-        }
-        else {
-            sceneAsset = new GLTFLoader().load(path);
-        }
+        assetPath = path;
         scene = new Scene(sceneAsset.scene);
         flags.put(FLAG_CALCULATE_BOUNDING_BOX);
         updateModelInstance(scene.modelInstance);
+    }
+
+    @Override
+    public void onReset() {
+        super.onReset();
+        clearAsset();
+    }
+
+    private void clearAsset() {
+        assetPath = "";
+        if(sceneAsset != null) {
+            sceneAsset.dispose();
+            sceneAsset = null;
+            scene = null;
+        }
+    }
+
+    @Override
+    public void onUIDraw(XUIData uiData) {
+        if(uiData.button("Bounding Box", "Calculate")) {
+            flags.put(FLAG_CALCULATE_BOUNDING_BOX);
+        }
+        XUIOpStringEditText op = XUIOpStringEditText.get();
+        if(uiData.editText("Asset Path", assetPath, op)) {
+            setAssetInternal(op.value);
+        }
     }
 }

@@ -2,27 +2,23 @@ package xlight.demo.basic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import xlight.engine.camera.PROJECTION_MODE;
+import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.core.XApplication;
 import xlight.engine.core.XEngine;
-import xlight.engine.camera.ecs.component.XCameraComponent;
+import xlight.engine.core.ecs.system.XCameraSystem;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XGameComponent;
-import xlight.engine.g3d.ecs.component.XBox3DComponent;
+import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.ecs.entity.XEntityService;
+import xlight.engine.ecs.system.XSystemService;
+import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.g3d.ecs.component.XGLTFComponent;
 import xlight.engine.g3d.ecs.system.XGLTFSystem;
 import xlight.engine.scene.XSceneListener;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.transform.ecs.component.XTransformComponent;
-import xlight.engine.core.ecs.system.XCameraSystem;
-import xlight.engine.ecs.XWorld;
-import xlight.engine.ecs.component.XComponentService;
-import xlight.engine.ecs.entity.XEntity;
-import xlight.engine.ecs.entity.XEntityService;
-import xlight.engine.ecs.system.XSystemService;
-import xlight.engine.g3d.ecs.system.XRender3DSystem;
-import xlight.engine.ecs.system.XSystemType;
 
 public class MainApp implements XApplication {
 
@@ -92,7 +88,7 @@ public class MainApp implements XApplication {
         FileHandle assetFile = Gdx.files.internal(asset);
         String name = assetFile.nameWithoutExtension();
         e.setName(name);
-        e.attachComponent(new XGLTFComponent(assetFile));
+        e.attachComponent(new XGLTFComponent(asset));
         e.attachComponent(new XTransformComponent().position(x, y, z));
         e.attachComponent(new XGameComponent());
         es.attachEntity(e);
@@ -101,8 +97,7 @@ public class MainApp implements XApplication {
     public void createGroundEntity(XEntityService es) {
         XEntity e = es.obtain();
         e.setName("Ground");
-        FileHandle assetFile = Gdx.files.internal("models/ground/ground.gltf");
-        e.attachComponent(new XGLTFComponent(assetFile));
+        e.attachComponent(new XGLTFComponent("models/ground/ground.gltf"));
         e.attachComponent(new XTransformComponent().position(0, -2, 0).scale(5, 1, 5));
         e.attachComponent(new XGameComponent());
         es.attachEntity(e);
