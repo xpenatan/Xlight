@@ -12,7 +12,7 @@ object LibExt {
     const val gdxMultiViewVersion = "-SNAPSHOT"
     const val gdxTeaVMVersion = "-SNAPSHOT"
 
-    const val gdxGLTFVersion = "com.github.mgsx-dev.gdx-gltf:core:-SNAPSHOT"
+    const val gdxGLTFVersion = "com.github.mgsx-dev.gdx-gltf:gltf:2.2.1"
 }
 
 private fun getVersion(releaseVersion: String, suffix: String = ""): String {
