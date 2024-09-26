@@ -51,5 +51,8 @@ public interface XUIData {
 
     boolean checkbox(String line, boolean value, XUIOpCheckbox op);
 
+    /**
+     * Return true when one of transform values is updated.
+     */
     boolean transform(XTransform value, XUIOpTransform op);
 }

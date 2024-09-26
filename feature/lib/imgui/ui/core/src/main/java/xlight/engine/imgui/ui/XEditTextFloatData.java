@@ -5,7 +5,7 @@ import imgui.idl.helper.IDLFloat;
 
 public class XEditTextFloatData {
     public String leftLabel;
-    private IDLFloat value;
+    public final IDLFloat value = new IDLFloat();;
     public float v_speed;
     public float v_min;
     public float v_max;
@@ -19,13 +19,6 @@ public class XEditTextFloatData {
 
     public XEditTextFloatData() {
         clear();
-    }
-
-    public IDLFloat getValue() {
-        if(value == null) {
-            value = new IDLFloat();
-        }
-        return value;
     }
 
     public void clear() {

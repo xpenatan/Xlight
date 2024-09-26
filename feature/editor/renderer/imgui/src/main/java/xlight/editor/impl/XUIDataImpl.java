@@ -1,5 +1,7 @@
 package xlight.editor.impl;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import imgui.ImGui;
 import imgui.ImGuiString;
@@ -17,6 +19,7 @@ import xlight.engine.imgui.ui.XEditText;
 import xlight.engine.imgui.ui.XEditTextFloatData;
 import xlight.engine.imgui.ui.XEditTextIntData;
 import xlight.engine.imgui.ui.XUITableUtil;
+import xlight.engine.transform.XGizmoType;
 import xlight.engine.transform.XTransform;
 import static imgui.ImGuiTreeNodeFlags.ImGuiTreeNodeFlags_DefaultOpen;
 
@@ -32,6 +35,10 @@ class XUIDataImpl implements XUIData {
     public final XEditTextIntData INT_D_2;
     public final XEditTextIntData INT_D_3;
     public final XEditTextIntData INT_D_4;
+
+    private static int xColor = Color.RED.toIntBits();
+    private static int yColor = Color.GREEN.toIntBits();
+    private static int zColor = Color.toIntBits(0, 150, 255, 255);
 
     public XUIDataImpl() {
         FLOAT_D_1 = new XEditTextFloatData();
@@ -126,7 +133,7 @@ class XUIDataImpl implements XUIData {
     public boolean editText(String line, float value, XUIOpEditText op) {
         beginTable();
         FLOAT_D_1.clear();
-        FLOAT_D_1.getValue().set(value);
+        FLOAT_D_1.value.set(value);
         FLOAT_D_1.tooltip = op.tooltip;
         FLOAT_D_1.leftLabel = op.label;
         FLOAT_D_1.width = op.width;
@@ -143,7 +150,7 @@ class XUIDataImpl implements XUIData {
         }
         boolean flag = XEditText.render(line, FLOAT_D_1);
         if(flag) {
-            op.value = FLOAT_D_1.getValue().getValue();
+            op.value = FLOAT_D_1.value.getValue();
         }
 
         if(addLine) {
@@ -158,8 +165,8 @@ class XUIDataImpl implements XUIData {
         beginTable();
         FLOAT_D_1.clear();
         FLOAT_D_2.clear();
-        FLOAT_D_1.getValue().set(x);
-        FLOAT_D_2.getValue().set(y);
+        FLOAT_D_1.value.set(x);
+        FLOAT_D_2.value.set(y);
         FLOAT_D_1.leftLabel = op.label1;
         FLOAT_D_1.tooltip = op.tooltip1;
         FLOAT_D_2.leftLabel = op.label2;
@@ -172,8 +179,8 @@ class XUIDataImpl implements XUIData {
         }
         boolean flag = XEditText.render(line, FLOAT_D_1, FLOAT_D_2);
         if(flag) {
-            float value1 = FLOAT_D_1.getValue().getValue();
-            float value2 = FLOAT_D_2.getValue().getValue();
+            float value1 = FLOAT_D_1.value.getValue();
+            float value2 = FLOAT_D_2.value.getValue();
             op.value.set(value1, value2);
         }
 
@@ -190,9 +197,9 @@ class XUIDataImpl implements XUIData {
         FLOAT_D_1.clear();
         FLOAT_D_2.clear();
         FLOAT_D_3.clear();
-        FLOAT_D_1.getValue().set(x);
-        FLOAT_D_2.getValue().set(y);
-        FLOAT_D_3.getValue().set(z);
+        FLOAT_D_1.value.set(x);
+        FLOAT_D_2.value.set(y);
+        FLOAT_D_3.value.set(z);
         FLOAT_D_1.leftLabel = op.label1;
         FLOAT_D_1.tooltip = op.tooltip1;
         FLOAT_D_2.leftLabel = op.label2;
@@ -207,9 +214,9 @@ class XUIDataImpl implements XUIData {
         }
         boolean flag = XEditText.render(line, FLOAT_D_1, FLOAT_D_2, FLOAT_D_3);
         if(flag) {
-            float value1 = FLOAT_D_1.getValue().getValue();
-            float value2 = FLOAT_D_2.getValue().getValue();
-            float value3 = FLOAT_D_3.getValue().getValue();
+            float value1 = FLOAT_D_1.value.getValue();
+            float value2 = FLOAT_D_2.value.getValue();
+            float value3 = FLOAT_D_3.value.getValue();
             op.value.set(value1, value2, value3);
         }
 
@@ -429,6 +436,158 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public boolean transform(XTransform value, XUIOpTransform op) {
-        return false;
+        boolean flag = false;
+        if(op.drawPosition) {
+            XUITableUtil.beginLine(op.posLine);
+            Vector3 position = value.getPosition();
+            FLOAT_D_1.clear();
+            FLOAT_D_2.clear();
+            FLOAT_D_3.clear();
+            FLOAT_D_1.value.set(position.x);
+            FLOAT_D_2.value.set(position.y);
+            FLOAT_D_3.value.set(position.z);
+            FLOAT_D_1.leftLabel = op.posLabel1;
+            FLOAT_D_2.leftLabel = op.posLabel2;
+            FLOAT_D_3.leftLabel = op.posLabel3;
+            FLOAT_D_1.tooltip = op.posTooltip1;
+            FLOAT_D_2.tooltip = op.posTooltip2;
+            FLOAT_D_3.tooltip = op.posTooltip3;
+            FLOAT_D_1.labelClickDragColor = xColor;
+            FLOAT_D_2.labelClickDragColor = yColor;
+            FLOAT_D_3.labelClickDragColor = zColor;
+            if(XEditText.render("##POS", FLOAT_D_1, FLOAT_D_2, FLOAT_D_3)) {
+                float value1 = FLOAT_D_1.value.getValue();
+                float value2 = FLOAT_D_2.value.getValue();
+                float value3 = FLOAT_D_3.value.getValue();
+                position.set(value1, value2, value3);
+                flag = true;
+            }
+            XUITableUtil.endLine();
+        }
+
+        if(op.drawRotation) {
+            XUITableUtil.beginLine(op.rotLine);
+            Vector3 rotation = value.getRotation();
+            FLOAT_D_1.clear();
+            FLOAT_D_2.clear();
+            FLOAT_D_3.clear();
+            FLOAT_D_1.value.set(rotation.x);
+            FLOAT_D_2.value.set(rotation.y);
+            FLOAT_D_3.value.set(rotation.z);
+            FLOAT_D_1.leftLabel = op.rotLabel1;
+            FLOAT_D_2.leftLabel = op.rotLabel2;
+            FLOAT_D_3.leftLabel = op.rotLabel3;
+            FLOAT_D_1.tooltip = op.rotTooltip1;
+            FLOAT_D_2.tooltip = op.rotTooltip2;
+            FLOAT_D_3.tooltip = op.rotTooltip3;
+            FLOAT_D_1.labelClickDragColor = xColor;
+            FLOAT_D_2.labelClickDragColor = yColor;
+            FLOAT_D_3.labelClickDragColor = zColor;
+            if(XEditText.render("##ROT", FLOAT_D_1, FLOAT_D_2, FLOAT_D_3)) {
+                float value1 = FLOAT_D_1.value.getValue();
+                float value2 = FLOAT_D_2.value.getValue();
+                float value3 = FLOAT_D_3.value.getValue();
+                rotation.set(value1, value2, value3);
+                flag = true;
+            }
+            XUITableUtil.endLine();
+        }
+
+        if(op.drawScale) {
+            XUITableUtil.beginLine(op.sclLine);
+            Vector3 scale = value.getScale();
+            FLOAT_D_1.clear();
+            FLOAT_D_2.clear();
+            FLOAT_D_3.clear();
+            FLOAT_D_1.value.set(scale.x);
+            FLOAT_D_2.value.set(scale.y);
+            FLOAT_D_3.value.set(scale.z);
+            FLOAT_D_1.leftLabel = op.sclLabel1;
+            FLOAT_D_2.leftLabel = op.sclLabel2;
+            FLOAT_D_3.leftLabel = op.sclLabel3;
+            FLOAT_D_1.tooltip = op.sclTooltip1;
+            FLOAT_D_2.tooltip = op.sclTooltip2;
+            FLOAT_D_3.tooltip = op.sclTooltip3;
+            FLOAT_D_1.labelClickDragColor = xColor;
+            FLOAT_D_2.labelClickDragColor = yColor;
+            FLOAT_D_3.labelClickDragColor = zColor;
+            if(XEditText.render("##SCL", FLOAT_D_1, FLOAT_D_2, FLOAT_D_3)) {
+                float value1 = FLOAT_D_1.value.getValue();
+                float value2 = FLOAT_D_2.value.getValue();
+                float value3 = FLOAT_D_3.value.getValue();
+                scale.set(value1, value2, value3);
+                flag = true;
+            }
+            XUITableUtil.endLine();
+        }
+
+        if(op.drawSize) {
+            XUITableUtil.beginLine(op.sizeLine);
+            Vector3 size = value.getSize();
+            FLOAT_D_1.clear();
+            FLOAT_D_2.clear();
+            FLOAT_D_3.clear();
+            FLOAT_D_1.value.set(size.x);
+            FLOAT_D_2.value.set(size.y);
+            FLOAT_D_3.value.set(size.z);
+            FLOAT_D_1.leftLabel = op.sizeLabel1;
+            FLOAT_D_2.leftLabel = op.sizeLabel2;
+            FLOAT_D_3.leftLabel = op.sizeLabel3;
+            FLOAT_D_1.tooltip = op.sizeTooltip1;
+            FLOAT_D_2.tooltip = op.sizeTooltip2;
+            FLOAT_D_3.tooltip = op.sizeTooltip3;
+            FLOAT_D_1.labelClickDragColor = xColor;
+            FLOAT_D_2.labelClickDragColor = yColor;
+            FLOAT_D_3.labelClickDragColor = zColor;
+            FLOAT_D_1.v_min = 0f;
+            FLOAT_D_1.v_max = 500f;
+            FLOAT_D_2.v_min = 0f;
+            FLOAT_D_2.v_max = 500f;
+            FLOAT_D_3.v_min = 0f;
+            FLOAT_D_3.v_max = 500f;
+            if(XEditText.render("##SIZE", FLOAT_D_1, FLOAT_D_2, FLOAT_D_3)) {
+                float value1 = FLOAT_D_1.value.getValue();
+                float value2 = FLOAT_D_2.value.getValue();
+                float value3 = FLOAT_D_3.value.getValue();
+                size.set(value1, value2, value3);
+            }
+            XUITableUtil.endLine();
+        }
+
+        if(op.drawOffset) {
+            XUITableUtil.beginLine(op.offsetLine);
+            Vector3 offset = value.getOffset();
+            FLOAT_D_1.clear();
+            FLOAT_D_2.clear();
+            FLOAT_D_3.clear();
+            FLOAT_D_1.value.set(offset.x);
+            FLOAT_D_2.value.set(offset.y);
+            FLOAT_D_3.value.set(offset.z);
+            FLOAT_D_1.leftLabel = op.offsetLabel1;
+            FLOAT_D_2.leftLabel = op.offsetLabel2;
+            FLOAT_D_3.leftLabel = op.offsetLabel3;
+            FLOAT_D_1.tooltip = op.offsetTooltip1;
+            FLOAT_D_2.tooltip = op.offsetTooltip2;
+            FLOAT_D_3.tooltip = op.offsetTooltip3;
+            FLOAT_D_1.labelClickDragColor = xColor;
+            FLOAT_D_2.labelClickDragColor = yColor;
+            FLOAT_D_3.labelClickDragColor = zColor;
+
+            FLOAT_D_1.v_min = -0.5f;
+            FLOAT_D_1.v_max = 0.5f;
+            FLOAT_D_2.v_min = -0.5f;
+            FLOAT_D_2.v_max = 0.5f;
+            FLOAT_D_3.v_min = -0.5f;
+            FLOAT_D_3.v_max = 0.5f;
+            if(XEditText.render("##OFFSET", FLOAT_D_1, FLOAT_D_2, FLOAT_D_3)) {
+                float value1 = FLOAT_D_1.value.getValue();
+                float value2 = FLOAT_D_2.value.getValue();
+                float value3 = FLOAT_D_3.value.getValue();
+                offset.set(value1, value2, value3);
+                flag = true;
+            }
+            XUITableUtil.endLine();
+        }
+        return flag;
     }
 }

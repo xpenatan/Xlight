@@ -213,7 +213,7 @@ public class XEditText {
             boolean clicked = renderLeftLabel(leftLabel, 0, data.labelClickDragColor, data.labelClickDragColor);
             String format = "%.3f";
             int flags = ImGuiSliderFlags.ImGuiSliderFlags_None;
-            if(ImGuiInternal.DragBehavior(ImGui.GetID(leftLabel), ImGuiDataType.ImGuiDataType_Float, data.getValue().getPointer(), data.v_speed, IDLFloat.TMP_1.set(data.v_min).getPointer(), IDLFloat.TMP_2.set(data.v_max).getPointer(), format, flags)) {
+            if(ImGuiInternal.DragBehavior(ImGui.GetID(leftLabel), ImGuiDataType.ImGuiDataType_Float, data.value.getPointer(), data.v_speed, IDLFloat.TMP_1.set(data.v_min).getPointer(), IDLFloat.TMP_2.set(data.v_max).getPointer(), format, flags)) {
                 flag = true;
             }
             ImGui.SameLine(0, 0);
@@ -221,12 +221,12 @@ public class XEditText {
         if(data.width != 0) {
             ImGui.SetNextItemWidth(data.width);
         }
-        if(ImGui.InputFloat("###edittext", data.getValue(), data.step, data.step_fast, data.format, data.flags)) {
+        if(ImGui.InputFloat("###edittext", data.value, data.step, data.step_fast, data.format, data.flags)) {
             if(data.v_min == 0 && data.v_max == 0) {
                 flag = true;
             }
             else {
-                float value = data.getValue().getValue();
+                float value = data.value.getValue();
                 if(value >= data.v_min && value <= data.v_max) {
                     flag = true;
                 }
