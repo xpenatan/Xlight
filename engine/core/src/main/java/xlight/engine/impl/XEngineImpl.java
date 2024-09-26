@@ -5,8 +5,10 @@ import xlight.engine.core.ecs.XPreferencesManager;
 import xlight.engine.asset.ecs.manager.XAssetManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.camera.ecs.component.XCameraComponent;
+import xlight.engine.core.register.XMetaClass;
+import xlight.engine.core.register.XRegisterManager;
 import xlight.engine.ecs.component.XComponent;
-import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.ecs.component.XGameWorldComponent;
 import xlight.engine.g3d.ecs.component.XGLTFComponent;
 import xlight.engine.g3d.ecs.component.XRender3DComponent;
 import xlight.engine.init.ecs.service.XInitFeatureService;
@@ -15,7 +17,7 @@ import xlight.engine.pool.XPool;
 import xlight.engine.pool.ecs.manager.XPoolManager;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.transform.ecs.component.XTransformComponent;
-import xlight.engine.ecs.component.XUIComponent;
+import xlight.engine.ecs.component.XUIWorldComponent;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.ecs.XWorld;
 
@@ -49,14 +51,12 @@ public class XEngineImpl implements XEngine {
     public void dispose() {
         world.getEntityService().clear();
         world.eventService.clear();
-        update(2);
+        world.update(2);
         world.getEventService().sendEvent(XEngineEvent.EVENT_DISPOSE, null, null, false);
         world = null;
     }
 
     private void setupEngine() {
-        registerComponents();
-
         // Setup Camera
         XCameraManagerImpl cameraManager = new XCameraManagerImpl();
         world.attachManager(XCameraManager.class, cameraManager);
@@ -72,15 +72,28 @@ public class XEngineImpl implements XEngine {
         world.attachManager(XPoolManager.class, new XPoolManagerImpl());
         world.attachManager(XSceneManager.class, new XSceneManagerImpl());
         world.attachManager(XPreferencesManager.class, new XPreferencesManagerImpl());
+        world.attachManager(XRegisterManager.class, new XRegisterManagerImpl(world));
+
+        world.update(1);
+
+        registerComponents();
     }
 
     private void registerComponents() {
-        XComponentServiceImpl componentService = world.componentService;
-        componentService.registerComponent(XRender3DComponent.class); // Abstract component so there is no pool
-        componentService.registerComponent(XGameComponent.class, new XPool<>() { protected XComponent newObject() { return new XGameComponent(); } });
-        componentService.registerComponent(XUIComponent.class, new XPool<>() { protected XComponent newObject() { return new XUIComponent(); } });
-        componentService.registerComponent(XTransformComponent.class, new XPool<>() { protected XComponent newObject() { return new XTransformComponent(); } });
-        componentService.registerComponent(XCameraComponent.class, new XPool<>() { protected XComponent newObject() { return new XCameraComponent(); } });
-        componentService.registerComponent(XGLTFComponent.class, new XPool<>() { protected XComponent newObject() { return new XGLTFComponent(); } });
+        XRegisterManager registerManager = world.getManager(XRegisterManager.class);
+        world.componentService.registerComponent(XRender3DComponent.class); // Generic component use component service
+
+        XMetaClass metaClass;
+        metaClass = registerManager.registerClass(2, XGameWorldComponent.class, new XPool<>() { protected XComponent newObject() { return new XGameWorldComponent(); } });
+        metaClass.setMetaClassGroup("World type");
+        metaClass = registerManager.registerClass(3, XUIWorldComponent.class, new XPool<>() { protected XComponent newObject() { return new XUIWorldComponent(); } });
+        metaClass.setMetaClassGroup("World type");
+        metaClass = registerManager.registerClass(4, XTransformComponent.class, new XPool<>() { protected XComponent newObject() { return new XTransformComponent(); } });
+        metaClass.setMetaClassGroup("Position");
+        metaClass = registerManager.registerClass(5, XCameraComponent.class, new XPool<>() { protected XComponent newObject() { return new XCameraComponent(); } });
+        metaClass.setMetaClassGroup("Camera");
+        metaClass = registerManager.registerClass(6, XGLTFComponent.class, new XPool<>() { protected XComponent newObject() { return new XGLTFComponent(); } });
+        metaClass.setMetaClassGroup("g3d");
+        metaClass.setParentType(XRender3DComponent.class);
     }
 }

@@ -9,8 +9,6 @@ import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.component.XComponentType;
 import xlight.engine.ecs.entity.XEntity;
-import xlight.engine.pool.XPool;
-import xlight.engine.pool.XPoolController;
 
 class XComponentServiceImpl implements XComponentService {
 
@@ -30,11 +28,6 @@ class XComponentServiceImpl implements XComponentService {
 
     @Override
     public <T extends XComponent> boolean registerComponent(Class<T> type) {
-        return registerComponent(type, null);
-    }
-
-    @Override
-    public <T extends XComponent> boolean registerComponent(Class<T> type, XPool<XComponent> pool) {
         XComponentType componentType = getComponentInternal(type);
         if(componentType == null) {
             int nextIndex = components.size;
@@ -43,17 +36,13 @@ class XComponentServiceImpl implements XComponentService {
             pair.a = componentType;
             pair.b = new XComponentArray();
             components.add(pair);
-            if(pool != null) {
-                XPoolController poolController = world.getGlobalData(XPoolController.class);
-                poolController.registerPool(type, pool);
-            }
             return true;
         }
         return false;
     }
 
     @Override
-    public <T extends XComponent> XComponentType getComponentType(Class<T> type) {
+    public XComponentType getComponentType(Class<?> type) {
         return getComponentInternal(type);
     }
 
@@ -78,6 +67,17 @@ class XComponentServiceImpl implements XComponentService {
         return component;
     }
 
+    @Override
+    public boolean containsComponent(XEntity entity, Class<?> type) {
+        XComponentType componentType = getComponentInternal(type);
+        if(componentType != null) {
+            int index = componentType.getIndex();
+            XComponent component = getComponentIndex(entity, index);
+            return component != null;
+        }
+        return false;
+    }
+
     public <T extends XComponent> T getComponentIndex(XEntity entity, int index) {
         T component = null;
         XPair<XComponentType, XComponentArray> pair = components.get(index);
@@ -99,7 +99,7 @@ class XComponentServiceImpl implements XComponentService {
     }
 
     @Override
-    public <T extends XComponent> boolean detachComponent(XEntity entity, Class<T> type) {
+    public boolean detachComponent(XEntity entity, Class<?> type) {
         XComponentType componentType = getComponentInternal(type);
         if(componentType != null) {
             int index = componentType.getIndex();
@@ -154,8 +154,9 @@ class XComponentServiceImpl implements XComponentService {
                 if(getComponent(componentList, entityIndex) == null) {
                     entity.componentMask.set(componentIndex);
                     entity.componentsIndex.add(componentIndex);
-                    entityService.onComponentAdded(entity, component);
+                    componentList.set(entityIndex, component);
                     component.onAttach(world, entity);
+                    entityService.onComponentAdded(entity, component);
                     ret = true;
                 }
             }
@@ -166,13 +167,13 @@ class XComponentServiceImpl implements XComponentService {
                     tmpBits.clear();
                     tmpBits.or(entity.componentMask);
                     entity.componentMask.clear(componentIndex);
+                    componentFound.onDetach(world, entity);
                     entityService.onComponentRemoved(entity, tmpBits, entity.componentMask);
                     entity.componentsIndex.removeValue(componentIndex);
-                    componentFound.onDetach(world, entity);
+                    componentList.set(entityIndex, null);
                     ret = true;
                 }
             }
-            componentList.set(entityIndex, component);
         }
         return ret;
     }

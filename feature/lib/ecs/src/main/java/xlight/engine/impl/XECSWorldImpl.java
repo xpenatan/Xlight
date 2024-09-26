@@ -175,7 +175,7 @@ public class XECSWorldImpl implements XWorld {
     }
 
     @Override
-    public <T> T getGlobalData(Class<?> type) {
+    public <T> T getGlobalData(Class<T> type) {
         return (T)globalData.get(type.hashCode());
     }
 }

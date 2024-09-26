@@ -23,7 +23,7 @@ import xlight.engine.camera.controller.XCameraController;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
-import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.ecs.component.XGameWorldComponent;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
 import xlight.engine.ecs.system.XSystemController;
@@ -76,7 +76,7 @@ public class XGameEditorAppListener implements ApplicationListener {
         systemService.attachSystem(new XFloatingButtonSystem());
         systemService.attachSystem(new XBoundingBoxDebugSystem());
         systemService.attachSystem(new XAABBDebugSystem());
-        systemService.attachSystem(new XSelectingSystem(XGameComponent.class));
+        systemService.attachSystem(new XSelectingSystem(XGameWorldComponent.class));
     }
     private void setupManagers(XWorld world) {
         world.attachManager(XGameEditorManager.class, new XGameEditorManagerImpl());

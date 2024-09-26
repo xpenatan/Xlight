@@ -1,13 +1,11 @@
 package xlight.engine.aabb.ecs.service;
 
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.IntSet;
 import xlight.engine.aabb.XAABBTree;
 import xlight.engine.aabb.XAABBTreeDefault;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
-import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.ecs.component.XGameWorldComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.service.XService;
 import xlight.engine.transform.XTransform;
@@ -24,7 +22,7 @@ public class XAABBServiceDefault implements XAABBService, XService {
     @Override
     public void onAttach(XWorld world) {
         XComponentMatcherBuilder matcherBuilder = world.getComponentService().getMatcherBuilder();
-        XComponentMatcher matcher = matcherBuilder.all(XGameComponent.class, XTransformComponent.class).build(-100, new XComponentMatcher.XComponentMatcherListener() {
+        XComponentMatcher matcher = matcherBuilder.all(XGameWorldComponent.class, XTransformComponent.class).build(-100, new XComponentMatcher.XComponentMatcherListener() {
             @Override
             public void onEntityUpdate(XComponentMatcher.XComponentMatcherState state, XEntity entity) {
                 int id = entity.getId();

@@ -13,7 +13,7 @@ import xlight.engine.properties.pool.XPropertiesPoolUtil;
 
 class XPoolManagerImpl implements XPoolManager, XManager {
 
-    private XPoolControllerImpl poolController;
+    private XPoolController poolController;
 
     public XPoolManagerImpl() {
     }

@@ -1,16 +1,15 @@
 package xlight.engine.ecs.component;
 
 import xlight.engine.ecs.entity.XEntity;
-import xlight.engine.pool.XPool;
 
 public interface XComponentService {
     <T extends XComponent> boolean registerComponent(Class<T> type);
-    <T extends XComponent> boolean registerComponent(Class<T> type, XPool<XComponent> pool);
-    <T extends XComponent> XComponentType getComponentType(Class<T> type);
+    XComponentType getComponentType(Class<?> type);
     <T extends XComponent> T getComponent(XEntity entity, Class<T> type);
+    boolean containsComponent(XEntity entity, Class<?> type);
     <T extends XComponent> T getComponentIndex(XEntity entity, int index);
     boolean attachComponent(XEntity entity, XComponent component);
-    <T extends XComponent> boolean detachComponent(XEntity entity, Class<T> type);
+    boolean detachComponent(XEntity entity, Class<?> type);
     boolean detachComponent(XEntity entity, XComponent component);
     XComponentMatcherBuilder getMatcherBuilder();
 }

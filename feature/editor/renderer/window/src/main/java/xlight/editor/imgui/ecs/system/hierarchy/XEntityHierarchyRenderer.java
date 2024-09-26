@@ -23,14 +23,14 @@ import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
-import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.ecs.component.XGameWorldComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEventService;
+import xlight.engine.g3d.ecs.component.XGLTFComponent;
 import xlight.engine.list.XIntSet;
 import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
-import xlight.engine.pool.ecs.manager.XPoolManager;
 import xlight.engine.string.XStringUtil;
 import xlight.engine.string.XTextBuilder;
 import xlight.engine.transform.ecs.component.XTransformComponent;
@@ -153,7 +153,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
     private void renderNewEntityPopUp(XEngine gameEngine) {
         XWorld world = gameEngine.getWorld();
-        XPoolController poolController = world.getManager(XPoolManager.class).getPoolController();
+        XPoolController poolController = world.getGlobalData(XPoolController.class);
         if(ImGui.BeginMenu("New Entity")) {
             if(ImGui.MenuItem("Empty")) {
                 XEntityService entityService = gameEngine.getWorld().getEntityService();
@@ -164,26 +164,11 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
             }
 
             if(ImGui.BeginMenu("Game Entity")) {
-                if(ImGui.MenuItem("Basic")) {
-                    XEntityService entityService = gameEngine.getWorld().getEntityService();
-                    XEntity newEntity = entityService.obtain();
-                    newEntity.setName("Basic");
-                    XComponent gameComponent = poolController.obtainObject(XGameComponent.class);
-                    XComponent transformComponent = poolController.obtainObject(XTransformComponent.class);
-                    newEntity.attachComponent(gameComponent);
-                    newEntity.attachComponent(transformComponent);
-
-                    entityService.attachEntity(newEntity);
-                }
-                if(ImGui.BeginItemTooltip()) {
-                    ImGui.Text("Components:\nGame\nTransform");
-                    ImGui.EndTooltip();
-                }
                 if(ImGui.MenuItem("Default")) {
                     XEntityService entityService = gameEngine.getWorld().getEntityService();
                     XEntity newEntity = entityService.obtain();
                     newEntity.setName("Default");
-                    XComponent gameComponent = poolController.obtainObject(XGameComponent.class);
+                    XComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
                     XComponent transformComponent = poolController.obtainObject(XTransformComponent.class);
                     newEntity.attachComponent(gameComponent);
                     newEntity.attachComponent(transformComponent);
@@ -191,27 +176,26 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                     entityService.attachEntity(newEntity);
                 }
                 if(ImGui.BeginItemTooltip()) {
-                    ImGui.Text("Components:\nGame\nTransform\nAABB");
+                    ImGui.Text("Components:\nGameWorld\nTransform");
                     ImGui.EndTooltip();
                 }
                 if(ImGui.BeginMenu("3D")) {
                     if(ImGui.MenuItem("Asset")) {
-//                        XEntityService entityService = gameEngine.getWorld().getEntityService();
-//                        XEntity newEntity = entityService.obtain();
-//                        newEntity.setName("Asset");
-//                        XGameComponent gameComponent = poolController.obtainObject(XGameComponent.class);
-//                        XTransformComponent transformComponent = poolController.obtainObject(XTransformComponent.class);
-//                        XRender3DComponent modelComponent = poolController.obtainObject(XRender3DComponent.class);
-//                        modelComponent.createAndAddShapeType(XAssetModel.MODEL_TYPE);
-//
-//                        newEntity.attachComponent(gameComponent);
-//                        newEntity.attachComponent(transformComponent);
-//                        newEntity.attachComponent(modelComponent);
-//
-//                        entityService.attachEntity(newEntity);
+                        XEntityService entityService = gameEngine.getWorld().getEntityService();
+                        XEntity newEntity = entityService.obtain();
+                        newEntity.setName("Asset");
+                        XGameWorldComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
+                        XTransformComponent transformComponent = poolController.obtainObject(XTransformComponent.class);
+                        XGLTFComponent modelComponent = poolController.obtainObject(XGLTFComponent.class);
+
+                        newEntity.attachComponent(gameComponent);
+                        newEntity.attachComponent(transformComponent);
+                        newEntity.attachComponent(modelComponent);
+
+                        entityService.attachEntity(newEntity);
                     }
                     if(ImGui.BeginItemTooltip()) {
-                        ImGui.Text("Components:\nGame\nTransform\nAABB\nModel");
+                        ImGui.Text("Components:\nGameWorld\nTransform\nGLTF");
                         ImGui.EndTooltip();
                     }
                     ImGui.EndMenu();
@@ -221,7 +205,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                     XEntityService entityService = gameEngine.getWorld().getEntityService();
                     XEntity newEntity = entityService.obtain();
                     newEntity.setName("Camera");
-                    XGameComponent gameComponent = poolController.obtainObject(XGameComponent.class);
+                    XGameWorldComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
                     XTransformComponent transformComponent = poolController.obtainObject(XTransformComponent.class);
                     XCameraComponent cameraComponent = poolController.obtainObject(XCameraComponent.class);
 
@@ -232,7 +216,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                     entityService.attachEntity(newEntity);
                 }
                 if(ImGui.BeginItemTooltip()) {
-                    ImGui.Text("Components:\nGame\nTransform\nAABB\nCamera");
+                    ImGui.Text("Components:\nGame\nTransform\nCamera");
                     ImGui.EndTooltip();
                 }
 

@@ -4,10 +4,10 @@ import xlight.engine.camera.XCamera;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.ecs.XWorld;
-import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.ecs.component.XGameWorldComponent;
 import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.transform.ecs.component.XTransformComponent;
-import xlight.engine.ecs.component.XUIComponent;
+import xlight.engine.ecs.component.XUIWorldComponent;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
 import xlight.engine.ecs.entity.XEntity;
@@ -81,10 +81,10 @@ public class XCameraSystem extends XEntitySystem {
 
     private Class<?> getRenderComponentType() {
         if(systemType == XSystemType.RENDER) {
-            return XGameComponent.class;
+            return XGameWorldComponent.class;
         }
         else if(systemType == XSystemType.UI) {
-            return XUIComponent.class;
+            return XUIWorldComponent.class;
         }
         return null;
     }

@@ -89,7 +89,7 @@ class XEntityImpl implements XEntity {
     }
 
     @Override
-    public <T extends XComponent> boolean detachComponent(Class<T> type) {
+    public boolean detachComponent(Class<?> type) {
         XComponentService componentService = world.getComponentService();
         return componentService.detachComponent(this, type);
     }
@@ -98,6 +98,12 @@ class XEntityImpl implements XEntity {
     public boolean detachComponent(XComponent component) {
         XComponentService componentService = world.getComponentService();
         return componentService.detachComponent(this, component);
+    }
+
+    @Override
+    public boolean containsComponent(Class<?> type) {
+        XComponentService componentService = world.getComponentService();
+        return componentService.containsComponent(this, type);
     }
 
     @Override

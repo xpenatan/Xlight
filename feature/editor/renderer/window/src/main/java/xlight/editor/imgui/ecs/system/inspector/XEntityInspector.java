@@ -17,12 +17,15 @@ import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.imgui.ui.XCollapseWidget;
 import xlight.engine.imgui.ui.XUITableUtil;
+import xlight.engine.pool.XPoolController;
 
 public class XEntityInspector {
     private XImGuiManager imguiManager;
+    private XUIComponentsWidget componentsWidget;
 
-    public XEntityInspector(XImGuiManager imguiManager) {
+    public XEntityInspector(XImGuiManager imguiManager, XPoolController poolController) {
         this.imguiManager = imguiManager;
+        componentsWidget = new XUIComponentsWidget(poolController);
     }
 
     public void renderEntity(XWorld editorWorld, XWorld gameWorld, XEntity entity, XUIData uiData) {
@@ -56,7 +59,6 @@ public class XEntityInspector {
                 }
                 XEntity parent = entity.getParent();
                 uiData.text("Parent:", parent != null ? parent.getName() : "-1");
-                uiData.text("Components Size:", "" + entity.getComponentsSize());
             }
 
             if(entityUIListener != null) {
@@ -70,7 +72,7 @@ public class XEntityInspector {
     }
 
     private void renderComponents(XWorld editorWorld, XWorld gameWorld, XEntity entity, XUIData uiData) {
-        String groupName = "Components";
+        String groupName = "Components - " + entity.getComponentsSize();
         Texture[] texturesArray = XCollapseWidget.getTexturesArray();
 
         texturesArray[0] = XEditorAssets.ic_addTexture;
@@ -83,10 +85,13 @@ public class XEntityInspector {
 
         if(widgetData.buttonIndex == 0) {
             ImGui.OpenPopup("OpenComponentList");
+            componentsWidget.clear();
         }
 
         if(ImGui.BeginPopup("OpenComponentList")) {
-
+            if(componentsWidget.render(gameWorld, entity)) {
+                ImGui.CloseCurrentPopup();
+            }
             ImGui.EndPopup();
         }
 
@@ -118,14 +123,6 @@ public class XEntityInspector {
                     entity.detachComponent(component);
                 }
             });
-//            if(entity.detachComponent(component)) {
-//                componentRemove = true;
-//                if(metaClass.isRegistered()) {
-//                    if(component instanceof XPoolable) {
-//                        poolController.releaseObject(metaClass.getType(), component);
-//                    }
-//                }
-//            }
         }
 
         if(widgetData.isOpen) {

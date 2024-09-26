@@ -9,7 +9,7 @@ import xlight.engine.core.XApplication;
 import xlight.engine.core.XEngine;
 import xlight.engine.core.ecs.system.XCameraSystem;
 import xlight.engine.ecs.XWorld;
-import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.ecs.component.XGameWorldComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.system.XSystemService;
@@ -79,7 +79,7 @@ public class MainApp implements XApplication {
 
         e.attachComponent(new XTransformComponent().position(x, y, z));
         e.attachComponent(cameraComponent);
-        e.attachComponent(new XGameComponent());
+        e.attachComponent(new XGameWorldComponent());
         es.attachEntity(e);
     }
 
@@ -90,7 +90,7 @@ public class MainApp implements XApplication {
         e.setName(name);
         e.attachComponent(new XGLTFComponent(asset));
         e.attachComponent(new XTransformComponent().position(x, y, z));
-        e.attachComponent(new XGameComponent());
+        e.attachComponent(new XGameWorldComponent());
         es.attachEntity(e);
     }
 
@@ -99,7 +99,7 @@ public class MainApp implements XApplication {
         e.setName("Ground");
         e.attachComponent(new XGLTFComponent("models/ground/ground.gltf"));
         e.attachComponent(new XTransformComponent().position(0, -2, 0).scale(5, 1, 5));
-        e.attachComponent(new XGameComponent());
+        e.attachComponent(new XGameWorldComponent());
         es.attachEntity(e);
     }
 }

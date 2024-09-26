@@ -32,12 +32,13 @@ public interface XEntity {
     /**
      * Quick way to detach component. Same as using ComponentService.
      */
-    <T extends XComponent> boolean detachComponent(Class<T> type);
+    boolean detachComponent(Class<?> type);
 
     /**
      * Quick way to detach component. Same as using ComponentService.
      */
     boolean detachComponent(XComponent component);
+    boolean containsComponent(Class<?> type);
 
     int getComponentsSize();
     XComponent getComponentAt(int index);

@@ -18,6 +18,9 @@ dependencies {
     implementation(project(":feature:lib:ecs"))
     implementation(project(":feature:lib:list"))
     implementation(project(":feature:lib:string"))
+    implementation(project(":feature:lib:pool"))
+    implementation(project(":feature:lib:renderer:g3d"))
+    implementation(project(":feature:lib:renderer:g2d"))
     implementation(project(":feature:lib:imgui:ui:core"))
 
     implementation(project(":feature:engine:init"))

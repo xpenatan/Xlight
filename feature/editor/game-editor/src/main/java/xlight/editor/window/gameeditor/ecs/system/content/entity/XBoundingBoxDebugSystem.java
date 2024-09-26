@@ -13,7 +13,7 @@ import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.component.XComponentMatcherBuilder;
-import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.ecs.component.XGameWorldComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEvent;
@@ -63,7 +63,7 @@ public class XBoundingBoxDebugSystem extends XGameEditorSystem {
     private void init(XEngine gameEngine) {
         XWorld engineWorld = gameEngine.getWorld();
         XComponentMatcherBuilder matcherBuilder = engineWorld.getComponentService().getMatcherBuilder();
-        XComponentMatcher matcher = matcherBuilder.all(XGameComponent.class, XTransformComponent.class).build();
+        XComponentMatcher matcher = matcherBuilder.all(XGameWorldComponent.class, XTransformComponent.class).build();
         entities = matcher.getEntities();
     }
 

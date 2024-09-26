@@ -15,6 +15,7 @@ import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.system.XSystem;
 import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
+import xlight.engine.pool.XPoolController;
 
 public class XInspectorWindowSystem implements XSystem {
 
@@ -36,7 +37,8 @@ public class XInspectorWindowSystem implements XSystem {
         entitySelectionManager = world.getManager(XEntitySelectionManager.class);
         editorManager = world.getManager(XEditorManager.class);
 
-        entityInspector = new XEntityInspector(imguiManager);
+        XPoolController poolController = world.getGlobalData(XPoolController.class);
+        entityInspector = new XEntityInspector(imguiManager, poolController);
 
         if(uiData == null) {
             uiData = world.getGlobalData(XUIData.class);
