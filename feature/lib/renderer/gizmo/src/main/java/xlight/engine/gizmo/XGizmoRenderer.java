@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
@@ -94,9 +95,10 @@ public class XGizmoRenderer {
         objectVirtualPosition = new Vector3();
         objectVirtualTotalVectorTargetAngle = new Vector3();
         environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 1, 1, 1, 1f));
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.7f, 0.7f, 0.7f, 1f));
+        environment.add(new DirectionalLight().set(1.0f, 1.0f, 1.0f, 0, -1, 0));
 
-        positionGizmoModel =  XShapeModelHelper.createPositionGizmo(AXIS_WIDTH, true, 0.8f);
+        positionGizmoModel =  XShapeModelHelper.createPositionGizmo(AXIS_WIDTH, true, 0.9f);
         positionGizmoModelInstance = new XModelInstance(positionGizmoModel);
 
         rotationGizmoModel = createRotationGizmo();
@@ -129,7 +131,7 @@ public class XGizmoRenderer {
         {
             Node node = mb.node();
             node.id = "rotationX";
-            Material material = new Material("rotationX", ColorAttribute.createDiffuse(1, 0, 0, 0.7f));
+            Material material = new Material("rotationX", ColorAttribute.createDiffuse(1, 0, 0, 0.9f));
             BlendingAttribute blending = new BlendingAttribute();
             material.set(blending);
             MeshPartBuilder builder = mb.part("rotationX", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position, material);
@@ -139,7 +141,7 @@ public class XGizmoRenderer {
         {
             Node node = mb.node();
             node.id = "rotationY";
-            Material material = new Material("rotationY", ColorAttribute.createDiffuse(0, 1, 0, 0.7f));
+            Material material = new Material("rotationY", ColorAttribute.createDiffuse(0, 1, 0, 0.9f));
             BlendingAttribute blending = new BlendingAttribute();
             material.set(blending);
             MeshPartBuilder builder = mb.part("rotationY", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position, material);
@@ -149,7 +151,7 @@ public class XGizmoRenderer {
         {
             Node node = mb.node();
             node.id = "rotationZ";
-            Material material = new Material("rotationZ", ColorAttribute.createDiffuse(0, 0, 1, 0.7f));
+            Material material = new Material("rotationZ", ColorAttribute.createDiffuse(0, 0, 1, 0.9f));
 
             BlendingAttribute blending = new BlendingAttribute();
             material.set(blending);
@@ -221,7 +223,7 @@ public class XGizmoRenderer {
 
         nodeConeAxisX.calculateLocalTransform();
         nodeConeAxisX.calculateWorldTransform();
-        material = new Material("boxAxisX", ColorAttribute.createDiffuse(r, g, b, 0.8f));
+        material = new Material("boxAxisX", ColorAttribute.createDiffuse(r, g, b, 0.9f));
         BlendingAttribute blending = new BlendingAttribute();
         blending.blended = false;
         material.set(blending);

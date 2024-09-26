@@ -68,22 +68,22 @@ public class XShapeModelHelper {
         axisZ.rotation.set(Vector3.X, 90);
 
         if(createBox) {
-            Model modelYZ = createBoxXY(1f, 0f, 0f);
+            Model modelYZ = createBoxXY(1f, 0f, 0f, alpha);
             Node axisYZ = mb.node("axisYZ", modelYZ);
             axisYZ.rotation.set(Vector3.Y, -90);
 
-            Model modelXZ = createBoxXY(0f, 1f, 0f);
+            Model modelXZ = createBoxXY(0f, 1f, 0f, alpha);
             Node axisXZ = mb.node("axisXZ", modelXZ);
             axisXZ.rotation.set(Vector3.X, 90);
 
-            Model modelXY = createBoxXY(0f, 0f, 1f);
+            Model modelXY = createBoxXY(0f, 0f, 1f, alpha);
             Node axisXY = mb.node("axisXY", modelXY);
         }
 
         return mb.end();
     }
 
-    public static Model createBoxXY(float r, float g, float b) {
+    public static Model createBoxXY(float r, float g, float b, float alpha) {
         ModelBuilder mb = new ModelBuilder();
         Material material = null;
 
@@ -95,7 +95,7 @@ public class XShapeModelHelper {
 
         Node node = mb.node();
         node.id = "axisXY";
-        material = new Material("axisXY", ColorAttribute.createDiffuse(r, g, b, 0.8f));
+        material = new Material("axisXY", ColorAttribute.createDiffuse(r, g, b, alpha));
         BlendingAttribute blending = new BlendingAttribute();
         material.set(blending);
         MeshPartBuilder meshBuilderXY = mb.part("axisXY", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, material);

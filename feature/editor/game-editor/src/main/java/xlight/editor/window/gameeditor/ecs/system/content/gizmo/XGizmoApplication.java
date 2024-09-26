@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import xlight.engine.camera.PROJECTION_MODE;
@@ -30,12 +31,13 @@ public class XGizmoApplication extends ApplicationAdapter {
         this.world = world;
         modelBatch = new ModelBatch();
 
-        positionGizmoModel = XShapeModelHelper.createPositionGizmo(0.4f, false, 0.9f);
+        positionGizmoModel = XShapeModelHelper.createPositionGizmo(0.4f, false, 1.0f);
         positionGizmoModelInstance = new XModelInstance(positionGizmoModel);
         positionGizmoModelInstance.initMeshDataCache();
 
         environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 1, 1, 1, 1f));
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.5f, 0.5f, 0.5f, 1f));
+        environment.add(new DirectionalLight().set(1.0f, 1.0f, 1.0f, 0, -1, 0));
 
         modelCamera = XCamera.newInstance();
         modelCamera.setViewport(new ScreenViewport());
