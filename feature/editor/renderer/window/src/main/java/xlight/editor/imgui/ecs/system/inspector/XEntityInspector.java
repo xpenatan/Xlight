@@ -50,11 +50,11 @@ public class XEntityInspector {
                     entity.setName(strOp.value);
                 }
                 XUIOpCheckbox op = XUIOpCheckbox.get();
-                if(uiData.checkbox("Is Visible:", entity.isVisible(), op)) {
+                if(uiData.checkbox("Visible:", entity.isVisible(), op)) {
                     entity.setVisible(op.value);
                 }
                 op = XUIOpCheckbox.get();
-                if(uiData.checkbox("Is Savable:", entity.isSavable(), op)) {
+                if(uiData.checkbox("Savable:", entity.isSavable(), op)) {
                     entity.setSavable(op.value);
                 }
                 XEntity parent = entity.getParent();
