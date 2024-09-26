@@ -10,6 +10,7 @@ import xlight.engine.ecs.manager.XManager;
 import xlight.engine.ecs.service.XService;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.list.XIntMap;
+import xlight.engine.pool.XPoolController;
 
 public class XECSWorldImpl implements XWorld {
 
@@ -41,6 +42,9 @@ public class XECSWorldImpl implements XWorld {
 
         initServices = new Array<>();
         initManagers = new Array<>();
+
+        XPoolControllerImpl poolController = new XPoolControllerImpl();
+        registerGlobalData(XPoolController.class, poolController);
     }
 
     @Override

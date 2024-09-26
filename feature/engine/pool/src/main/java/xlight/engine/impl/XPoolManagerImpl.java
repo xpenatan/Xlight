@@ -16,7 +16,6 @@ class XPoolManagerImpl implements XPoolManager, XManager {
     private XPoolControllerImpl poolController;
 
     public XPoolManagerImpl() {
-        poolController = new XPoolControllerImpl();
     }
 
     @Override
@@ -26,10 +25,12 @@ class XPoolManagerImpl implements XPoolManager, XManager {
 
     @Override
     public void onAttach(XWorld world) {
+        poolController = world.getGlobalData(XPoolController.class);
         XJson json = world.getManager(XJsonManager.class).getJson();
         XListPoolUtil.registerPool(poolController);
         XPrimitivePoolUtil.registerPool(poolController);
         XDataMapPoolUtil.registerPool(json, poolController);
         XPropertiesPoolUtil.registerPool(json, poolController);
+        world.registerGlobalData(XPoolController.class, poolController);
     }
 }

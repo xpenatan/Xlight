@@ -28,6 +28,9 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
 
     Files.FileType fileType = Files.FileType.Internal;
 
+    public XGLTFComponent() {
+    }
+
     public XGLTFComponent(String path) {
         setAssetInternal(path);
     }

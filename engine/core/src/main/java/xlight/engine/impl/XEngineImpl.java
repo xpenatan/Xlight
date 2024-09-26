@@ -5,10 +5,13 @@ import xlight.engine.core.ecs.XPreferencesManager;
 import xlight.engine.asset.ecs.manager.XAssetManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.camera.ecs.component.XCameraComponent;
+import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XGameComponent;
+import xlight.engine.g3d.ecs.component.XGLTFComponent;
 import xlight.engine.g3d.ecs.component.XRender3DComponent;
 import xlight.engine.init.ecs.service.XInitFeatureService;
 import xlight.engine.json.ecs.manager.XJsonManager;
+import xlight.engine.pool.XPool;
 import xlight.engine.pool.ecs.manager.XPoolManager;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.transform.ecs.component.XTransformComponent;
@@ -73,10 +76,11 @@ public class XEngineImpl implements XEngine {
 
     private void registerComponents() {
         XComponentServiceImpl componentService = world.componentService;
-        componentService.registerComponent(XGameComponent.class);
-        componentService.registerComponent(XUIComponent.class);
-        componentService.registerComponent(XTransformComponent.class);
-        componentService.registerComponent(XCameraComponent.class);
-        componentService.registerComponent(XRender3DComponent.class);
+        componentService.registerComponent(XRender3DComponent.class); // Abstract component so there is no pool
+        componentService.registerComponent(XGameComponent.class, new XPool<>() { protected XComponent newObject() { return new XGameComponent(); } });
+        componentService.registerComponent(XUIComponent.class, new XPool<>() { protected XComponent newObject() { return new XUIComponent(); } });
+        componentService.registerComponent(XTransformComponent.class, new XPool<>() { protected XComponent newObject() { return new XTransformComponent(); } });
+        componentService.registerComponent(XCameraComponent.class, new XPool<>() { protected XComponent newObject() { return new XCameraComponent(); } });
+        componentService.registerComponent(XGLTFComponent.class, new XPool<>() { protected XComponent newObject() { return new XGLTFComponent(); } });
     }
 }

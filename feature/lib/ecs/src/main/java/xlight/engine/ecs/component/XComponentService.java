@@ -1,9 +1,11 @@
 package xlight.engine.ecs.component;
 
 import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.pool.XPool;
 
 public interface XComponentService {
     <T extends XComponent> boolean registerComponent(Class<T> type);
+    <T extends XComponent> boolean registerComponent(Class<T> type, XPool<XComponent> pool);
     <T extends XComponent> XComponentType getComponentType(Class<T> type);
     <T extends XComponent> T getComponent(XEntity entity, Class<T> type);
     <T extends XComponent> T getComponentIndex(XEntity entity, int index);

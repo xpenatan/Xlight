@@ -9,6 +9,8 @@ import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.component.XComponentType;
 import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.pool.XPool;
+import xlight.engine.pool.XPoolController;
 
 class XComponentServiceImpl implements XComponentService {
 
@@ -28,6 +30,11 @@ class XComponentServiceImpl implements XComponentService {
 
     @Override
     public <T extends XComponent> boolean registerComponent(Class<T> type) {
+        return registerComponent(type, null);
+    }
+
+    @Override
+    public <T extends XComponent> boolean registerComponent(Class<T> type, XPool<XComponent> pool) {
         XComponentType componentType = getComponentInternal(type);
         if(componentType == null) {
             int nextIndex = components.size;
@@ -36,6 +43,10 @@ class XComponentServiceImpl implements XComponentService {
             pair.a = componentType;
             pair.b = new XComponentArray();
             components.add(pair);
+            if(pool != null) {
+                XPoolController poolController = world.getGlobalData(XPoolController.class);
+                poolController.registerPool(type, pool);
+            }
             return true;
         }
         return false;
