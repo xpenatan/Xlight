@@ -95,6 +95,9 @@ public class XSelectingSystem extends XGameEditorSystem {
                     Camera gdxCamera = camera.asGDXCamera();
                     selectionRenderer.render(1, gdxCamera, selectionManager, componentService);
 
+                    cursor3DRenderer.update(gdxCamera);
+                    cursor3DRenderer.render(gdxCamera);
+
                     boolean leftClick = Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
                     boolean rightClick = Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT);
                     if(!gizmoRenderer.isHighlight() && (leftClick || rightClick)) {
@@ -110,6 +113,7 @@ public class XSelectingSystem extends XGameEditorSystem {
 
     private void renderGizmo(XCamera camera) {
         XEntity currentSelectedTarget = selectionManager.getCurrentSelectedTarget();
+        Camera gdxCamera = camera.asGDXCamera();
         if(currentSelectedTarget != null) {
             XTransformComponent transformComponent = currentSelectedTarget.getComponent(XTransformComponent.class);
             if(transformComponent == null) {
@@ -125,7 +129,7 @@ public class XSelectingSystem extends XGameEditorSystem {
             gizmoRenderer.setObjectAngle(quaternion, rotationSequence);
 
             boolean isPerspective = camera.getProjectionMode() == PROJECTION_MODE.PERSPECTIVE;
-            gizmoRenderer.render(camera.asGDXCamera(), isPerspective, null, cursor3DRenderer);
+            gizmoRenderer.render(gdxCamera, isPerspective, null, cursor3DRenderer);
 
             XCursor3DRenderer.AXIS_TYPE targetType = gizmoRenderer.getAxisType();
             if(targetType != null) {

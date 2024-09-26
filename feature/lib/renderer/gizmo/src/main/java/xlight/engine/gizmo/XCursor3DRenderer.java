@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Plane;
@@ -40,6 +41,8 @@ public class XCursor3DRenderer implements Disposable {
 
     Vector3 intersection = new Vector3();
 
+    private XShapeRenderer shapeRenderer;
+
     public static enum AXIS_TYPE {
         X, Y, Z, X_Y, X_Z, Y_Z
     }
@@ -47,6 +50,7 @@ public class XCursor3DRenderer implements Disposable {
     private AXIS_TYPE moveState = AXIS_TYPE.X_Y;
 
     ModelInstance planeModel;
+    ModelInstance cursor3dModel;
     ModelBatch modelBatch;
     Environment environment;
 
@@ -71,6 +75,8 @@ public class XCursor3DRenderer implements Disposable {
         Model model = modelBuilder.createBox(2f, 1f, 0.05f, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
         planeModel = new ModelInstance(model);
 
+        Model cursorModel = modelBuilder.createSphere(0.1f, 0.1f, 0.1f, 16, 16, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
+        cursor3dModel = new ModelInstance(cursorModel);
         modelBatch = new ModelBatch();
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.5f, 0.5f, 0.5f, 1f));
@@ -102,13 +108,13 @@ public class XCursor3DRenderer implements Disposable {
             moveState = AXIS_TYPE.Z;
         }
         else if(ctrl && alt && Gdx.input.isKeyPressed(Keys.X)) {
-            moveState = AXIS_TYPE.X_Y;
-        }
-        else if(ctrl && alt && Gdx.input.isKeyPressed(Keys.Y)) {
             moveState = AXIS_TYPE.Y_Z;
         }
-        else if(ctrl && alt && Gdx.input.isKeyPressed(Keys.Z)) {
+        else if(ctrl && alt && Gdx.input.isKeyPressed(Keys.Y)) {
             moveState = AXIS_TYPE.X_Z;
+        }
+        else if(ctrl && alt && Gdx.input.isKeyPressed(Keys.Z)) {
+            moveState = AXIS_TYPE.X_Y;
         }
         else if(alt && Gdx.input.isKeyPressed(Keys.C)) {
 //			setPlanePosition(position);
@@ -120,12 +126,14 @@ public class XCursor3DRenderer implements Disposable {
         }
     }
 
-    @Deprecated
-    public void render(Camera editorCam, XShapeRenderer shapeRenderer) {
-
-        drawBox(shapeRenderer, 0.1f, 0.1f, 0.1f, planePosition.x, planePosition.y, planePosition.z, 0, 0, 0, 0, 1, 1);
-
+    public void render(Camera editorCam) {
+        modelBatch.begin(editorCam);
         if(isDebug) {
+            if(shapeRenderer == null) {
+                shapeRenderer = new XShapeRenderer();
+            }
+            shapeRenderer.setProjectionMatrix(editorCam.combined);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             drawBox(shapeRenderer, 0.1f, 0.1f, 0.1f, intersection.x, intersection.y, intersection.z, 0, 0, 0, 1, 1, 0);
 
             float x = planePosition.x;
@@ -137,17 +145,18 @@ public class XCursor3DRenderer implements Disposable {
             planeModel.transform.idt();
             shapeRenderer.setColor(Color.BLUE);
             shapeRenderer.line(x, y, z, x + scale * normalRotated.x, y + scale * normalRotated.y, z + scale * normalRotated.z);
-            //		shapeRenderer.setColor(Color.RED);
-            //		shapeRenderer.line(x, y, z, x + scale * upRotated.x, y + scale * upRotated.y, z + scale * upRotated.z );
+            shapeRenderer.end();
 
             planeModel.transform.setToLookAt(planePosition, tmp_0.set(planePosition).add(normalRotated), upRotated);
             if(intersectFlag)
                 planeModel.transform.inv();
 
-            modelBatch.begin(editorCam);
             modelBatch.render(planeModel, environment);
-            modelBatch.end();
         }
+        cursor3dModel.transform.idt();
+        cursor3dModel.transform.translate(planePosition.x, planePosition.y, planePosition.z);
+        modelBatch.render(cursor3dModel, environment);
+        modelBatch.end();
     }
 
     void drawBox(XShapeRenderer shapeRenderer, float sizeX, float sizeY, float sizeZ, float x, float y, float z, float rx, float ry, float rz, float r, float g, float b) {
