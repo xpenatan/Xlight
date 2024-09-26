@@ -2,13 +2,13 @@ package xlight.engine.core.editor.ui;
 
 import com.badlogic.gdx.utils.Array;
 import xlight.engine.core.editor.ui.options.XUIOpButton;
-import xlight.engine.core.editor.ui.options.XUIOpCheckbox;
 import xlight.engine.core.editor.ui.options.XUIOpEditText;
 import xlight.engine.core.editor.ui.options.XUIOpEditText2;
 import xlight.engine.core.editor.ui.options.XUIOpEditText3;
-import xlight.engine.core.editor.ui.options.XUIOpSelectList;
 import xlight.engine.core.editor.ui.options.XUIOpStringEditText;
 import xlight.engine.core.editor.ui.options.XUIOpTransform;
+import xlight.engine.core.editor.ui.options.XUIOpCheckbox;
+import xlight.engine.core.editor.ui.options.XUIOpSelectList;
 import xlight.engine.transform.XTransform;
 
 public interface XUIData {
@@ -54,5 +54,5 @@ public interface XUIData {
     /**
      * Return true when one of transform values is updated.
      */
-    boolean transform(XTransform value, XUIOpTransform op);
+    boolean transform(XTransform transform, XUIOpTransform op);
 }

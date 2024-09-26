@@ -19,7 +19,6 @@ import xlight.engine.imgui.ui.XEditText;
 import xlight.engine.imgui.ui.XEditTextFloatData;
 import xlight.engine.imgui.ui.XEditTextIntData;
 import xlight.engine.imgui.ui.XUITableUtil;
-import xlight.engine.transform.XGizmoType;
 import xlight.engine.transform.XTransform;
 import static imgui.ImGuiTreeNodeFlags.ImGuiTreeNodeFlags_DefaultOpen;
 
@@ -435,11 +434,12 @@ class XUIDataImpl implements XUIData {
     }
 
     @Override
-    public boolean transform(XTransform value, XUIOpTransform op) {
+    public boolean transform(XTransform transform, XUIOpTransform op) {
+        beginTable();
         boolean flag = false;
         if(op.drawPosition) {
             XUITableUtil.beginLine(op.posLine);
-            Vector3 position = value.getPosition();
+            Vector3 position = transform.getPosition();
             FLOAT_D_1.clear();
             FLOAT_D_2.clear();
             FLOAT_D_3.clear();
@@ -459,7 +459,7 @@ class XUIDataImpl implements XUIData {
                 float value1 = FLOAT_D_1.value.getValue();
                 float value2 = FLOAT_D_2.value.getValue();
                 float value3 = FLOAT_D_3.value.getValue();
-                position.set(value1, value2, value3);
+                transform.setPosition(value1, value2, value3);
                 flag = true;
             }
             XUITableUtil.endLine();
@@ -467,7 +467,7 @@ class XUIDataImpl implements XUIData {
 
         if(op.drawRotation) {
             XUITableUtil.beginLine(op.rotLine);
-            Vector3 rotation = value.getRotation();
+            Vector3 rotation = transform.getRotation();
             FLOAT_D_1.clear();
             FLOAT_D_2.clear();
             FLOAT_D_3.clear();
@@ -487,7 +487,7 @@ class XUIDataImpl implements XUIData {
                 float value1 = FLOAT_D_1.value.getValue();
                 float value2 = FLOAT_D_2.value.getValue();
                 float value3 = FLOAT_D_3.value.getValue();
-                rotation.set(value1, value2, value3);
+                transform.setRotation(value1, value2, value3);
                 flag = true;
             }
             XUITableUtil.endLine();
@@ -495,7 +495,7 @@ class XUIDataImpl implements XUIData {
 
         if(op.drawScale) {
             XUITableUtil.beginLine(op.sclLine);
-            Vector3 scale = value.getScale();
+            Vector3 scale = transform.getScale();
             FLOAT_D_1.clear();
             FLOAT_D_2.clear();
             FLOAT_D_3.clear();
@@ -515,7 +515,7 @@ class XUIDataImpl implements XUIData {
                 float value1 = FLOAT_D_1.value.getValue();
                 float value2 = FLOAT_D_2.value.getValue();
                 float value3 = FLOAT_D_3.value.getValue();
-                scale.set(value1, value2, value3);
+                transform.setScale(value1, value2, value3);
                 flag = true;
             }
             XUITableUtil.endLine();
@@ -523,7 +523,7 @@ class XUIDataImpl implements XUIData {
 
         if(op.drawSize) {
             XUITableUtil.beginLine(op.sizeLine);
-            Vector3 size = value.getSize();
+            Vector3 size = transform.getSize();
             FLOAT_D_1.clear();
             FLOAT_D_2.clear();
             FLOAT_D_3.clear();
@@ -549,14 +549,14 @@ class XUIDataImpl implements XUIData {
                 float value1 = FLOAT_D_1.value.getValue();
                 float value2 = FLOAT_D_2.value.getValue();
                 float value3 = FLOAT_D_3.value.getValue();
-                size.set(value1, value2, value3);
+                transform.setSize(value1, value2, value3);
             }
             XUITableUtil.endLine();
         }
 
         if(op.drawOffset) {
             XUITableUtil.beginLine(op.offsetLine);
-            Vector3 offset = value.getOffset();
+            Vector3 offset = transform.getOffset();
             FLOAT_D_1.clear();
             FLOAT_D_2.clear();
             FLOAT_D_3.clear();
@@ -583,7 +583,7 @@ class XUIDataImpl implements XUIData {
                 float value1 = FLOAT_D_1.value.getValue();
                 float value2 = FLOAT_D_2.value.getValue();
                 float value3 = FLOAT_D_3.value.getValue();
-                offset.set(value1, value2, value3);
+                transform.setOffset(value1, value2, value3);
                 flag = true;
             }
             XUITableUtil.endLine();

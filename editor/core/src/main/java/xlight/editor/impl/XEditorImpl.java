@@ -16,7 +16,6 @@ import xlight.editor.core.project.XProjectOptions;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.editor.imgui.ecs.manager.XImGuiWindowsManager;
 import xlight.engine.core.XEngine;
-import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.pool.XPoolController;

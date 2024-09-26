@@ -1,7 +1,5 @@
 package xlight.engine.core.editor.ui.options;
 
-import com.badlogic.gdx.math.Vector3;
-
 public class XUIOpEditText {
 
     private static final XUIOpEditText op = new XUIOpEditText();
