@@ -33,7 +33,7 @@ i:d:/demos/g3d/basic/web/build/tmp:0:1
 i:d:/demos/g3d/basic/web/build/tmp/jar:0:1
 i:b:/demos/g3d/basic/web/build/tmp/jar/MANIFEST.MF:25:1
 i:d:/demos/g3d/basic/web/build/tmp/compileJava:0:1
-i:b:/demos/g3d/basic/web/build/tmp/compileJava/previous-compilation-data.bin:3378:1
+i:b:/demos/g3d/basic/web/build/tmp/compileJava/previous-compilation-data.bin:3341:1
 i:d:/demos/g3d/basic/web/build/libs:0:1
 i:b:/demos/g3d/basic/web/build/libs/web-1.0.0-SNAPSHOT.jar:2211:1
 i:d:/demos/g3d/basic/web/build/dist:0:1
@@ -111,7 +111,7 @@ i:b:/demos/g3d/basic/web/build/dist/webapp/scripts/gdx.wasm.js:190549:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/startup-logo.png:12214:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/index.html:2063:1
 i:d:/demos/g3d/basic/web/build/dist/webapp/teavm:0:1
-i:b:/demos/g3d/basic/web/build/dist/webapp/teavm/app.js:13574331:1
+i:b:/demos/g3d/basic/web/build/dist/webapp/teavm/app.js:13589897:1
 i:d:/demos/g3d/basic/web/build/generated:0:1
 i:d:/demos/g3d/basic/web/build/generated/sources:0:1
 i:d:/demos/g3d/basic/web/build/generated/sources/annotationProcessor:0:1
