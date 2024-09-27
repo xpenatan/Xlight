@@ -286,7 +286,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         if(init) {
 //            ImGui.ShowDemoWindow();
 //            ImGui.ShowMetricsWindow();
-//            ImGui.ShowStyleEditor();
+            ImGui.ShowStyleEditor();
 
             ImGui.Render();
             ImDrawData drawData = ImGui.GetDrawData();
