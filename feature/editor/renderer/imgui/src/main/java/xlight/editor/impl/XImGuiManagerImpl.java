@@ -125,6 +125,8 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), (int)(18 * dpiScale)).setName(fontFile01.name());
         fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), (int)(20 * dpiScale)).setName(fontFile01.name());
 
+        ImGui.GetIO().set_FontGlobalScale(1.0f / dpiScale);
+
         InputMultiplexer imGuiInput = imguiManager.getImGuiInput();
         editorInput.addProcessor(imGuiInput);
 
