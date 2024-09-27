@@ -117,13 +117,13 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         FileHandle fontFile01 = Gdx.files.classpath("editor/fonts/Cousine-Regular.ttf");
         FileHandle fontFile02 = Gdx.files.classpath("editor/fonts/DroidSans.ttf");
 
-        fonts.AddFontFromMemoryTTF(fontFile02.readBytes(), 18).setName(fontFile02.name());
-        fonts.AddFontFromMemoryTTF(fontFile02.readBytes(), 16).setName(fontFile02.name());
-        fonts.AddFontFromMemoryTTF(fontFile02.readBytes(), 20).setName(fontFile02.name());
+        fonts.AddFontFromMemoryTTF(fontFile02.readBytes(), (int)(18 * dpiScale)).setName(fontFile02.name());
+        fonts.AddFontFromMemoryTTF(fontFile02.readBytes(), (int)(16 * dpiScale)).setName(fontFile02.name());
+        fonts.AddFontFromMemoryTTF(fontFile02.readBytes(), (int)(20 * dpiScale)).setName(fontFile02.name());
 
-        fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), 16).setName(fontFile01.name());
-        fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), 18).setName(fontFile01.name());
-        fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), 20).setName(fontFile01.name());
+        fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), (int)(16 * dpiScale)).setName(fontFile01.name());
+        fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), (int)(18 * dpiScale)).setName(fontFile01.name());
+        fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), (int)(20 * dpiScale)).setName(fontFile01.name());
 
         InputMultiplexer imGuiInput = imguiManager.getImGuiInput();
         editorInput.addProcessor(imGuiInput);
