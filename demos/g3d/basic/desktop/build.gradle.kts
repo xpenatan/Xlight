@@ -22,6 +22,6 @@ tasks.register<JavaExec>("desktop-run") {
 
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX) {
         // Required to run on macOS
-        jvmArgs?.add("-XstartOnFirstThread")
+        jvmArgs("-XstartOnFirstThread")
     }
 }
