@@ -1,3 +1,4 @@
+import org.gradle.internal.os.OperatingSystem.MAC_OS
 import java.io.File
 
 plugins {
@@ -18,4 +19,9 @@ tasks.register<JavaExec>("desktop-run") {
     mainClass.set(mainClassName)
     classpath = sourceSets["main"].runtimeClasspath
     workingDir = File("../assets_raw/")
+
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX) {
+        // Required to run on macOS
+        jvmArgs?.add("-XstartOnFirstThread")
+    }
 }

@@ -22,4 +22,9 @@ tasks.register<JavaExec>("run") {
     description = "Run Xlight"
     mainClass.set(mainClassName)
     classpath = sourceSets["main"].runtimeClasspath
+
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX) {
+        // Required to run on macOS
+        jvmArgs?.add("-XstartOnFirstThread")
+    }
 }
