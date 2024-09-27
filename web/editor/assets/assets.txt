@@ -111,7 +111,7 @@ i:b:/demos/g3d/basic/web/build/dist/webapp/scripts/gdx.wasm.js:190549:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/startup-logo.png:12214:1
 i:b:/demos/g3d/basic/web/build/dist/webapp/index.html:2063:1
 i:d:/demos/g3d/basic/web/build/dist/webapp/teavm:0:1
-i:b:/demos/g3d/basic/web/build/dist/webapp/teavm/app.js:13590289:1
+i:b:/demos/g3d/basic/web/build/dist/webapp/teavm/app.js:13593381:1
 i:d:/demos/g3d/basic/web/build/generated:0:1
 i:d:/demos/g3d/basic/web/build/generated/sources:0:1
 i:d:/demos/g3d/basic/web/build/generated/sources/annotationProcessor:0:1
