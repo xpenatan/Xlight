@@ -23,6 +23,7 @@ import imgui.ImGuiWindowFlags;
 import imgui.ImVec2;
 import imgui.gdx.ImGuiGdxImpl;
 import imgui.gdx.ImGuiGdxInputMultiplexer;
+import xlight.engine.app.XGraphics;
 import xlight.engine.core.XEngineEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
@@ -95,6 +96,11 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         XEditorManager editorManager = world.getManager(XEditorManager.class);
         XImGuiManager imguiManager = world.getManager(XImGuiManager.class);
         InputMultiplexer editorInput = editorManager.getDefaultMultiplexer();
+
+        XGraphics graphics = world.getGlobalData(XGraphics.class);
+
+        float dpiScale = graphics.getDPIScale();
+        System.out.println("DPI Scale: " + dpiScale);
 
         world.registerGlobalData(XUIData.class, new XUIDataImpl());
 

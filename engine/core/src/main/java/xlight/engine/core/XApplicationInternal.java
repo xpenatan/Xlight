@@ -9,7 +9,7 @@ import xlight.engine.scene.ecs.manager.XSceneManager;
 
 class XApplicationInternal implements ApplicationListener {
 
-    public XEngine engine;
+    protected XEngine engine;
     private XApplication applicationListener;
 
     public XApplicationInternal(XEngine engine, XApplication applicationListener) {
