@@ -45,7 +45,7 @@ public class XMainWindow extends XImGuiWindowContext {
     private static final String MENU_VIEW_DEBUG_WIREFRAME = "Wireframe";
     private static final String MENU_VIEW_DEBUG_ACTIVE_CAMERA = "Active Camera";
 
-    public static final int MENU_BAR_BIG_SIZE = 30;
+    public static int MENU_BAR_BIG_SIZE;
     private static int BTN_COLOR_SELECTED = Color.toIntBits(110, 110, 110, 255);
 
     private boolean first = true;
@@ -81,6 +81,10 @@ public class XMainWindow extends XImGuiWindowContext {
             editorManager = world.getManager(XEditorManager.class);
         }
 
+        float frameHeight = ImGui.GetFrameHeight();
+
+        MENU_BAR_BIG_SIZE = (int)(frameHeight + (5 * ImLayout.GetDPIScale()));
+
         if(ImGui.BeginMenuBar()) {
             ImVec2 imVec2 = ImGui.GetWindowSize();
             if(ImGui.BeginMenu(MENU_FILE)) {
@@ -112,13 +116,11 @@ public class XMainWindow extends XImGuiWindowContext {
             menuWindowClass.set_DockNodeFlagsOverrideSet(ImGuiDockNodeFlags.ImGuiDockNodeFlags_NoUndocking | ImGuiDockNodeFlagsPrivate_.ImGuiDockNodeFlags_NoTabBar);
         }
         int bigMenuDockspaceId = ImGui.GetID("ChildBigMenuDockSpaceId");
+        ImGui.PushStyleVar(ImGuiStyleVar.ImGuiStyleVar_WindowPadding, ImVec2.TMP_1.set(0, 0));
         ImGui.DockSpace(bigMenuDockspaceId, ImVec2.TMP_1.set(0, MENU_BAR_BIG_SIZE), 0, menuWindowClass);
-
-        float cursorPosY = ImGui.GetCursorPosY();
 
         XEngine gameEngine = editorManager.getGameEngine();
 
-        float centerX = Gdx.graphics.getWidth() / 2f;
         int flags = ImGuiWindowFlags.ImGuiWindowFlags_NoMove;
         flags = flags | ImGuiWindowFlags.ImGuiWindowFlags_NoTitleBar;
         flags = flags | ImGuiWindowFlags.ImGuiWindowFlags_NoResize;
@@ -128,28 +130,30 @@ public class XMainWindow extends XImGuiWindowContext {
         ImGui.SetNextWindowDockID(bigMenuDockspaceId);
         ImGui.Begin(BIG_MENU, null, flags);
 
-        ImLayout.BeginAlign("##BigMenuAlign", ImLayout.MATCH_PARENT, ImLayout.MATCH_PARENT, 0.5f);
+        ImLayout.BeginAlign("##BigMenuAlign", ImLayout.MATCH_PARENT, MENU_BAR_BIG_SIZE, 0.5f);
         renderImGuiButtons(gameEngine);
         ImLayout.EndAlign();
-        renderImGuiTranslation();
 
         ImGui.End();
+        ImGui.PopStyleVar();
     }
 
     private void renderImGuiButtons(XEngine gameEngine) {
-        int padding = 5;
+        int padding = (int)(6 * ImLayout.GetDPIScale());
         boolean startHoldingStep = false;
         boolean isPlay = false;
 
         int colorPlay = isPlay ? BTN_COLOR_SELECTED : 0;
         int colorStop = startHoldingStep || isPlay ? 0 : BTN_COLOR_SELECTED;
 
+        int buttonSize = MENU_BAR_BIG_SIZE - padding * 2;
+
         ImGui.PushStyleVar(ImGuiStyleVar.ImGuiStyleVar_FramePadding, ImVec2.TMP_1.set(padding, padding));
 
         if(colorStop != 0) {
             ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, colorStop);
         }
-        if(renderMenuButton(XEditorAssets.stopTexture, "##stopTexture")) {
+        if(renderMenuButton(XEditorAssets.stopTexture, "##stopTexture", buttonSize)) {
             // TODO call stop
         }
         if(colorStop != 0) {
@@ -160,7 +164,7 @@ public class XMainWindow extends XImGuiWindowContext {
         if(colorPlay != 0) {
             ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, colorPlay);
         }
-        if(renderMenuButton(XEditorAssets.playTexture, "##playTexture")) {
+        if(renderMenuButton(XEditorAssets.playTexture, "##playTexture", buttonSize)) {
             // TODO call play
         }
         if(colorPlay != 0) {
@@ -173,7 +177,7 @@ public class XMainWindow extends XImGuiWindowContext {
             ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, BTN_COLOR_SELECTED);
         }
         ImGui.SameLine();
-        if(renderMenuButton(XEditorAssets.playStepTexture, "##playStepTexture")) {
+        if(renderMenuButton(XEditorAssets.playStepTexture, "##playStepTexture", buttonSize)) {
             // TODO play step
         }
         if(startHoldingStep) {
@@ -181,25 +185,20 @@ public class XMainWindow extends XImGuiWindowContext {
         }
 
         ImGui.SameLine();
-        if(renderMenuButton(XEditorAssets.saveTexture, "##saveTexture")) {
+        if(renderMenuButton(XEditorAssets.saveTexture, "##saveTexture", buttonSize)) {
             // TODO save scene
         }
         ImGui.SameLine();
 
-        if(renderMenuButton(XEditorAssets.loadTexture, "##loadTexture")) {
+        if(renderMenuButton(XEditorAssets.loadTexture, "##loadTexture", buttonSize)) {
             //TODO load scene
 
         }
         ImGui.PopStyleVar();
     }
 
-    private void renderImGuiTranslation() {
-
-    }
-
-    private boolean renderMenuButton(Texture texture, String id) {
-        float size = 15;
-        if(ImGui.ImageButton(id, texture.getTextureObjectHandle(), ImVec2.TMP_1.set(size, size), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(1, 1))) {
+    private boolean renderMenuButton(Texture texture, String id, int buttonSize) {
+        if(ImGui.ImageButton(id, texture.getTextureObjectHandle(), ImVec2.TMP_1.set(buttonSize, buttonSize), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(1, 1))) {
             return true;
         }
         return false;

@@ -6,6 +6,7 @@ import imgui.ImGuiCol;
 import imgui.ImGuiPopupFlags;
 import imgui.ImVec2;
 import imgui.ImVec4;
+import imgui.extension.imlayout.ImLayout;
 import xlight.editor.assets.XEditorAssets;
 import xlight.editor.window.gameeditor.ecs.system.XGameEditorSystem;
 import xlight.editor.window.gameeditor.ecs.system.content.aabb.XAABBDebugSystem;
@@ -18,7 +19,7 @@ import xlight.engine.transform.XGizmoType;
 
 public class XFloatingButtonSystem extends XGameEditorSystem {
 
-    private static final float buttonSize = 20;
+    private float buttonSize;
 
     private XSelectingSystem selectingSystem;
 
@@ -31,6 +32,8 @@ public class XFloatingButtonSystem extends XGameEditorSystem {
         if(selectingSystem == null) {
             selectingSystem = world.getSystemService().getSystem(XSelectingSystem.class);
         }
+
+        buttonSize = 20 * ImLayout.GetDPIScale();
 
         ImGui.SetCursorPos(ImVec2.TMP_1.set(2, 2));
 

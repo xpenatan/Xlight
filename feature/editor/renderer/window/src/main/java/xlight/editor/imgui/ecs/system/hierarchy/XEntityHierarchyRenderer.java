@@ -289,13 +289,13 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
         ImLayout.BeginAlign("imlayout2", ImLayout.MATCH_PARENT, ImLayout.MATCH_PARENT, 1, 0.5f, -4, 0);
         {
-
+            int buttonSize = (int)(16 * ImLayout.GetDPIScale());
             ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, Color.toIntBits(0, 0, 0, 0));
             boolean savable = entity.isSavable();
             ImLayout.BeginAlign("saveID", ImLayout.WRAP_PARENT, ImLayout.MATCH_PARENT, 0, 0.5f);
             {
                 float alpha = savable ? 1.0f : 0.4f;
-                if(ImGui.ImageButton("savable", XEditorAssets.saveTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(14, 15), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(0.9f, 1), ImVec4.TMP_1.set(0, 0, 0, 0), ImVec4.TMP_2.set(1, 1, 1, alpha))) {
+                if(ImGui.ImageButton("savable", XEditorAssets.saveTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(buttonSize, buttonSize), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(0.9f, 1), ImVec4.TMP_1.set(0, 0, 0, 0), ImVec4.TMP_2.set(1, 1, 1, alpha))) {
                     entity.setSavable(!savable);
                 }
             }
@@ -311,7 +311,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
             ImLayout.BeginAlign("saveID", ImLayout.WRAP_PARENT, ImLayout.MATCH_PARENT, 0, 0.5f);
             {
-                if(ImGui.ImageButton("visibility", tex, ImVec2.TMP_1.set(15, 15))) {
+                if(ImGui.ImageButton("visibility", tex, ImVec2.TMP_1.set(buttonSize, buttonSize))) {
                     entity.setVisible(!visible);
                 }
             }
@@ -324,7 +324,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
             ImGui.SameLine(0, 0);
             ImLayout.BeginAlign("saveID", ImLayout.WRAP_PARENT, ImLayout.MATCH_PARENT, 0, 0.5f);
             {
-                if(ImGui.ImageButton("entityTrash", XEditorAssets.ic_trashTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(15, 15))) {
+                if(ImGui.ImageButton("entityTrash", XEditorAssets.ic_trashTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(buttonSize, buttonSize))) {
                     XEntityService entityService = gameWorld.getEntityService();
                     entityService.releaseEntity(entity);
                 }

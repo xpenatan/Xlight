@@ -21,6 +21,7 @@ import imgui.ImGuiViewport;
 import imgui.ImGuiWindowClass;
 import imgui.ImGuiWindowFlags;
 import imgui.ImVec2;
+import imgui.extension.imlayout.ImLayout;
 import imgui.gdx.ImGuiGdxImpl;
 import imgui.gdx.ImGuiGdxInputMultiplexer;
 import xlight.engine.app.XGraphics;
@@ -57,7 +58,6 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
     private ImGuiWindowClass rootWindowClass;
     private boolean init = false;
     int rootDockspaceID;
-
 
     private XUIDataTypeListener<XEntity> entityListener;
     private IntMap<XUIDataTypeListener<? extends XComponent>> componentListenerMap;
@@ -125,7 +125,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), (int)(18 * dpiScale)).setName(fontFile01.name());
         fonts.AddFontFromMemoryTTF(fontFile01.readBytes(), (int)(20 * dpiScale)).setName(fontFile01.name());
 
-        ImGui.GetStyle().ScaleAllSizes(dpiScale);
+        ImLayout.ScaleAllSizes(dpiScale);
 
         InputMultiplexer imGuiInput = imguiManager.getImGuiInput();
         editorInput.addProcessor(imGuiInput);
