@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":feature:lib:ecs"))
     implementation(project(":feature:lib:datamap"))
     implementation(project(":feature:lib:pool"))
+    implementation(project(":feature:lib:list"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 }

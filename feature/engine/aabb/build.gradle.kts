@@ -7,6 +7,7 @@ dependencies {
     implementation(project(":feature:lib:aabb:core"))
     implementation(project(":feature:lib:aabb:default"))
     implementation(project(":feature:lib:transform"))
+    implementation(project(":feature:lib:datamap"))
     implementation(project(":feature:engine:transform"))
     implementation(project(":feature:engine:core"))
 

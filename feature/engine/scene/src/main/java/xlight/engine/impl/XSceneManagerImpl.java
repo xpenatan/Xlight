@@ -2,6 +2,7 @@ package xlight.engine.impl;
 
 import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.core.XEngineEvent;
+import xlight.engine.datamap.XDataMap;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEvent;
@@ -10,6 +11,7 @@ import xlight.engine.ecs.manager.XManager;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.pool.ecs.manager.XPoolManager;
 import xlight.engine.scene.XScene;
+import xlight.engine.scene.XSceneKeys;
 import xlight.engine.scene.XSceneListener;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 
@@ -110,12 +112,15 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     }
 
     private void loadSceneInternal(XScene scene) {
-
-
+        XLoadEntity.loadEntities(world, scene);
     }
 
     public void saveInternal(XScene scene) {
         scene.clear();
-        // TODO save everything to scene
+
+        XDataMap sceneDataMap = currentScene.sceneDataMap;
+        sceneDataMap.put(XSceneKeys.SCENE_TYPE.getKey(), currentScene.type.getValue());
+
+        XSaveEntity.saveEntities(world, currentScene);
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.loaders.gltf.GLTFLoader;
@@ -12,11 +13,14 @@ import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.core.editor.ui.XUIDataListener;
 import xlight.engine.core.editor.ui.options.XUIOpStringEditText;
+import xlight.engine.datamap.XDataMap;
+import xlight.engine.datamap.XDataMapListener;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.g3d.XBatch3D;
 
-public class XGLTFComponent extends XRender3DComponent implements XUIDataListener {
+public class XGLTFComponent extends XRender3DComponent implements XUIDataListener, XDataMapListener {
+    private static final int DATAMAP_ASSETPATH = 1;
 
     private SceneAsset sceneAsset;
     private Scene scene;
@@ -74,6 +78,9 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
     }
 
     private void setAssetInternal(String path) {
+        if(path != null) {
+            path = path.trim();
+        }
         if(!componentAttached) {
             assetToLoad = true;
             assetPath = path;
@@ -123,6 +130,21 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
             sceneAsset.dispose();
             sceneAsset = null;
             scene = null;
+        }
+    }
+
+    @Override
+    public void onSave(XDataMap map) {
+        if(!assetPath.isEmpty()) {
+            map.put(DATAMAP_ASSETPATH, assetPath);
+        }
+    }
+
+    @Override
+    public void onLoad(XDataMap map) {
+        String asset = map.getString(DATAMAP_ASSETPATH, null);
+        if(asset != null) {
+            setAssetInternal(asset);
         }
     }
 

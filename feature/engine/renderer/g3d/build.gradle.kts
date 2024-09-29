@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":feature:lib:list"))
     implementation(project(":feature:lib:pool"))
     implementation(project(":feature:lib:camera"))
+    implementation(project(":feature:lib:datamap"))
 
     implementation(project(":feature:engine:transform"))
     implementation(project(":feature:engine:camera"))

@@ -7,7 +7,7 @@ public interface XSceneListener {
      * The default scene is always with id of 'default' and is always called.
      * If the editor launch your game, it may call other id instead of 'default'.
      */
-    void onLoadSceneBegin(int sceneId);
+    default void onLoadSceneBegin(int sceneId) {};
 
     /**
      * This method will be called after the XScene data is loaded and every entity is attached.

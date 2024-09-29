@@ -38,8 +38,9 @@ public class MainApp implements XApplication {
 
         sceneManager.setSceneListener(new XSceneListener() {
             @Override
-            public void onLoadSceneBegin(int sceneId) {
-                if(sceneId == 0) {
+            public void onLoadSceneEnd(int sceneId) {
+                int size = world.getEntityService().getEntities().getSize();
+                if(sceneId == 0 && size == 0) {
                     createCameraEntity(es, 0, 0, 3.0f);
                     createGroundEntity(es);
                     createModelEntity(es, "models/DamagedHelmet.glb", 0, 0, 0);

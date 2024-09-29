@@ -1,5 +1,6 @@
 package xlight.editor;
 
+import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import xlight.editor.core.XEditor;
 import xlight.engine.core.XDesktopApp;
 import xlight.engine.core.XDesktopConfiguration;
@@ -9,6 +10,7 @@ public class DesktopMain {
         XDesktopConfiguration config = new XDesktopConfiguration();
         config.setWindowedMode(1324, 900);
         config.setTitle("Xlight Editor");
+        config.setHdpiMode(HdpiMode.Pixels);
         new XDesktopApp(XEditor.newInstance(), config);
     }
 }

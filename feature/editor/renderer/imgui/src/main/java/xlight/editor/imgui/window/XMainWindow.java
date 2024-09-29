@@ -18,6 +18,7 @@ import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.scene.ecs.manager.XSceneManager;
 
 public class XMainWindow extends XImGuiWindowContext {
 
@@ -131,14 +132,16 @@ public class XMainWindow extends XImGuiWindowContext {
         ImGui.Begin(BIG_MENU, null, flags);
 
         ImLayout.BeginAlign("##BigMenuAlign", ImLayout.MATCH_PARENT, MENU_BAR_BIG_SIZE, 0.5f);
-        renderImGuiButtons(gameEngine);
+        if(gameEngine != null) {
+            renderImGuiButtons(gameEngine.getWorld());
+        }
         ImLayout.EndAlign();
 
         ImGui.End();
         ImGui.PopStyleVar();
     }
 
-    private void renderImGuiButtons(XEngine gameEngine) {
+    private void renderImGuiButtons(XWorld gameWorld) {
         int padding = (int)(6 * ImLayout.GetDPIScale());
         boolean startHoldingStep = false;
         boolean isPlay = false;
@@ -186,13 +189,14 @@ public class XMainWindow extends XImGuiWindowContext {
 
         ImGui.SameLine();
         if(renderMenuButton(XEditorAssets.saveTexture, "##saveTexture", buttonSize)) {
-            // TODO save scene
+            XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+            sceneManager.save();
         }
         ImGui.SameLine();
 
         if(renderMenuButton(XEditorAssets.loadTexture, "##loadTexture", buttonSize)) {
-            //TODO load scene
-
+            XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+            sceneManager.load();
         }
         ImGui.PopStyleVar();
     }
