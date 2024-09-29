@@ -40,9 +40,7 @@ public class XCollapseWidget {
         if(textures != null && textures.length > 0 && textures[0] != null) {
             ImLayout.BeginAlign("##align", ImLayout.MATCH_PARENT, ImLayout.MATCH_PARENT, 1.0f, 0.5f, -3, 0);
 
-            float size = ImGui.GetContentRegionAvail().get_y();
-
-            size = 19;
+            float size = (int)(19 * ImLayout.GetDPIScale());;
 
             int padding = 0;
             ImGui.PushStyleVar(ImGuiStyleVar.ImGuiStyleVar_FramePadding, ImVec2.TMP_1.set(padding, padding));
