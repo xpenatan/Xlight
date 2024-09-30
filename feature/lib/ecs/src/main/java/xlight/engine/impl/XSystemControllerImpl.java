@@ -1,6 +1,7 @@
 package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.Array;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.system.XSystem;
 import xlight.engine.ecs.system.XSystemBeginEndListener;
 import xlight.engine.ecs.system.XSystemController;
@@ -10,7 +11,7 @@ import xlight.engine.ecs.util.timestep.timestep.XStepUpdate;
 
 class XSystemControllerImpl implements XSystemController, XStepUpdate {
 
-    private final XECSWorldImpl world;
+    private final XWorld world;
 
     private final Array<XSystemServiceImpl.XSystemInternalData> stepSystem;
     private final Array<XSystemServiceImpl.XSystemInternalData> updateSystem;
@@ -23,7 +24,7 @@ class XSystemControllerImpl implements XSystemController, XStepUpdate {
     private final Array<XSystemBeginEndListener> uiListener;
     private final Array<XSystemBeginEndListener> renderListener;
 
-    public XSystemControllerImpl(XECSWorldImpl world) {
+    public XSystemControllerImpl(XWorld world) {
         this.world = world;
 
         stepSystem = new Array<>();

@@ -31,7 +31,7 @@ class XLoadSystem {
     }
 
     private static void loadSystem(XWorld world, XDataMap systemMap) {
-        XSystemService systemService = world.getSystemService();
+        XSystemService systemService = world.getWorldService().getSystemService();
         int sceneType = systemMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
         if(sceneType == XSceneTypeValue.SYSTEM.getValue()) {
             int key = systemMap.getInt(XSceneKeys.CLASS.getKey(), -1);

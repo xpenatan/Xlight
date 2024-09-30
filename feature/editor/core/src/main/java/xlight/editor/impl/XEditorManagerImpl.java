@@ -44,7 +44,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
         defaultMultiplexer = new InputMultiplexer();
         defaultInput.setInputProcessor(defaultMultiplexer);
 
-        XEventService eventService = world.getEventService();
+        XEventService eventService = world.getWorldService().getEventService();
         eventService.addEventListener(XEditorEvent.EVENT_NEW_PROJECT, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
@@ -108,7 +108,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
 
                         @Override
                         public void onEndEvent(XEvent event) {
-                            gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
+                            gameEngine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
                                 @Override
                                 public void onEndEvent(XEvent event) {
                                     XSceneManager sceneManager = gameEngine.getWorld().getManager(XSceneManager.class);

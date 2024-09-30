@@ -53,7 +53,7 @@ public class XEditorImpl implements XEditor {
 
         editorEngine.update(1); // Do a single step to attach editor data
 
-        XEventService eventService = world.getEventService();
+        XEventService eventService = world.getWorldService().getEventService();
         eventService.addEventListener(XEditorEvent.EVENT_EDITOR_READY, event -> {
             onEditorReady(event.getWorld());
             return false;

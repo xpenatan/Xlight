@@ -55,7 +55,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
     }
 
     public void onAttach(XWorld world) {
-        XEventService eventService = world.getEventService();
+        XEventService eventService = world.getWorldService().getEventService();
 
         selectionManager = world.getManager(XEntitySelectionManager.class);
 
@@ -95,7 +95,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
                 boolean b = ImGuiInternal.IsDragDropActive();
 
-                XEntityService entityService = gameEngineWorld.getEntityService();
+                XEntityService entityService = gameEngineWorld.getWorldService().getEntityService();
                 XList<XEntity> entities = entityService.getEntities();
                 entitySize = entities.getSize();
                 boolean leftControl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
@@ -156,7 +156,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
         XPoolController poolController = world.getGlobalData(XPoolController.class);
         if(ImGui.BeginMenu("New Entity")) {
             if(ImGui.MenuItem("Empty")) {
-                XEntityService entityService = gameEngine.getWorld().getEntityService();
+                XEntityService entityService = gameEngine.getWorld().getWorldService().getEntityService();
                 XEntity newEntity = entityService.obtain();
                 newEntity.setName("Empty");
                 entityService.attachEntity(newEntity);
@@ -165,7 +165,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
             if(ImGui.BeginMenu("Game Entity")) {
                 if(ImGui.MenuItem("Default")) {
-                    XEntityService entityService = gameEngine.getWorld().getEntityService();
+                    XEntityService entityService = gameEngine.getWorld().getWorldService().getEntityService();
                     XEntity newEntity = entityService.obtain();
                     newEntity.setName("Default");
                     XComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
@@ -181,7 +181,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                 }
                 if(ImGui.BeginMenu("3D")) {
                     if(ImGui.MenuItem("Asset")) {
-                        XEntityService entityService = gameEngine.getWorld().getEntityService();
+                        XEntityService entityService = gameEngine.getWorld().getWorldService().getEntityService();
                         XEntity newEntity = entityService.obtain();
                         newEntity.setName("Asset");
                         XGameWorldComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
@@ -202,7 +202,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                 }
 
                 if(ImGui.MenuItem("Camera")) {
-                    XEntityService entityService = gameEngine.getWorld().getEntityService();
+                    XEntityService entityService = gameEngine.getWorld().getWorldService().getEntityService();
                     XEntity newEntity = entityService.obtain();
                     newEntity.setName("Camera");
                     XGameWorldComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
@@ -237,7 +237,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
     private void renderEntityItem(XWorld gameWorld, XEntity entity, boolean leftControl) {
         boolean isOpen = renderEntity(gameWorld, entity, leftControl);
         if(isOpen) {
-            XEntityService entityService = gameWorld.getEntityService();
+            XEntityService entityService = gameWorld.getWorldService().getEntityService();
             XIntSet.XIntSetNode cur = entity.getChildHead();
             while(cur != null) {
                 int key = cur.getKey();
@@ -325,7 +325,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
             ImLayout.BeginAlign("saveID", ImLayout.WRAP_PARENT, ImLayout.MATCH_PARENT, 0, 0.5f);
             {
                 if(ImGui.ImageButton("entityTrash", XEditorAssets.ic_trashTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(buttonSize, buttonSize))) {
-                    XEntityService entityService = gameWorld.getEntityService();
+                    XEntityService entityService = gameWorld.getWorldService().getEntityService();
                     entityService.releaseEntity(entity);
                 }
             }
@@ -357,7 +357,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                 boolean isPreview = dragDropPayload.IsPreview();
 
                 int draggedEntityID = dragDropPayload.get_Data();
-                XEntity draggedEntity = gameWorld.getEntityService().getEntity(draggedEntityID);
+                XEntity draggedEntity = gameWorld.getWorldService().getEntityService().getEntity(draggedEntityID);
 
                 if(isPreview) {
                     if(ImGui.BeginTooltip()) {

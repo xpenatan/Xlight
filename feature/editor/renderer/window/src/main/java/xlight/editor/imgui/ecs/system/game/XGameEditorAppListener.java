@@ -64,7 +64,7 @@ public class XGameEditorAppListener implements ApplicationListener {
 
         cameraController = new XCameraController();
         cameraController.setCamera(editorGameCamera);
-        XSystemService systemService = editorWorld.getSystemService();
+        XSystemService systemService = editorWorld.getWorldService().getSystemService();
         systemController = systemService.getSystemController(XGameEditorSystem.SYSTEM_CONTROLLER);
 
         setupManagers(editorWorld);
@@ -87,14 +87,14 @@ public class XGameEditorAppListener implements ApplicationListener {
 
         editorManager = editorWorld.getManager(XEditorManager.class);
 
-        editorWorld.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, new XEventListener() {
+        editorWorld.getWorldService().getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 return false;
             }
         });
 
-        editorWorld.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, new XEventListener() {
+        editorWorld.getWorldService().getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 return false;
@@ -184,7 +184,7 @@ public class XGameEditorAppListener implements ApplicationListener {
         System.out.println("LOG RESIZE " + width + " " + height);
         XEngine gameEngine = editorManager.getGameEngine();
         if(gameEngine != null) {
-            gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_RESIZE);
+            gameEngine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_RESIZE);
         }
     }
 
@@ -193,7 +193,7 @@ public class XGameEditorAppListener implements ApplicationListener {
         System.out.println("LOG PAUSE");
         XEngine gameEngine = editorManager.getGameEngine();
         if(gameEngine != null) {
-            gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_PAUSE);
+            gameEngine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_PAUSE);
         }
     }
 
@@ -202,7 +202,7 @@ public class XGameEditorAppListener implements ApplicationListener {
         System.out.println("LOG RESUME");
         XEngine gameEngine = editorManager.getGameEngine();
         if(gameEngine != null) {
-            gameEngine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_RESUME);
+            gameEngine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_RESUME);
         }
     }
 

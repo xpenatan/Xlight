@@ -83,7 +83,7 @@ class XEntityServiceImpl implements XEntityService {
             updateEntityAdded((XEntityImpl)entity);
 
             // Send event as soon as possible.
-            world.getEventService().sendEvent(XWorldEvent.EVENT_ATTACH_ENTITY, entity, null, false);
+            world.getWorldService().getEventService().sendEvent(XWorldEvent.EVENT_ATTACH_ENTITY, entity, null, false);
             return true;
         }
         return false;
@@ -94,7 +94,7 @@ class XEntityServiceImpl implements XEntityService {
         boolean flag = entities.detachEntity(entity.getId());
         if(flag) {
             // Send event as soon as possible.
-            world.getEventService().sendEvent(XWorldEvent.EVENT_DETACH_ENTITY, entity, null, false);
+            world.getWorldService().getEventService().sendEvent(XWorldEvent.EVENT_DETACH_ENTITY, entity, null, false);
             entitySize--;
             XEntityImpl e = (XEntityImpl)entity;
             // Loop all matchers if entity mask bits match

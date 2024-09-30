@@ -117,7 +117,7 @@ public class XEntityInspector {
         XCollapseWidget.CollaspeWidgetData widgetData = XCollapseWidget.begin(id, groupName, XCollapseWidget.WHITE_COLOR, texturesArray, defaultOptions);
 
         if(widgetData.buttonIndex == 0) {
-            gameWorld.getEventService().sendEvent(-1, null, new XEventService.XSendEventListener() {
+            gameWorld.getWorldService().getEventService().sendEvent(-1, null, new XEventService.XSendEventListener() {
                 @Override
                 public void onEndEvent(XEvent event) {
                     entity.detachComponent(component);

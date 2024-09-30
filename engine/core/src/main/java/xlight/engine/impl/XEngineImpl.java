@@ -7,6 +7,7 @@ import xlight.engine.core.XEngine;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.core.register.XMetaClass;
 import xlight.engine.core.register.XRegisterManager;
+import xlight.engine.ecs.XWorldService;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XGameWorldComponent;
 import xlight.engine.g3d.ecs.component.XGLTFComponent;
@@ -49,10 +50,11 @@ public class XEngineImpl implements XEngine {
 
     @Override
     public void dispose() {
-        world.getEntityService().clear();
-        world.eventService.clear();
+        XWorldService worldService = world.getWorldService();
+        worldService.getEntityService().clear();
+        worldService.getEventService().clear();
         world.update(2);
-        world.getEventService().sendEvent(XEngineEvent.EVENT_DISPOSE, null, null, false);
+        worldService.getEventService().sendEvent(XEngineEvent.EVENT_DISPOSE, null, null, false);
         world = null;
     }
 
@@ -81,7 +83,7 @@ public class XEngineImpl implements XEngine {
 
     private void registerComponents() {
         XRegisterManager registerManager = world.getManager(XRegisterManager.class);
-        world.componentService.registerComponent(XRender3DComponent.class); // Generic component use component service
+        world.getWorldService().getComponentService().registerComponent(XRender3DComponent.class); // Generic component use component service
 
         XMetaClass metaClass;
         metaClass = registerManager.registerClass(2, XGameWorldComponent.class, new XPool<>() { protected XComponent newObject() { return new XGameWorldComponent(); } });

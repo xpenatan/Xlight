@@ -21,10 +21,7 @@ public interface XWorld {
     <T> T getManager(int key);
     XList<XManagerData> getManagers();
 
-    XSystemService getSystemService();
-    XEntityService getEntityService();
-    XComponentService getComponentService();
-    XEventService getEventService();
+    XWorldService getWorldService();
 
     float getDeltaTime();
     void update(float deltaTime);

@@ -26,7 +26,7 @@ public class XProjectManagerImpl implements XProjectManager, XManager {
     @Override
     public void newProject(XProjectOptions options) {
         if(world != null&& options != null) {
-            XEventService eventService = world.getEventService();
+            XEventService eventService = world.getWorldService().getEventService();
             this.project = options;
             eventService.sendEvent(XEditorEvent.EVENT_NEW_PROJECT, options);
         }

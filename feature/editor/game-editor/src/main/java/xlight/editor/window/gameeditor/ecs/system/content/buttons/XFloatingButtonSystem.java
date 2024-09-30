@@ -13,6 +13,7 @@ import xlight.editor.window.gameeditor.ecs.system.content.aabb.XAABBDebugSystem;
 import xlight.editor.window.gameeditor.ecs.system.content.entity.XBoundingBoxDebugSystem;
 import xlight.editor.window.gameeditor.ecs.system.content.selection.XSelectingSystem;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.XWorldService;
 import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.transform.XGizmoType;
@@ -30,7 +31,7 @@ public class XFloatingButtonSystem extends XGameEditorSystem {
     @Override
     public void onTick(XWorld world) {
         if(selectingSystem == null) {
-            selectingSystem = world.getSystemService().getSystem(XSelectingSystem.class);
+            selectingSystem = world.getWorldService().getSystemService().getSystem(XSelectingSystem.class);
         }
 
         buttonSize = 20 * ImLayout.GetDPIScale();
@@ -99,8 +100,9 @@ public class XFloatingButtonSystem extends XGameEditorSystem {
 
     private void renderConfigMenu(XWorld world) {
         if(ImGui.BeginMenu("Debug")) {
-            XSystemData aabbSystemData = world.getSystemService().getSystemData(XAABBDebugSystem.class);
-            XSystemData boundingBoxSystemData = world.getSystemService().getSystemData(XBoundingBoxDebugSystem.class);
+            XWorldService worldService = world.getWorldService();
+            XSystemData aabbSystemData = worldService.getSystemService().getSystemData(XAABBDebugSystem.class);
+            XSystemData boundingBoxSystemData = worldService.getSystemService().getSystemData(XBoundingBoxDebugSystem.class);
 
             if(aabbSystemData != null) {
                 boolean enabled = aabbSystemData.isEnabled();

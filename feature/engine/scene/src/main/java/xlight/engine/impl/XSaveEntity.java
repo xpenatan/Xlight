@@ -19,7 +19,7 @@ import xlight.engine.scene.XSceneTypeValue;
 class XSaveEntity {
 
     public static void save(XWorld world, XScene scene) {
-        XEntityService entityService = world.getEntityService();
+        XEntityService entityService = world.getWorldService().getEntityService();
         XRegisterManager registerManager = world.getManager(XRegisterManager.class);
         XPoolController poolController = world.getGlobalData(XPoolController.class);
 

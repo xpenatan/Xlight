@@ -42,7 +42,7 @@ public class XBoundingBoxDebugSystem extends XGameEditorSystem {
         if(gameEngine != null) {
             init(gameEngine);
         }
-        world.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, new XEventListener() {
+        world.getWorldService().getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 XEngine engine = event.getUserData();
@@ -50,7 +50,7 @@ public class XBoundingBoxDebugSystem extends XGameEditorSystem {
                 return false;
             }
         });
-        world.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, new XEventListener() {
+        world.getWorldService().getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 entities = null;
@@ -62,7 +62,7 @@ public class XBoundingBoxDebugSystem extends XGameEditorSystem {
 
     private void init(XEngine gameEngine) {
         XWorld engineWorld = gameEngine.getWorld();
-        XComponentMatcherBuilder matcherBuilder = engineWorld.getComponentService().getMatcherBuilder();
+        XComponentMatcherBuilder matcherBuilder = engineWorld.getWorldService().getComponentService().getMatcherBuilder();
         XComponentMatcher matcher = matcherBuilder.all(XGameWorldComponent.class, XTransformComponent.class).build();
         entities = matcher.getEntities();
     }
@@ -74,7 +74,7 @@ public class XBoundingBoxDebugSystem extends XGameEditorSystem {
             XCamera camera = world.getManager(XCameraManager.class).getRenderingGameCamera();
             XWorld gameEngineWorld = gameEngine.getWorld();
             if(camera != null && entities != null) {
-                XEntityService es = gameEngineWorld.getEntityService();
+                XEntityService es = gameEngineWorld.getWorldService().getEntityService();
 
                 shapeRenderer.setProjectionMatrix(camera.getCombined());
                 shapeRenderer.beginDepth(ShapeRenderer.ShapeType.Line);

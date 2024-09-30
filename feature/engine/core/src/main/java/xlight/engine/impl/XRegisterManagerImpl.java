@@ -62,7 +62,7 @@ class XRegisterManagerImpl implements XRegisterManager, XManager {
         XMetaClassImpl metaClass = registerMetaClassInternal(key, type);
         if(metaClass != null) {
             if(XClassHelper.classExtends(XComponent.class, type)) {
-                XComponentService componentService = world.getComponentService();
+                XComponentService componentService = world.getWorldService().getComponentService();
                 componentService.registerComponent((Class<XComponent>)type);
                 if(pool != null) {
                     XPoolController globalData = world.getGlobalData(XPoolController.class);

@@ -21,7 +21,7 @@ class XPreferencesManagerImpl implements XPreferencesManager, XManager, XEventSe
     @Override
     public void onAttach(XWorld world) {
         XPoolController poolController = world.getManager(XPoolManager.class).getPoolController();
-        eventService = world.getEventService();
+        eventService = world.getWorldService().getEventService();
         editorProperties = XProperties.obtain(poolController);
     }
 

@@ -1,6 +1,7 @@
 package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.IntMap;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.system.XSystem;
 import xlight.engine.ecs.system.XSystemBeginEndListener;
 import xlight.engine.ecs.system.XSystemController;
@@ -12,13 +13,13 @@ import xlight.engine.list.XList;
 
 class XSystemServiceImpl implements XSystemService {
 
-    private XECSWorldImpl world;
+    private XWorld world;
 
     private final XIntMap<XSystemData> systemMap;
     private final XSystemControllerImpl defaultController;
     private final IntMap<XSystemControllerImpl> customControllers;
 
-    public XSystemServiceImpl(XECSWorldImpl world) {
+    public XSystemServiceImpl(XWorld world) {
         this.world = world;
 
         systemMap = new XIntMap<>();

@@ -89,7 +89,7 @@ public class XSelectingSystem extends XGameEditorSystem {
                     gizmoRenderer.setGlobalTransform(isGlobalTransform());
                     gizmoRenderer.setTransformType(getTransformType());
 
-                    XComponentService componentService = gameEngineWorld.getComponentService();
+                    XComponentService componentService = gameEngineWorld.getWorldService().getComponentService();
                     XAABBTree gameTree = aabbService.getGameTree();
                     Camera gdxCamera = camera.asGDXCamera();
                     selectionRenderer.render(1, gdxCamera, selectionManager, componentService);
@@ -195,7 +195,7 @@ public class XSelectingSystem extends XGameEditorSystem {
         }
         else if(rightClick) {
             if(hitList.size > 0) {
-                XEntityService entityService = gameEngineWorld.getEntityService();
+                XEntityService entityService = gameEngineWorld.getWorldService().getEntityService();
                 XEntity entity = validateEntitySelected(camera, hitList, entityService, x, y, true, selectionManager);
                 if(entity != null) {
                     selectionManager.changeCurrentSelectedTarget(entity);
@@ -207,7 +207,7 @@ public class XSelectingSystem extends XGameEditorSystem {
     private void updateClickLogic(XWorld gameEngineWorld, Camera camera, XEntitySelectionManager selectionManager, Array<XAABBTreeNode> raycastList, int clickX, int clickY) {
         boolean leftCtrl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
         if(raycastList.size > 0) {
-            XEntityService entityService = gameEngineWorld.getEntityService();
+            XEntityService entityService = gameEngineWorld.getWorldService().getEntityService();
             XEntity entity = validateEntitySelected(camera, raycastList, entityService, clickX, clickY, false, selectionManager);
             if(entity != null) {
                 selectionManager.selectTarget(entity, leftCtrl);

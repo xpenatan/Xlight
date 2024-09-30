@@ -9,6 +9,7 @@ import xlight.engine.core.XApplication;
 import xlight.engine.core.XEngine;
 import xlight.engine.core.ecs.system.XCameraSystem;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.XWorldService;
 import xlight.engine.ecs.component.XGameWorldComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
@@ -26,20 +27,21 @@ public class MainApp implements XApplication {
     public void onSetup(XEngine engine) {
 
         XWorld world = engine.getWorld();
-        XSystemService systemService = world.getSystemService();
+        XWorldService worldService = world.getWorldService();
+        XSystemService systemService = worldService.getSystemService();
 
         systemService.attachSystem(new XCameraSystem(XSystemType.RENDER));
 //        systemService.attachSystem(new XRender3DSystem(XSystemType.RENDER));
         systemService.attachSystem(new XGLTFSystem(XSystemType.RENDER));
 
-        XEntityService es = world.getEntityService();
+        XEntityService es = worldService.getEntityService();
 
         XSceneManager sceneManager = world.getManager(XSceneManager.class);
 
         sceneManager.setSceneListener(new XSceneListener() {
             @Override
             public void onLoadSceneEnd(int sceneId) {
-                int size = world.getEntityService().getEntities().getSize();
+                int size = es.getEntities().getSize();
                 if(sceneId == 0 && size == 0) {
                     createCameraEntity(es, 0, 0, 3.0f);
                     createGroundEntity(es);

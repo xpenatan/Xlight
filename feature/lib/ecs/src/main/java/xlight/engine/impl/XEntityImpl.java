@@ -78,31 +78,31 @@ class XEntityImpl implements XEntity {
 
     @Override
     public <T extends XComponent> T getComponent(Class<T> type) {
-        XComponentService componentService = world.getComponentService();
+        XComponentService componentService = world.getWorldService().getComponentService();
         return componentService.getComponent(this, type);
     }
 
     @Override
     public boolean attachComponent(XComponent component) {
-        XComponentService componentService = world.getComponentService();
+        XComponentService componentService = world.getWorldService().getComponentService();
         return componentService.attachComponent(this, component);
     }
 
     @Override
     public boolean detachComponent(Class<?> type) {
-        XComponentService componentService = world.getComponentService();
+        XComponentService componentService = world.getWorldService().getComponentService();
         return componentService.detachComponent(this, type);
     }
 
     @Override
     public boolean detachComponent(XComponent component) {
-        XComponentService componentService = world.getComponentService();
+        XComponentService componentService = world.getWorldService().getComponentService();
         return componentService.detachComponent(this, component);
     }
 
     @Override
     public boolean containsComponent(Class<?> type) {
-        XComponentService componentService = world.getComponentService();
+        XComponentService componentService = world.getWorldService().getComponentService();
         return componentService.containsComponent(this, type);
     }
 
@@ -117,7 +117,7 @@ class XEntityImpl implements XEntity {
             return null;
         }
         int i = componentsIndex.get(index);
-        return world.getComponentService().getComponentIndex(this, i);
+        return world.getWorldService().getComponentService().getComponentIndex(this, i);
     }
 
     @Override
@@ -149,7 +149,7 @@ class XEntityImpl implements XEntity {
         if(parentId == -1) {
             return null;
         }
-        XEntityService entityService = world.getEntityService();
+        XEntityService entityService = world.getWorldService().getEntityService();
         return entityService.getEntity(parentId);
     }
 
@@ -162,7 +162,7 @@ class XEntityImpl implements XEntity {
             return false;
         }
 
-        XEntityService entityService = world.getEntityService();
+        XEntityService entityService = world.getWorldService().getEntityService();
         XEntity thisParent = null;
         if(parentId != -1) {
             thisParent = entityService.getEntity(parentId);
@@ -189,7 +189,7 @@ class XEntityImpl implements XEntity {
     @Override
     public XEntity getChild(int id) {
         if(children.containsKey(id)) {
-            XEntityService entityService = world.getEntityService();
+            XEntityService entityService = world.getWorldService().getEntityService();
             return entityService.getEntity(id);
         }
         return null;
@@ -213,7 +213,7 @@ class XEntityImpl implements XEntity {
     @Override
     public XEntity removeChild(int id) {
         if(children.remove(id)) {
-            XEntityService entityService = world.getEntityService();
+            XEntityService entityService = world.getWorldService().getEntityService();
             XEntityImpl entity = (XEntityImpl)entityService.getEntity(id);
             entity.parentId = -1;
             return entity;
@@ -226,7 +226,7 @@ class XEntityImpl implements XEntity {
         XList<XIntSet.XIntSetNode> nodeList = children.getNodeList();
         for(XIntSet.XIntSetNode node : children.getNodeList()) {
             int id = node.getKey();
-            XEntityService entityService = world.getEntityService();
+            XEntityService entityService = world.getWorldService().getEntityService();
             XEntityImpl entity = (XEntityImpl)entityService.getEntity(id);
             entity.parentId = -1;
         }

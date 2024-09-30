@@ -81,7 +81,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
     }
 
     private void init(XWorld world, XInitFeature feature) {
-        XSystemService systemService = world.getSystemService();
+        XSystemService systemService = world.getWorldService().getSystemService();
 
         addWindowContext(XMainWindow.CLASS_ID, new XMainWindow());
 
@@ -140,7 +140,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         rootWindowClass.set_DockingAlwaysTabBar(true);
         rootWindowClass.get_ClassId();
 
-        world.getEventService().addEventListener(XEngineEvent.EVENT_DISPOSE, new XEventListener() {
+        world.getWorldService().getEventService().addEventListener(XEngineEvent.EVENT_DISPOSE, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
                 impl.dispose();

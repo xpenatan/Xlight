@@ -19,7 +19,7 @@ class XSaveSystem {
     public static void save(XWorld world, XScene scene) {
         XRegisterManager registerManager = world.getManager(XRegisterManager.class);
         XPoolController poolController = world.getGlobalData(XPoolController.class);
-        XSystemService systemService = world.getSystemService();
+        XSystemService systemService = world.getWorldService().getSystemService();
 
         XDataMap sceneDataMap = scene.getSceneDataMap();
 

@@ -22,7 +22,7 @@ class XApplicationInternal implements ApplicationListener {
         engine.update(1); // Do a single update so default manager/services are initialized
         applicationListener.onSetup(engine);
 
-        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
+        engine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
             @Override
             public void onEndEvent(XEvent event) {
                 XSceneManager sceneManager = engine.getWorld().getManager(XSceneManager.class);
@@ -41,17 +41,17 @@ class XApplicationInternal implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
-        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_RESIZE);
+        engine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_RESIZE);
     }
 
     @Override
     public void pause() {
-        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_PAUSE);
+        engine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_PAUSE);
     }
 
     @Override
     public void resume() {
-        engine.getWorld().getEventService().sendEvent(XEngineEvent.EVENT_RESUME);
+        engine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_RESUME);
     }
 
     @Override

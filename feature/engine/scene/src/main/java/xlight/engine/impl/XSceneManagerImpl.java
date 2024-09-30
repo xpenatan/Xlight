@@ -4,6 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.core.XEngineEvent;
 import xlight.engine.datamap.XDataMap;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.XWorldService;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventService;
@@ -79,11 +80,11 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     @Override
     public void setScene(int id, String name) {
         currentScene.clear();
-        XEntityService entityService = world.getEntityService();
+        XEntityService entityService = world.getWorldService().getEntityService();
         entityService.clear();
         currentScene.setId(id);
         currentScene.setName(name);
-        XEventService eventService = world.getEventService();
+        XEventService eventService = world.getWorldService().getEventService();
         eventService.sendEvent(XEngineEvent.EVENT_CLEAR_WORLD, null, new XEventService.XSendEventListener() {
             @Override
             public void onEndEvent(XEvent event) {
@@ -97,9 +98,10 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     }
 
     public void loadInternal(XScene scene) {
-        XEntityService entityService = world.getEntityService();
+        XWorldService worldService = world.getWorldService();
+        XEntityService entityService = worldService.getEntityService();
         entityService.clear();
-        XEventService eventService = world.getEventService();
+        XEventService eventService = worldService.getEventService();
         eventService.sendEvent(XEngineEvent.EVENT_CLEAR_WORLD, null, new XEventService.XSendEventListener() {
             @Override
             public void onEndEvent(XEvent event) {

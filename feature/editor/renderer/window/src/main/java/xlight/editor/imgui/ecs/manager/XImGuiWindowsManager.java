@@ -28,7 +28,7 @@ public class XImGuiWindowsManager implements XManager {
     }
 
     private void initSystems(XInitFeatureService featureService, XWorld world) {
-        XSystemService systemService = world.getSystemService();
+        XSystemService systemService = world.getWorldService().getSystemService();
         systemService.attachSystem(new XHierarchyWindowSystem());
         systemService.attachSystem(new XGameWindowSystem());
         systemService.attachSystem(new XUIWindowSystem());
@@ -42,7 +42,7 @@ public class XImGuiWindowsManager implements XManager {
 
         featureService.addFeatureDependency(() -> {
             // When all imgui windows are ready we send a editor ready event
-            world.getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_READY);
+            world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_READY);
         }, XGameEditorAppListener.FEATURE);
     }
 

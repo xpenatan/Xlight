@@ -21,7 +21,7 @@ public class XAABBServiceDefault implements XAABBService, XService {
 
     @Override
     public void onAttach(XWorld world) {
-        XComponentMatcherBuilder matcherBuilder = world.getComponentService().getMatcherBuilder();
+        XComponentMatcherBuilder matcherBuilder = world.getWorldService().getComponentService().getMatcherBuilder();
         XComponentMatcher matcher = matcherBuilder.all(XGameWorldComponent.class, XTransformComponent.class).build(-100, new XComponentMatcher.XComponentMatcherListener() {
             @Override
             public void onEntityUpdate(XComponentMatcher.XComponentMatcherState state, XEntity entity) {

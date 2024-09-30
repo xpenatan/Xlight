@@ -34,7 +34,7 @@ class XLoadEntity {
 
     private static XEntity loadEntityAndInit(XWorld world, XDataMap entityDataMap) {
         // TODO remove loading recursive
-        XEntityService entityService = world.getEntityService();
+        XEntityService entityService = world.getWorldService().getEntityService();
         XEntity entity = loadEntity(world, entityDataMap);
         if(entity != null) {
             entityService.attachEntity(entity);
@@ -53,7 +53,7 @@ class XLoadEntity {
     }
 
     private static XEntity loadEntity(XWorld world, XDataMap entityMap) {
-        XEntityService entityService = world.getEntityService();
+        XEntityService entityService = world.getWorldService().getEntityService();
         int sceneType = entityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
         if(sceneType == XSceneTypeValue.ENTITY.getValue()) {
 

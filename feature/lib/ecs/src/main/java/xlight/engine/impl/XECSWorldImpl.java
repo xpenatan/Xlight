@@ -3,6 +3,7 @@ package xlight.engine.impl;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.XWorldService;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEventService;
@@ -23,10 +24,7 @@ public class XECSWorldImpl implements XWorld {
     private final Array<XService> initServices;
     private final Array<XManager> initManagers;
 
-    XComponentServiceImpl componentService;
-    XEntityServiceImpl entityService;
-    XSystemServiceImpl systemService;
-    XEventServiceImpl eventService;
+    private XWorldServiceImpl worldService;
 
     private final IntMap<Object> globalData;
 
@@ -34,19 +32,14 @@ public class XECSWorldImpl implements XWorld {
         globalData = new IntMap<>();
         services = new XIntMap<>();
         managers = new XIntMap<>();
-        entityService = new XEntityServiceImpl(this);
-        componentService = new XComponentServiceImpl();
-        systemService = new XSystemServiceImpl(this);
-        eventService = new XEventServiceImpl(this);
-
-        entityService.init(this);
-        componentService.init(this, entityService);
-
         initServices = new Array<>();
         initManagers = new Array<>();
 
         XPoolControllerImpl poolController = new XPoolControllerImpl();
         registerGlobalData(XPoolController.class, poolController);
+
+        worldService = new XWorldServiceImpl(this);
+        worldService.init();
     }
 
     @Override
@@ -112,23 +105,8 @@ public class XECSWorldImpl implements XWorld {
     }
 
     @Override
-    public XSystemService getSystemService() {
-        return systemService;
-    }
-
-    @Override
-    public XEntityService getEntityService() {
-        return entityService;
-    }
-
-    @Override
-    public XComponentService getComponentService() {
-        return componentService;
-    }
-
-    @Override
-    public XEventService getEventService() {
-        return eventService;
+    public XWorldService getWorldService() {
+        return worldService;
     }
 
     @Override
@@ -156,23 +134,23 @@ public class XECSWorldImpl implements XWorld {
         for(XService service: services.getList()) {
             service.onTick(this);
         }
-        eventService.update();
+        worldService.eventService.update();
     }
 
     @Override
     public void tickUpdate() {
-        systemService.tickStepSystem();
-        systemService.tickUpdateSystem();
+        worldService.systemService.tickStepSystem();
+        worldService.systemService.tickUpdateSystem();
     }
 
     @Override
     public void tickUI() {
-        systemService.tickUISystem();
+        worldService.systemService.tickUISystem();
     }
 
     @Override
     public void tickRender() {
-        systemService.tickRenderSystem();
+        worldService.systemService.tickRenderSystem();
     }
 
     @Override
