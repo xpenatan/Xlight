@@ -49,7 +49,7 @@ public class XShapeModelHelper {
         MeshPartBuilder meshBuilderCylinderX = mb.part("cylinder", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal,
                 material);
 
-        CylinderShapeBuilder.build(meshBuilderCylinderX, 0.05f, axisWidth - 0.022f, 0.05f, 5);
+        CylinderShapeBuilder.build(meshBuilderCylinderX, 0.07f, axisWidth - 0.022f, 0.07f, 5);
 
         return mb.end();
     }

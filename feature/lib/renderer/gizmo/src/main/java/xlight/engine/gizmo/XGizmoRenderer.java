@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.CylinderShapeBuilder;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
+import net.mgsx.gltf.scene3d.attributes.PBRColorAttribute;
 import xlight.engine.glutils.XShapeRenderer;
 import xlight.engine.g3d.model.XMeshData;
 import xlight.engine.g3d.model.XModelInstance;
@@ -124,40 +125,47 @@ public class XGizmoRenderer {
         ModelBuilder mb = new ModelBuilder();
         mb.begin();
 
-        float height = 0.03f;
-        int divisionsU = 32;
-        int divisionsV = 3;
+        float height = 0.04f;
+        int divisionsU = 24;
+        int divisionsV = 6;
 
         {
             Node node = mb.node();
             node.id = "rotationX";
-            Material material = new Material("rotationX", ColorAttribute.createDiffuse(1, 0, 0, 0.9f));
+            float r = 1;
+            float g = 0;
+            float b = 0;
+            Material material = new Material("rotationX", ColorAttribute.createDiffuse(r, g, b, 0.9f), PBRColorAttribute.createBaseColorFactor(new Color(r, g, b, 1.0f)));
             BlendingAttribute blending = new BlendingAttribute();
             material.set(blending);
-            MeshPartBuilder builder = mb.part("rotationX", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position, material);
-            torus(builder, 0.99f, height, divisionsU, divisionsV);
+            MeshPartBuilder builder = mb.part("rotationX", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, material);
+            torus(builder, 1.08f, height, divisionsU, divisionsV);
             node.rotation.set(Vector3.Y, -90);
         }
         {
             Node node = mb.node();
             node.id = "rotationY";
-            Material material = new Material("rotationY", ColorAttribute.createDiffuse(0, 1, 0, 0.9f));
+            float r = 0;
+            float g = 1;
+            float b = 0;
+            Material material = new Material("rotationY", ColorAttribute.createDiffuse(r, g, b, 0.9f), PBRColorAttribute.createBaseColorFactor(new Color(r, g, b, 1.0f)));
             BlendingAttribute blending = new BlendingAttribute();
             material.set(blending);
-            MeshPartBuilder builder = mb.part("rotationY", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position, material);
-            torus(builder, 0.9700f, height, divisionsU, divisionsV);
+            MeshPartBuilder builder = mb.part("rotationY", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, material);
+            torus(builder, 1.04f, height, divisionsU, divisionsV);
             node.rotation.set(Vector3.X, -90);
         }
         {
             Node node = mb.node();
             node.id = "rotationZ";
-            Material material = new Material("rotationZ", ColorAttribute.createDiffuse(0, 0, 1, 0.9f));
-
+            float r = 0;
+            float g = 0;
+            float b = 1;
+            Material material = new Material("rotationZ", ColorAttribute.createDiffuse(r, g, b, 0.9f), PBRColorAttribute.createBaseColorFactor(new Color(r, g, b, 1.0f)));
             BlendingAttribute blending = new BlendingAttribute();
             material.set(blending);
-
-            MeshPartBuilder builder = mb.part("rotationZ", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position, material);
-            torus(builder, 0.9600f, height, divisionsU, divisionsV);
+            MeshPartBuilder builder = mb.part("rotationZ", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, material);
+            torus(builder, 1.00f, height, divisionsU, divisionsV);
         }
 
         return mb.end();
@@ -223,7 +231,7 @@ public class XGizmoRenderer {
 
         nodeConeAxisX.calculateLocalTransform();
         nodeConeAxisX.calculateWorldTransform();
-        material = new Material("boxAxisX", ColorAttribute.createDiffuse(r, g, b, 0.9f));
+        material = new Material("boxAxisX", ColorAttribute.createDiffuse(r, g, b, 0.9f), PBRColorAttribute.createBaseColorFactor(new Color(r, g, b, 1.0f)));
         BlendingAttribute blending = new BlendingAttribute();
         blending.blended = false;
         material.set(blending);
@@ -238,7 +246,7 @@ public class XGizmoRenderer {
         MeshPartBuilder meshBuilderCylinderX = mb.part("cylinder", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal,
                 material);
 
-        CylinderShapeBuilder.build(meshBuilderCylinderX, 0.05f, AXIS_WIDTH - 0.022f, 0.05f, 5);
+        CylinderShapeBuilder.build(meshBuilderCylinderX, 0.07f, AXIS_WIDTH - 0.022f, 0.07f, 5);
 
         return mb.end();
     }
@@ -255,7 +263,7 @@ public class XGizmoRenderer {
 
         Node node = mb.node();
         node.id = "axisXY";
-        material = new Material("axisXY", ColorAttribute.createDiffuse(r, g, b, 0.9f));
+        material = new Material("axisXY", ColorAttribute.createDiffuse(r, g, b, 0.9f), PBRColorAttribute.createBaseColorFactor(new Color(r, g, b, 1.0f)));
         BlendingAttribute blending = new BlendingAttribute();
         material.set(blending);
         MeshPartBuilder meshBuilderXY = mb.part("axisXY", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, material);
