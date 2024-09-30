@@ -7,11 +7,9 @@ import xlight.engine.ecs.system.XSystemController;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.ecs.util.timestep.timestep.XSimpleFixedTimeStep;
 import xlight.engine.ecs.util.timestep.timestep.XStepUpdate;
-import xlight.engine.list.XIntMap;
 
 class XSystemControllerImpl implements XSystemController, XStepUpdate {
 
-    private final XIntMap<XSystemServiceImpl.XSystemInternalData> systemMap;
     private final XECSWorldImpl world;
 
     private final Array<XSystemServiceImpl.XSystemInternalData> stepSystem;
@@ -25,9 +23,8 @@ class XSystemControllerImpl implements XSystemController, XStepUpdate {
     private final Array<XSystemBeginEndListener> uiListener;
     private final Array<XSystemBeginEndListener> renderListener;
 
-    public XSystemControllerImpl(XECSWorldImpl world, XIntMap<XSystemServiceImpl.XSystemInternalData> systemMap) {
+    public XSystemControllerImpl(XECSWorldImpl world) {
         this.world = world;
-        this.systemMap = systemMap;
 
         stepSystem = new Array<>();
         updateSystem = new Array<>();
@@ -99,9 +96,9 @@ class XSystemControllerImpl implements XSystemController, XStepUpdate {
         return false;
     }
 
-    public boolean detachSystem(XSystemServiceImpl.XSystemInternalData systemData) {
-        Class<?> classType = systemData.system.getClassType();
-        XSystemType type = systemData.system.getType();
+    public boolean detachSystem(XSystem system) {
+        Class<?> classType = system.getClassType();
+        XSystemType type = system.getType();
 
         switch(type) {
             case UPDATE: {

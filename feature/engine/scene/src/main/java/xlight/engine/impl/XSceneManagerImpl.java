@@ -117,7 +117,9 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     }
 
     private void loadSceneInternal(XScene scene) {
-        XLoadEntity.loadEntities(world, scene);
+        XLoadSystem.load(world, scene);
+        XLoadManager.load(world, scene);
+        XLoadEntity.load(world, scene);
     }
 
     public void saveInternal(XScene scene) {
@@ -126,6 +128,8 @@ class XSceneManagerImpl implements XSceneManager, XManager {
         XDataMap sceneDataMap = currentScene.sceneDataMap;
         sceneDataMap.put(XSceneKeys.SCENE_TYPE.getKey(), currentScene.type.getValue());
 
-        XSaveEntity.saveEntities(world, currentScene);
+        XSaveSystem.save(world, currentScene);
+        XSaveManager.save(world, currentScene);
+        XSaveEntity.save(world, currentScene);
     }
 }

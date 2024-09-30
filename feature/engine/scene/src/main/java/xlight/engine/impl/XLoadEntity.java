@@ -15,8 +15,8 @@ import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
 import xlight.engine.scene.XSceneType;
 
-public class XLoadEntity {
-    public static void loadEntities(XWorld world, XScene scene) {
+class XLoadEntity {
+    public static void load(XWorld world, XScene scene) {
         System.out.println("LOAD SCENE:");
         XDataMap sceneDataMap = scene.getSceneDataMap();
         int sceneType = sceneDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
@@ -32,7 +32,7 @@ public class XLoadEntity {
         }
     }
 
-    public static XEntity loadEntityAndInit(XWorld world, XDataMap entityDataMap) {
+    private static XEntity loadEntityAndInit(XWorld world, XDataMap entityDataMap) {
         // TODO remove loading recursive
         XEntityService entityService = world.getEntityService();
         XEntity entity = loadEntity(world, entityDataMap);
@@ -52,7 +52,7 @@ public class XLoadEntity {
         return entity;
     }
 
-    public static XEntity loadEntity(XWorld world, XDataMap entityMap) {
+    private static XEntity loadEntity(XWorld world, XDataMap entityMap) {
         XEntityService entityService = world.getEntityService();
         int sceneType = entityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
         if(sceneType == XSceneType.ENTITY.getValue()) {
@@ -86,7 +86,7 @@ public class XLoadEntity {
         return null;
     }
 
-    public static XComponent loadComponent(XWorld world, XDataMap componentMap) {
+    private static XComponent loadComponent(XWorld world, XDataMap componentMap) {
         XRegisterManager registerManager = world.getManager(XRegisterManager.class);
         XPoolController poolController = world.getGlobalData(XPoolController.class);
 

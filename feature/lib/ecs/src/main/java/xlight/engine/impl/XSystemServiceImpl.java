@@ -8,21 +8,21 @@ import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.list.XIntMap;
+import xlight.engine.list.XList;
 
 class XSystemServiceImpl implements XSystemService {
 
     private XECSWorldImpl world;
 
-    private final XIntMap<XSystemInternalData> systemMap;
+    private final XIntMap<XSystemData> systemMap;
     private final XSystemControllerImpl defaultController;
     private final IntMap<XSystemControllerImpl> customControllers;
-
 
     public XSystemServiceImpl(XECSWorldImpl world) {
         this.world = world;
 
         systemMap = new XIntMap<>();
-        defaultController = new XSystemControllerImpl(world, systemMap);
+        defaultController = new XSystemControllerImpl(world);
         customControllers = new IntMap<>();
     }
 
@@ -33,8 +33,9 @@ class XSystemServiceImpl implements XSystemService {
         if(systemData != null) {
             return false;
         }
-        XSystemInternalData internalSystemData = new XSystemInternalData(system);
-        systemMap.put(classType.hashCode(), internalSystemData);
+        int key = classType.hashCode();
+        XSystemInternalData internalSystemData = new XSystemInternalData(key, system);
+        systemMap.put(key, internalSystemData);
 
         int systemControllerKey = system.getSystemController();
         XSystemControllerImpl systemController = getOrCreate(systemControllerKey);
@@ -44,29 +45,40 @@ class XSystemServiceImpl implements XSystemService {
 
     @Override
     public <T extends XSystem> T detachSystem(Class<?> classType) {
-        XSystemInternalData systemData = systemMap.remove(classType.hashCode());
+        XSystemData systemData = systemMap.remove(classType.hashCode());
         if(systemData == null) {
             return null;
         }
-        systemData.system.onDetach(world, systemData);
-        int systemControllerKey = systemData.system.getSystemController();
+        XSystem system = systemData.getSystem();
+        system.onDetach(world, systemData);
+        int systemControllerKey = system.getSystemController();
         XSystemControllerImpl systemController = getOrCreate(systemControllerKey);
-        systemController.detachSystem(systemData);
-        return (T)systemData.system;
+        systemController.detachSystem(system);
+        return (T)system;
     }
 
     @Override
     public <T extends XSystem> T getSystem(Class<?> type) {
-        XSystemInternalData data = systemMap.get(type.hashCode());
+        XSystemData data = systemMap.get(type.hashCode());
         if(data != null) {
-            return (T)data.system;
+            return (T)data.getSystem();
         }
         return null;
     }
 
     @Override
+    public XList<XSystemData> getSystems() {
+        return systemMap.getList();
+    }
+
+    @Override
     public XSystemData getSystemData(Class<?> type) {
         return systemMap.get(type.hashCode());
+    }
+
+    @Override
+    public XSystemData getSystemData(int key) {
+        return systemMap.get(key);
     }
 
     @Override
@@ -111,7 +123,7 @@ class XSystemServiceImpl implements XSystemService {
         }
         XSystemControllerImpl customController = customControllers.get(key);
         if(customController == null) {
-            customController = new XSystemControllerImpl(world, systemMap);
+            customController = new XSystemControllerImpl(world);
             customControllers.put(key, customController);
         }
         return customController;
@@ -121,15 +133,18 @@ class XSystemServiceImpl implements XSystemService {
         public boolean callAttach = true;
 
         public boolean isEnabled = true;
+        public boolean isForceUpdate = false;
         public XSystem system;
+        public int key;
 
-        public XSystemInternalData(XSystem system) {
+        public XSystemInternalData(int key, XSystem system) {
+            this.key = key;
             this.system = system;
         }
 
         @Override
         public boolean isEnabled() {
-            return isEnabled;
+            return isEnabled || isForceUpdate;
         }
 
         @Override
@@ -138,8 +153,23 @@ class XSystemServiceImpl implements XSystemService {
         }
 
         @Override
+        public boolean isForceUpdate() {
+            return isForceUpdate;
+        }
+
+        @Override
+        public void setForceUpdate(boolean flag) {
+            isForceUpdate = flag;
+        }
+
+        @Override
         public XSystem getSystem() {
             return system;
+        }
+
+        @Override
+        public int getKey() {
+            return key;
         }
     }
 }

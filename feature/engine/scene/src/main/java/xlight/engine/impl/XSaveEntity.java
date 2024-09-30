@@ -15,9 +15,9 @@ import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.XSceneKeys;
 import xlight.engine.scene.XSceneType;
 
-public class XSaveEntity {
+class XSaveEntity {
 
-    public static void saveEntities(XWorld world, XSceneImpl scene) {
+    public static void save(XWorld world, XSceneImpl scene) {
         XEntityService entityService = world.getEntityService();
         XRegisterManager registerManager = world.getManager(XRegisterManager.class);
         XPoolController poolController = world.getGlobalData(XPoolController.class);
@@ -68,12 +68,13 @@ public class XSaveEntity {
         return entityDataMap;
     }
 
-    public static XDataMap saveEntity(XPoolController poolController, XRegisterManager registerManager, XEntity entity) {
+    private static XDataMap saveEntity(XPoolController poolController, XRegisterManager registerManager, XEntity entity) {
         XDataMap entityMap = poolController.obtainObject(XDataMap.class);
 
         entityMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneType.ENTITY.getValue());
         entityMap.put(XSceneKeys.NAME.getKey(), entity.getName());
         entityMap.put(XSceneKeys.VISIBLE.getKey(), entity.isVisible());
+        // TODO add tag solution
 //        String tag = entity.getTag();
 //        if(tag != null && !tag.isEmpty()) {
 //            entityMap.put(XSceneKeys.TAG.getKey(), tag);
@@ -97,7 +98,7 @@ public class XSaveEntity {
         return entityMap;
     }
 
-    public static XDataMap saveComponent(XPoolController poolController, XRegisterManager registerManager, XComponent component) {
+    private static XDataMap saveComponent(XPoolController poolController, XRegisterManager registerManager, XComponent component) {
         XDataMap componentMap = null;
         XMetaClass registeredClass = registerManager.getRegisteredClass(component.getClass());
         if(registeredClass != null) {

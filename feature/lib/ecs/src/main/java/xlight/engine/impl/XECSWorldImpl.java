@@ -7,16 +7,18 @@ import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.ecs.manager.XManager;
+import xlight.engine.ecs.manager.XManagerData;
 import xlight.engine.ecs.service.XService;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.list.XIntMap;
+import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
 
 public class XECSWorldImpl implements XWorld {
 
     private float deltaTime;
     private final XIntMap<XService> services;
-    private final IntMap<XManager> managers;
+    private final XIntMap<XManagerData> managers;
 
     private final Array<XService> initServices;
     private final Array<XManager> initManagers;
@@ -31,7 +33,7 @@ public class XECSWorldImpl implements XWorld {
     public XECSWorldImpl() {
         globalData = new IntMap<>();
         services = new XIntMap<>();
-        managers = new IntMap<>();
+        managers = new XIntMap<>();
         entityService = new XEntityServiceImpl(this);
         componentService = new XComponentServiceImpl();
         systemService = new XSystemServiceImpl(this);
@@ -75,16 +77,16 @@ public class XECSWorldImpl implements XWorld {
     public <T extends XManager> void attachManager(Class<?> type, XManager manager) {
         int key = type.hashCode();
         if(!managers.containsKey(key)) {
-            managers.put(type.hashCode(), manager);
+            managers.put(type.hashCode(), new XManagerDataImpl(key, manager));
             initManagers.add(manager);
         }
     }
 
     @Override
     public boolean detachManager(Class<?> type) {
-        XManager manager = managers.remove(type.hashCode());
-        if(manager != null) {
-            manager.onDetach(this);
+        XManagerData managerData = managers.remove(type.hashCode());
+        if(managerData != null) {
+            managerData.getManager().onDetach(this);
             return true;
         }
         return false;
@@ -92,7 +94,21 @@ public class XECSWorldImpl implements XWorld {
 
     @Override
     public <T> T getManager(Class<T> type) {
-        return (T)managers.get(type.hashCode());
+        return getManager(type.hashCode());
+    }
+
+    @Override
+    public <T> T getManager(int key) {
+        XManagerData managerData = managers.get(key);
+        if(managerData != null) {
+            return (T)managerData.getManager();
+        }
+        return null;
+    }
+
+    @Override
+    public XList<XManagerData> getManagers() {
+        return managers.getList();
     }
 
     @Override
