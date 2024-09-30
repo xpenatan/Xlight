@@ -37,6 +37,7 @@ class XEditorManagerImpl implements XEditorManager, XManager {
     @Override
     public void onAttach(XWorld world) {
         rootEmuFiles = new EmuFiles(Gdx.files);
+        rootEmuFiles.fileHandleOverride = new FileHandleOverride();
         Gdx.files = rootEmuFiles;
 
         defaultInput = Gdx.input; // cache the default input

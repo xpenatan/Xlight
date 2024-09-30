@@ -14,6 +14,7 @@ public class WebMain {
         config.usePhysicalPixels = true;
         config.useGL30 = false;
         config.showDownloadLogs = true;
+        config.localStoragePrefix = "Xlight";
         new XWebApp(XEditor.newInstance(), config);
     }
 }

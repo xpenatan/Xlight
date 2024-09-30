@@ -28,7 +28,7 @@ public interface XSceneManager {
      * Load the scene from file.
      * The current scene will be cleared before loading.
      */
-    void loadFromFile(FileHandle file);
+    boolean loadFromFile(FileHandle file);
 
     void setSceneListener(XSceneListener listener);
     XSceneListener getSceneListener();

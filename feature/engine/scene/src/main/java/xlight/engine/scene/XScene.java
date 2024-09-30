@@ -11,7 +11,7 @@ public interface XScene {
 
     String getName();
 
-    void loadJson(String jsonStr);
+    boolean loadJson(String jsonStr);
 
     String getJson();
 

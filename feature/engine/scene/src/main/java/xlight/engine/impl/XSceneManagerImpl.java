@@ -49,16 +49,21 @@ class XSceneManagerImpl implements XSceneManager, XManager {
         saveInternal(currentScene);
         // Parse to json
         String json = currentScene.getJson();
-        file.writeString(json, false);
+        if(json != null) {
+            file.writeString(json, false);
+        }
     }
 
     @Override
-    public void loadFromFile(FileHandle file) {
+    public boolean loadFromFile(FileHandle file) {
         if(file.exists() && !file.isDirectory()) {
             currentScene.onReset();
-            currentScene.loadJson("TODO");
+            String jsonStr = file.readString();
+            currentScene.loadJson(jsonStr);
             loadInternal(currentScene);
+            return true;
         }
+        return false;
     }
 
     @Override

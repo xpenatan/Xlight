@@ -2,12 +2,16 @@ package xlight.editor.imgui.window;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import imgui.ImGui;
 import imgui.ImGuiCol;
 import imgui.ImGuiDockNodeFlags;
 import imgui.ImGuiDockNodeFlagsPrivate_;
+import imgui.ImGuiInputTextFlags;
+import imgui.ImGuiMouseButton;
+import imgui.ImGuiString;
 import imgui.ImGuiStyleVar;
 import imgui.ImGuiWindowClass;
 import imgui.ImGuiWindowFlags;
@@ -18,6 +22,8 @@ import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 
 public class XMainWindow extends XImGuiWindowContext {
@@ -46,6 +52,9 @@ public class XMainWindow extends XImGuiWindowContext {
     private static final String MENU_VIEW_DEBUG_WIREFRAME = "Wireframe";
     private static final String MENU_VIEW_DEBUG_ACTIVE_CAMERA = "Active Camera";
 
+    private static final String POPUP_SAVE = "PopupMenuSave";
+    private static final String POPUP_SAVE_PATH = "PopupSavePath";
+
     public static int MENU_BAR_BIG_SIZE;
     private static int BTN_COLOR_SELECTED = Color.toIntBits(110, 110, 110, 255);
 
@@ -54,9 +63,13 @@ public class XMainWindow extends XImGuiWindowContext {
 
     private ImGuiWindowClass menuWindowClass;
 
+    private ImGuiString pathString;
+
     public XMainWindow() {
         super("Main");
         isVisible = true;
+
+        pathString = new ImGuiString();
     }
 
     @Override
@@ -192,6 +205,11 @@ public class XMainWindow extends XImGuiWindowContext {
             XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
             sceneManager.save();
         }
+
+        if(ImGui.IsItemClicked(ImGuiMouseButton.ImGuiMouseButton_Right)) {
+            ImGui.OpenPopup(POPUP_SAVE);
+        }
+
         ImGui.SameLine();
 
         if(renderMenuButton(XEditorAssets.loadTexture, "##loadTexture", buttonSize)) {
@@ -199,6 +217,37 @@ public class XMainWindow extends XImGuiWindowContext {
             sceneManager.load();
         }
         ImGui.PopStyleVar();
+        boolean saveScenePath = false;
+        if(ImGui.BeginPopup(POPUP_SAVE)) {
+            if(ImGui.MenuItem("Save to file")) {
+                ImGui.CloseCurrentPopup();
+                saveScenePath = true;
+            }
+            ImGui.EndPopup();
+        }
+
+        if(saveScenePath) {
+            ImGui.OpenPopup(POPUP_SAVE_PATH);
+        }
+
+        int menuFlag = ImGuiWindowFlags.ImGuiWindowFlags_NoResize | ImGuiWindowFlags.ImGuiWindowFlags_NoSavedSettings;
+        if(ImGui.BeginPopup(POPUP_SAVE_PATH, menuFlag)) {
+            ImGui.Text("Save Path:");
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(150);
+            int flag = ImGuiInputTextFlags.ImGuiInputTextFlags_EnterReturnsTrue;
+            if(ImGui.InputText("##saveScene", pathString, pathString.getSize(), flag)) {
+                String newPath = pathString.getValue().trim();
+                pathString.clear();
+                if(!newPath.isEmpty()) {
+                    FileHandle path = Gdx.files.local(newPath);
+                    XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                    sceneManager.saveToFile(path);
+                }
+                ImGui.CloseCurrentPopup();
+            }
+            ImGui.EndPopup();
+        }
     }
 
     private boolean renderMenuButton(Texture texture, String id, int buttonSize) {

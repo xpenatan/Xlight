@@ -39,13 +39,15 @@ class XSceneImpl implements XScene, XPoolable {
     }
 
     @Override
-    public void loadJson(String jsonStr) {
-
+    public boolean loadJson(String jsonStr) {
+        sceneDataMap.loadJson(jsonStr);
+        boolean flag = sceneDataMap.getSize() > 0;
+        return flag;
     }
 
     @Override
     public String getJson() {
-        return null;
+        return sceneDataMap.saveJsonStr();
     }
 
     @Override
