@@ -13,14 +13,14 @@ import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
-import xlight.engine.scene.XSceneType;
+import xlight.engine.scene.XSceneTypeValue;
 
 class XLoadEntity {
     public static void load(XWorld world, XScene scene) {
         System.out.println("LOAD SCENE:");
         XDataMap sceneDataMap = scene.getSceneDataMap();
         int sceneType = sceneDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-        if(sceneType == XSceneType.SCENE.getValue()) {
+        if(sceneType == XSceneTypeValue.SCENE.getValue()) {
             XDataMapArray entitiesArray = sceneDataMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
             if(entitiesArray != null) {
                 int size = entitiesArray.getSize();
@@ -55,7 +55,7 @@ class XLoadEntity {
     private static XEntity loadEntity(XWorld world, XDataMap entityMap) {
         XEntityService entityService = world.getEntityService();
         int sceneType = entityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-        if(sceneType == XSceneType.ENTITY.getValue()) {
+        if(sceneType == XSceneTypeValue.ENTITY.getValue()) {
 
             String entityName = entityMap.getString(XSceneKeys.NAME.getKey(), "");
             boolean isEnable = entityMap.getBoolean(XSceneKeys.ENABLE.getKey(), true);
@@ -91,7 +91,7 @@ class XLoadEntity {
         XPoolController poolController = world.getGlobalData(XPoolController.class);
 
         int sceneType = componentMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-        if(sceneType == XSceneType.COMPONENT.getValue()) {
+        if(sceneType == XSceneTypeValue.COMPONENT.getValue()) {
             int key = componentMap.getInt(XSceneKeys.CLASS.getKey(), -1);
             if(key != -1) {
                 XMetaClass registeredClass = registerManager.getRegisteredClass(key);

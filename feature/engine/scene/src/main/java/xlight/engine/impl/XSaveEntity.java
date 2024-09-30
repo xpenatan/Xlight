@@ -12,17 +12,18 @@ import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.list.XIntSet;
 import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
+import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
-import xlight.engine.scene.XSceneType;
+import xlight.engine.scene.XSceneTypeValue;
 
 class XSaveEntity {
 
-    public static void save(XWorld world, XSceneImpl scene) {
+    public static void save(XWorld world, XScene scene) {
         XEntityService entityService = world.getEntityService();
         XRegisterManager registerManager = world.getManager(XRegisterManager.class);
         XPoolController poolController = world.getGlobalData(XPoolController.class);
 
-        XDataMap sceneDataMap = scene.sceneDataMap;
+        XDataMap sceneDataMap = scene.getSceneDataMap();
 
         XDataMapArray entitiesDataMapArray = poolController.obtainObject(XDataMapArray.class);
         sceneDataMap.put(XSceneKeys.ENTITIES.getKey(), entitiesDataMapArray);
@@ -71,7 +72,7 @@ class XSaveEntity {
     private static XDataMap saveEntity(XPoolController poolController, XRegisterManager registerManager, XEntity entity) {
         XDataMap entityMap = poolController.obtainObject(XDataMap.class);
 
-        entityMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneType.ENTITY.getValue());
+        entityMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneTypeValue.ENTITY.getValue());
         entityMap.put(XSceneKeys.NAME.getKey(), entity.getName());
         entityMap.put(XSceneKeys.VISIBLE.getKey(), entity.isVisible());
         // TODO add tag solution
@@ -103,7 +104,7 @@ class XSaveEntity {
         XMetaClass registeredClass = registerManager.getRegisteredClass(component.getClass());
         if(registeredClass != null) {
             componentMap = poolController.obtainObject(XDataMap.class);
-            componentMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneType.COMPONENT.getValue());
+            componentMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneTypeValue.COMPONENT.getValue());
             componentMap.put(XSceneKeys.CLASS.getKey(), registeredClass.getKey());
 
             if(component instanceof XDataMapListener) {

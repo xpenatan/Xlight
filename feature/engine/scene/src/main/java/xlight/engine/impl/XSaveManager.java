@@ -11,7 +11,7 @@ import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
-import xlight.engine.scene.XSceneType;
+import xlight.engine.scene.XSceneTypeValue;
 
 class XSaveManager {
 
@@ -35,7 +35,7 @@ class XSaveManager {
         int key = managerData.getKey();
         XManager manager = managerData.getManager();
 
-        managerMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneType.MANAGER.getValue());
+        managerMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneTypeValue.MANAGER.getValue());
         managerMap.put(XSceneKeys.CLASS.getKey(), key);
 
         if(manager instanceof XDataMapListener) {

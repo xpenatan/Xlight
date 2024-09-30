@@ -7,7 +7,7 @@ import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.manager.XManager;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
-import xlight.engine.scene.XSceneType;
+import xlight.engine.scene.XSceneTypeValue;
 
 class XLoadManager {
 
@@ -15,7 +15,7 @@ class XLoadManager {
         XDataMap sceneDataMap = scene.getSceneDataMap();
 
         int sceneType = sceneDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-        if(sceneType == XSceneType.SCENE.getValue()) {
+        if(sceneType == XSceneTypeValue.SCENE.getValue()) {
             XDataMapArray managersArray = sceneDataMap.getDataMapArray(XSceneKeys.MANAGERS.getKey());
             if(managersArray != null) {
                 int size = managersArray.getSize();
@@ -29,7 +29,7 @@ class XLoadManager {
 
     private static void loadManager(XWorld world, XDataMap managerMap) {
         int sceneType = managerMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-        if(sceneType == XSceneType.MANAGER.getValue()) {
+        if(sceneType == XSceneTypeValue.MANAGER.getValue()) {
             int key = managerMap.getInt(XSceneKeys.CLASS.getKey(), -1);
             if(key == -1) {
                 return;

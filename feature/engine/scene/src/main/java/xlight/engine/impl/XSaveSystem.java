@@ -12,7 +12,7 @@ import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
-import xlight.engine.scene.XSceneType;
+import xlight.engine.scene.XSceneTypeValue;
 
 class XSaveSystem {
 
@@ -40,7 +40,7 @@ class XSaveSystem {
         int key = systemData.getKey();
         XSystem system = systemData.getSystem();
 
-        systemMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneType.SYSTEM.getValue());
+        systemMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneTypeValue.SYSTEM.getValue());
         systemMap.put(XSceneKeys.ENABLE.getKey(), isEnable);
         systemMap.put(XSceneKeys.ENABLE_FORCE.getKey(), forceUpdate);
         systemMap.put(XSceneKeys.CLASS.getKey(), key);

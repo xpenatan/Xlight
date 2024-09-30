@@ -19,5 +19,5 @@ public interface XScene {
 
     XDataMap getSceneDataMap();
 
-    XSceneType getType();
+    XSceneTypeValue getType();
 }

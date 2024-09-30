@@ -4,7 +4,7 @@ import xlight.engine.datamap.XDataMap;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.pool.XPoolable;
 import xlight.engine.scene.XScene;
-import xlight.engine.scene.XSceneType;
+import xlight.engine.scene.XSceneTypeValue;
 
 class XSceneImpl implements XScene, XPoolable {
 
@@ -13,7 +13,7 @@ class XSceneImpl implements XScene, XPoolable {
 
     public XDataMap sceneDataMap;
 
-    public XSceneType type = XSceneType.SCENE;
+    public XSceneTypeValue type = XSceneTypeValue.SCENE;
 
     public XSceneImpl(XPoolController poolController) {
         sceneDataMap = XDataMap.obtain(poolController);
@@ -61,11 +61,11 @@ class XSceneImpl implements XScene, XPoolable {
     }
 
     @Override
-    public XSceneType getType() {
+    public XSceneTypeValue getType() {
         return type;
     }
 
-    public void setType(XSceneType type) {
+    public void setType(XSceneTypeValue type) {
         this.type = type;
     }
 
@@ -73,7 +73,7 @@ class XSceneImpl implements XScene, XPoolable {
     public void onReset() {
         id = -1;
         name = null;
-        type = XSceneType.SCENE;
+        type = XSceneTypeValue.SCENE;
         sceneDataMap.clear();
     }
 }

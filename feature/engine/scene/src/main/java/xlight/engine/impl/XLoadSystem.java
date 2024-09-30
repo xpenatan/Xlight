@@ -10,7 +10,7 @@ import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemService;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
-import xlight.engine.scene.XSceneType;
+import xlight.engine.scene.XSceneTypeValue;
 
 class XLoadSystem {
 
@@ -18,7 +18,7 @@ class XLoadSystem {
         XDataMap sceneDataMap = scene.getSceneDataMap();
 
         int sceneType = sceneDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-        if(sceneType == XSceneType.SCENE.getValue()) {
+        if(sceneType == XSceneTypeValue.SCENE.getValue()) {
             XDataMapArray systemsArray = sceneDataMap.getDataMapArray(XSceneKeys.SYSTEMS.getKey());
             if(systemsArray != null) {
                 int size = systemsArray.getSize();
@@ -33,7 +33,7 @@ class XLoadSystem {
     private static void loadSystem(XWorld world, XDataMap systemMap) {
         XSystemService systemService = world.getSystemService();
         int sceneType = systemMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-        if(sceneType == XSceneType.SYSTEM.getValue()) {
+        if(sceneType == XSceneTypeValue.SYSTEM.getValue()) {
             int key = systemMap.getInt(XSceneKeys.CLASS.getKey(), -1);
             if(key == -1) {
                 return;
