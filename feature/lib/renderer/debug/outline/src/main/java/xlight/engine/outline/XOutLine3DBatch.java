@@ -1,6 +1,7 @@
 package xlight.engine.outline;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -30,8 +31,8 @@ public class XOutLine3DBatch {
 
     private boolean outlineShaderValid;
 
-    private Color outlineInnerColor = new Color(Color.BLUE);
-    private Color outlineOuterColor = new Color(Color.BLUE);
+    private Color outlineInnerColor = Color.BLUE;
+    private Color outlineOuterColor = Color.BLUE;
 
     private float outlinesWidth = .23f;
     private float outlineDepthMin = 0.38f;
@@ -176,16 +177,49 @@ public class XOutLine3DBatch {
         if(objectsToRender.size <= 0) {
             return;
         }
-        frameBufferExt.begin();
-        modelBatch.begin(camera);
-        for(int i = 0; i < objectsToRender.size; i++) {
-            XRender3D render3D = objectsToRender.get(i);
-            render3D.onRender(engineType, batch3D);
-        }
-        modelBatch.end();
-        frameBufferExt.end();
 
-        render(camera.far, camera.near, frameBufferExt.getColorBufferTexture().texture);
+        boolean keyPressed = Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT);
+
+
+        if(keyPressed && objectsToRender.size > 1) {
+            // This feature is tied to XEntitySelectionManagerImpl when there is multiple selections and want to move only a single entity
+
+            outlineInnerColor = Color.YELLOW;
+            outlineOuterColor = Color.YELLOW;
+
+            frameBufferExt.begin();
+            modelBatch.begin(camera);
+            objectsToRender.get(0).onRender(engineType, batch3D);
+            modelBatch.end();
+            frameBufferExt.end();
+
+            render(camera.far, camera.near, frameBufferExt.getColorBufferTexture().texture);
+
+            outlineInnerColor = Color.BLUE;
+            outlineOuterColor = Color.BLUE;
+
+            frameBufferExt.begin();
+            modelBatch.begin(camera);
+            for(int i = 1; i < objectsToRender.size; i++) {
+                XRender3D render3D = objectsToRender.get(i);
+                render3D.onRender(engineType, batch3D);
+            }
+            modelBatch.end();
+            frameBufferExt.end();
+
+            render(camera.far, camera.near, frameBufferExt.getColorBufferTexture().texture);
+        }
+        else {
+            frameBufferExt.begin();
+            modelBatch.begin(camera);
+            for(int i = 0; i < objectsToRender.size; i++) {
+                XRender3D render3D = objectsToRender.get(i);
+                render3D.onRender(engineType, batch3D);
+            }
+            modelBatch.end();
+            frameBufferExt.end();
+            render(camera.far, camera.near, frameBufferExt.getColorBufferTexture().texture);
+        }
     }
 
     private static String defaultVertexShader = "" +
