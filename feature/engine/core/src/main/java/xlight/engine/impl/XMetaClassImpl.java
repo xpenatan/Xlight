@@ -10,6 +10,7 @@ public class XMetaClassImpl implements XMetaClass {
     private Class<?> parentType;
     private String name = "";
     public final Array<String> groups;
+    public boolean noGroup;
 
     public XMetaClassImpl(int key, Class<?> classType) {
         this.key = key;
@@ -54,10 +55,18 @@ public class XMetaClassImpl implements XMetaClass {
     @Override
     public void setMetaClassGroup(String... name) {
         groups.clear();
-        groups.addAll(name);
+        if(name == null) {
+            noGroup = true;
+        }
+        else {
+            groups.addAll(name);
+        }
     }
 
     public Array<String> getGroups() {
+        if(noGroup) {
+            return null;
+        }
         return groups;
     }
 }

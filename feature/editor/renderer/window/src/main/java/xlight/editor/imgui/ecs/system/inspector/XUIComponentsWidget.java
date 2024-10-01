@@ -93,18 +93,20 @@ public class XUIComponentsWidget {
         for(XMetaClass metaClass : registerService.getRegisteredClasses()) {
             Array<XUIComponentGroup> curGroups = componentGroups;
             Array<String> groups = metaClass.getGroups();
-            if(groups.size == 0) {
-                XUIComponentGroup componentGroup = findOrCreate(curGroups, "Others");
-                componentGroup.addMetaClass(metaClass);
-            }
-            else {
-                XUIComponentGroup lastGroup = null;
-                for(int i = 0; i < groups.size; i++) {
-                    String groupName = groups.get(i);
-                    lastGroup = findOrCreate(curGroups, groupName);
-                    curGroups = lastGroup.children;
+            if(groups != null) {
+                if(groups.size == 0) {
+                    XUIComponentGroup componentGroup = findOrCreate(curGroups, "Others");
+                    componentGroup.addMetaClass(metaClass);
                 }
-                lastGroup.addMetaClass(metaClass);
+                else {
+                    XUIComponentGroup lastGroup = null;
+                    for(int i = 0; i < groups.size; i++) {
+                        String groupName = groups.get(i);
+                        lastGroup = findOrCreate(curGroups, groupName);
+                        curGroups = lastGroup.children;
+                    }
+                    lastGroup.addMetaClass(metaClass);
+                }
             }
         }
 
