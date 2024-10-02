@@ -57,6 +57,7 @@ include(":feature:editor:core")
 include(":feature:editor:editor-assets")
 include(":feature:editor:renderer:imgui")
 include(":feature:editor:renderer:window")
+include(":feature:editor:renderer:imgui-util")
 
 include(":feature:editor:game-editor") // Classes used in game editor window
 

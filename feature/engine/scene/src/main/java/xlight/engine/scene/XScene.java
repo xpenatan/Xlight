@@ -1,5 +1,7 @@
 package xlight.engine.scene;
 
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.datamap.XDataMap;
 
 /**
@@ -11,8 +13,6 @@ public interface XScene {
 
     String getName();
 
-    boolean loadJson(String jsonStr);
-
     String getJson();
 
     void clear();
@@ -20,4 +20,8 @@ public interface XScene {
     XDataMap getSceneDataMap();
 
     XSceneTypeValue getType();
+
+    String getPath();
+
+    Files.FileType getFileType();
 }

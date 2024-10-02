@@ -1,5 +1,8 @@
 package xlight.engine.impl;
 
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.datamap.XDataMap;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.pool.XPoolable;
@@ -14,6 +17,9 @@ class XSceneImpl implements XScene, XPoolable {
     public XDataMap sceneDataMap;
 
     public XSceneTypeValue type = XSceneTypeValue.SCENE;
+
+    private String path;
+    private Files.FileType fileType;
 
     public XSceneImpl(XPoolController poolController) {
         sceneDataMap = XDataMap.obtain(poolController);
@@ -38,11 +44,17 @@ class XSceneImpl implements XScene, XPoolable {
         this.name = name;
     }
 
-    @Override
-    public boolean loadJson(String jsonStr) {
-        sceneDataMap.loadJson(jsonStr);
-        boolean flag = sceneDataMap.getSize() > 0;
-        return flag;
+    public boolean loadJson(String path, Files.FileType fileType) {
+        this.path = path;
+        this.fileType = fileType;
+        FileHandle fileHandle = Gdx.files.getFileHandle(path, fileType);
+        if(fileHandle.exists()) {
+            String jsonStr = fileHandle.readString();
+            sceneDataMap.loadJson(jsonStr);
+            boolean flag = sceneDataMap.getSize() > 0;
+            return flag;
+        }
+        return false;
     }
 
     @Override
@@ -65,6 +77,16 @@ class XSceneImpl implements XScene, XPoolable {
         return type;
     }
 
+    @Override
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public Files.FileType getFileType() {
+        return fileType;
+    }
+
     public void setType(XSceneTypeValue type) {
         this.type = type;
     }
@@ -73,6 +95,8 @@ class XSceneImpl implements XScene, XPoolable {
     public void onReset() {
         id = -1;
         name = null;
+        path = null;
+        fileType = null;
         type = XSceneTypeValue.SCENE;
         sceneDataMap.clear();
     }

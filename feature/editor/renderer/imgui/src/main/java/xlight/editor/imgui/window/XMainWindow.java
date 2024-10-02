@@ -1,5 +1,6 @@
 package xlight.editor.imgui.window;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
@@ -20,6 +21,7 @@ import imgui.extension.imlayout.ImLayout;
 import xlight.editor.assets.XEditorAssets;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
+import xlight.editor.imgui.util.XImGuiPopUpWidget;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.entity.XEntity;
@@ -53,6 +55,8 @@ public class XMainWindow extends XImGuiWindowContext {
     private static final String MENU_VIEW_DEBUG_ACTIVE_CAMERA = "Active Camera";
 
     private static final String POPUP_SAVE = "PopupMenuSave";
+    private static final String POPUP_LOAD = "PopupMenuLoad";
+    private static final String POPUP_LOAD_PATH = "PopupLoadPath";
     private static final String POPUP_SAVE_PATH = "PopupSavePath";
 
     public static int MENU_BAR_BIG_SIZE;
@@ -216,7 +220,25 @@ public class XMainWindow extends XImGuiWindowContext {
             XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
             sceneManager.load();
         }
+
+        if(ImGui.IsItemClicked(ImGuiMouseButton.ImGuiMouseButton_Right)) {
+            ImGui.OpenPopup(POPUP_LOAD);
+        }
         ImGui.PopStyleVar();
+
+        boolean loadScenePath = false;
+        if(ImGui.BeginPopup(POPUP_LOAD)) {
+            if(ImGui.MenuItem("Load from file")) {
+                ImGui.CloseCurrentPopup();
+                loadScenePath = true;
+            }
+            ImGui.EndPopup();
+        }
+        if(loadScenePath) {
+            ImGui.OpenPopup(POPUP_LOAD_PATH);
+        }
+
+
         boolean saveScenePath = false;
         if(ImGui.BeginPopup(POPUP_SAVE)) {
             if(ImGui.MenuItem("Save to file")) {
@@ -231,18 +253,28 @@ public class XMainWindow extends XImGuiWindowContext {
         }
 
         int menuFlag = ImGuiWindowFlags.ImGuiWindowFlags_NoResize | ImGuiWindowFlags.ImGuiWindowFlags_NoSavedSettings;
+        if(ImGui.BeginPopup(POPUP_LOAD_PATH, menuFlag)) {
+            if(XImGuiPopUpWidget.renderSceneSavePath(pathString)) {
+                String newPath = pathString.getValue().trim();
+                pathString.clear();
+                if(!newPath.isEmpty()) {
+                    XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                    sceneManager.loadToCurrentScene(newPath, Files.FileType.Local);
+                }
+                ImGui.CloseCurrentPopup();
+            }
+            ImGui.EndPopup();
+        }
+
         if(ImGui.BeginPopup(POPUP_SAVE_PATH, menuFlag)) {
-            ImGui.Text("Save Path:");
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth(150);
-            int flag = ImGuiInputTextFlags.ImGuiInputTextFlags_EnterReturnsTrue;
-            if(ImGui.InputText("##saveScene", pathString, pathString.getSize(), flag)) {
+            if(XImGuiPopUpWidget.renderSceneSavePath(pathString)) {
                 String newPath = pathString.getValue().trim();
                 pathString.clear();
                 if(!newPath.isEmpty()) {
                     FileHandle path = Gdx.files.local(newPath);
                     XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
-                    sceneManager.saveToFile(path);
+                    String jsonStr = sceneManager.saveCurrentScene();
+                    path.writeString(jsonStr, false);
                 }
                 ImGui.CloseCurrentPopup();
             }

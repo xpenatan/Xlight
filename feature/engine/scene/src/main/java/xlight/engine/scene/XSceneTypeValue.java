@@ -3,7 +3,6 @@ package xlight.engine.scene;
 public enum XSceneTypeValue {
     /** SCENE Contains all saved data */
     SCENE(1),
-    SUB_SCENE(2),
 
     ASSETS(14),
     ENTITIES(10),

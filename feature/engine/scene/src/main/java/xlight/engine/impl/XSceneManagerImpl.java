@@ -1,5 +1,6 @@
 package xlight.engine.impl;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.core.XEngineEvent;
 import xlight.engine.datamap.XDataMap;
@@ -21,13 +22,16 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     XSceneImpl currentScene;
     XWorld world;
     private XSceneListener sceneListener;
+    private XPoolController poolController;
+
+    private XLoadEntity loadEntity;
 
     @Override
     public void onAttach(XWorld world) {
-        XPoolManager poolService = world.getManager(XPoolManager.class);
-        XPoolController poolController = poolService.getPoolController();
+        poolController = world.getGlobalData(XPoolController.class);
         this.world = world;
         currentScene = new XSceneImpl(poolController);
+        loadEntity = new XLoadEntity();
     }
 
     @Override
@@ -46,25 +50,39 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     }
 
     @Override
-    public void saveToFile(FileHandle file) {
+    public String saveCurrentScene() {
         saveInternal(currentScene);
         // Parse to json
-        String json = currentScene.getJson();
-        if(json != null) {
-            file.writeString(json, false);
-        }
+        return currentScene.getJson();
     }
 
     @Override
-    public boolean loadFromFile(FileHandle file) {
-        if(file.exists() && !file.isDirectory()) {
-            currentScene.onReset();
-            String jsonStr = file.readString();
-            currentScene.loadJson(jsonStr);
+    public boolean loadToCurrentScene(String path, Files.FileType filetype) {
+        currentScene.onReset();
+        if(currentScene.loadJson(path, filetype)) {
             loadInternal(currentScene);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void addScene(XScene scene) {
+        if(scene != null) {
+            loadEntity.load(world, scene, true);
+        }
+    }
+
+    @Override
+    public XScene loadScene(String path, Files.FileType filetype) {
+        XSceneImpl scene = null;
+        scene = poolController.obtainObject(XScene.class);
+        if(scene.loadJson(path, filetype)) {
+
+            return scene;
+        }
+        poolController.releaseObject(XScene.class, scene);
+        return null;
     }
 
     @Override
@@ -121,7 +139,7 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     private void loadSceneInternal(XScene scene) {
         XLoadSystem.load(world, scene);
         XLoadManager.load(world, scene);
-        XLoadEntity.load(world, scene);
+        loadEntity.load(world, scene, false);
     }
 
     public void saveInternal(XScene scene) {

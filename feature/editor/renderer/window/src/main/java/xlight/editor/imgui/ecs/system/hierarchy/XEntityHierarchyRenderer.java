@@ -1,7 +1,9 @@
 package xlight.editor.imgui.ecs.system.hierarchy;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import imgui.ImGui;
@@ -11,7 +13,9 @@ import imgui.ImGuiDragDropFlags;
 import imgui.ImGuiInternal;
 import imgui.ImGuiMouseButton;
 import imgui.ImGuiPayload;
+import imgui.ImGuiString;
 import imgui.ImGuiWindow;
+import imgui.ImGuiWindowFlags;
 import imgui.ImVec2;
 import imgui.ImVec4;
 import imgui.extension.imlayout.ImLayout;
@@ -19,6 +23,7 @@ import xlight.editor.assets.XEditorAssets;
 import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XEntitySelectionManager;
+import xlight.editor.imgui.util.XImGuiPopUpWidget;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
@@ -31,6 +36,8 @@ import xlight.engine.g3d.ecs.component.XGLTFComponent;
 import xlight.engine.list.XIntSet;
 import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
+import xlight.engine.scene.XScene;
+import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.string.XStringUtil;
 import xlight.engine.string.XTextBuilder;
 import xlight.engine.transform.ecs.component.XTransformComponent;
@@ -50,8 +57,11 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
     private boolean renderTree;
 
-    public XEntityHierarchyRenderer() {
+    private static final String POPUP_ADD_SCENE_PATH = "PopupAddScenePath";
+    private ImGuiString pathString;
 
+    public XEntityHierarchyRenderer() {
+        pathString = new ImGuiString();
     }
 
     public void onAttach(XWorld world) {
@@ -138,25 +148,47 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
             }
         }
         if(gameEngine != null) {
+            XWorld gameWorld = gameEngine.getWorld();
             if(ImGui.IsWindowHovered(ImGuiHoveredFlags_ChildWindows)) {
                 if(ImGui.IsMouseClicked(ImGuiMouseButton.ImGuiMouseButton_Right)) {
                     ImGui.OpenPopup("EntityOptions");
                 }
             }
 
+            boolean openAddScenePath = false;
             if(ImGui.BeginPopup("EntityOptions")) {
-                renderNewEntityPopUp(gameEngine);
+                renderNewEntityPopUp(gameWorld);
+                if(ImGui.MenuItem("Add Scene")) {
+                    openAddScenePath = true;
+                }
+                ImGui.EndPopup();
+            }
+            if(openAddScenePath) {
+                ImGui.OpenPopup(POPUP_ADD_SCENE_PATH);
+            }
+
+            int menuFlag = ImGuiWindowFlags.ImGuiWindowFlags_NoResize | ImGuiWindowFlags.ImGuiWindowFlags_NoSavedSettings;
+            if(ImGui.BeginPopup(POPUP_ADD_SCENE_PATH, menuFlag)) {
+                if(XImGuiPopUpWidget.renderSceneSavePath(pathString)) {
+                    String newPath = pathString.getValue().trim();
+                    pathString.clear();
+                    if(!newPath.isEmpty()) {
+                        XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                        XScene scene = sceneManager.loadScene(newPath, Files.FileType.Local);
+                        sceneManager.addScene(scene);
+                    }
+                    ImGui.CloseCurrentPopup();
+                }
                 ImGui.EndPopup();
             }
         }
     }
 
-    private void renderNewEntityPopUp(XEngine gameEngine) {
-        XWorld world = gameEngine.getWorld();
-        XPoolController poolController = world.getGlobalData(XPoolController.class);
+    private void renderNewEntityPopUp(XWorld gameWorld) {
+        XPoolController poolController = gameWorld.getGlobalData(XPoolController.class);
         if(ImGui.BeginMenu("New Entity")) {
             if(ImGui.MenuItem("Empty")) {
-                XEntityService entityService = gameEngine.getWorld().getWorldService().getEntityService();
+                XEntityService entityService = gameWorld.getWorldService().getEntityService();
                 XEntity newEntity = entityService.obtain();
                 newEntity.setName("Empty");
                 entityService.attachEntity(newEntity);
@@ -165,7 +197,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
             if(ImGui.BeginMenu("Game Entity")) {
                 if(ImGui.MenuItem("Default")) {
-                    XEntityService entityService = gameEngine.getWorld().getWorldService().getEntityService();
+                    XEntityService entityService = gameWorld.getWorldService().getEntityService();
                     XEntity newEntity = entityService.obtain();
                     newEntity.setName("Default");
                     XComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
@@ -181,7 +213,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                 }
                 if(ImGui.BeginMenu("3D")) {
                     if(ImGui.MenuItem("Asset")) {
-                        XEntityService entityService = gameEngine.getWorld().getWorldService().getEntityService();
+                        XEntityService entityService = gameWorld.getWorldService().getEntityService();
                         XEntity newEntity = entityService.obtain();
                         newEntity.setName("Asset");
                         XGameWorldComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
@@ -202,7 +234,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                 }
 
                 if(ImGui.MenuItem("Camera")) {
-                    XEntityService entityService = gameEngine.getWorld().getWorldService().getEntityService();
+                    XEntityService entityService = gameWorld.getWorldService().getEntityService();
                     XEntity newEntity = entityService.obtain();
                     newEntity.setName("Camera");
                     XGameWorldComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
@@ -229,7 +261,6 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
             }
             ImGui.EndMenu();
         }
-
     }
 
     Array<XIntSet.XIntSetNode> list = new Array<>();
