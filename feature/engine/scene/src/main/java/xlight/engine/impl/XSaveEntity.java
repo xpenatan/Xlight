@@ -1,5 +1,9 @@
 package xlight.engine.impl;
 
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import xlight.engine.core.asset.XAssetUtil;
 import xlight.engine.core.register.XMetaClass;
 import xlight.engine.core.register.XRegisterManager;
 import xlight.engine.datamap.XDataMap;
@@ -14,7 +18,9 @@ import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
+import xlight.engine.scene.XSceneMapUtils;
 import xlight.engine.scene.XSceneTypeValue;
+import xlight.engine.scene.ecs.component.XSceneComponent;
 
 class XSaveEntity {
 
@@ -88,11 +94,49 @@ class XSaveEntity {
             XDataMapArray componentsDataMapArray = poolController.obtainObject(XDataMapArray.class);
             entityMap.put(XSceneKeys.COMPONENTS.getKey(), componentsDataMapArray);
 
+            XSceneComponent sceneComponent = entity.getComponent(XSceneComponent.class);
+            XDataMap sceneEntityMap = null;
+            if(sceneComponent != null) {
+                Files.FileType fileType = XAssetUtil.getFileTypeEnum(sceneComponent.fileHandleType);
+                FileHandle fileHandle = Gdx.files.getFileHandle(sceneComponent.scenePath, fileType);
+                if(fileHandle.exists()) {
+                    String jsonStr = fileHandle.readString();
+                    XDataMap sceneDataMap = XDataMap.obtain(poolController);
+                    sceneDataMap.loadJson(jsonStr);
+                    sceneEntityMap = XSceneMapUtils.getEntityMapFromSceneMap(sceneDataMap, sceneComponent.entityId);
+                }
+            }
+
             for(int i = 0; i < componentSize; i++) {
                 XComponent component = entity.getComponentAt(i);
-                XDataMap componentDataMap = saveComponent(poolController, registerManager, component);
-                if(componentDataMap != null) {
-                    componentsDataMapArray.add(componentDataMap);
+                Class<? extends XComponent> componentType = component.getClass();
+                XMetaClass metaClass = registerManager.getRegisteredClass(componentType);
+                if(metaClass != null) {
+                    int componentKey = metaClass.getKey();
+                    XDataMap componentMap = saveComponent(poolController, metaClass, component);
+                    boolean addComponent = true;
+                    if(sceneEntityMap != null) {
+                        XDataMap sceneComponentMap = XSceneMapUtils.getComponentMapFromEntityMap(sceneEntityMap, componentKey);
+                        if(sceneComponentMap != null) {
+                            XDataMap sceneComponentDataMap = sceneComponentMap.getDataMap(XSceneKeys.DATA.getKey());
+                            if(sceneComponentDataMap != null) {
+                                XDataMap componentDataMap = XSceneMapUtils.getComponentDataMapFromComponentMap(componentMap);
+                                if(sceneComponentDataMap.equals(componentDataMap)) {
+                                    addComponent = false;
+                                }
+                            }
+                            else {
+                                // Component don't have data map so it should be equal
+                                addComponent = false;
+                            }
+                        }
+                    }
+                    if(addComponent) {
+                        componentsDataMapArray.add(componentMap);
+                    }
+                    else {
+                        componentMap.free();
+                    }
                 }
             }
         }
@@ -100,19 +144,15 @@ class XSaveEntity {
         return entityMap;
     }
 
-    private static XDataMap saveComponent(XPoolController poolController, XRegisterManager registerManager, XComponent component) {
+    private static XDataMap saveComponent(XPoolController poolController, XMetaClass metaClass, XComponent component) {
         XDataMap componentMap = null;
-        XMetaClass registeredClass = registerManager.getRegisteredClass(component.getClass());
-        if(registeredClass != null) {
-            componentMap = poolController.obtainObject(XDataMap.class);
-            componentMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneTypeValue.COMPONENT.getValue());
-            componentMap.put(XSceneKeys.CLASS.getKey(), registeredClass.getKey());
-
-            if(component instanceof XDataMapListener) {
-                XDataMap componentDataMap = XDataMap.obtain(poolController);
-                componentMap.put(XSceneKeys.DATA.getKey(), componentDataMap);
-                ((XDataMapListener)component).onSave(componentDataMap);
-            }
+        componentMap = poolController.obtainObject(XDataMap.class);
+        componentMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneTypeValue.COMPONENT.getValue());
+        componentMap.put(XSceneKeys.CLASS.getKey(), metaClass.getKey());
+        if(component instanceof XDataMapListener) {
+            XDataMap componentDataMap = XDataMap.obtain(poolController);
+            componentMap.put(XSceneKeys.DATA.getKey(), componentDataMap);
+            ((XDataMapListener)component).onSave(componentDataMap);
         }
         return componentMap;
     }

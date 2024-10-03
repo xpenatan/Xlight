@@ -9,12 +9,9 @@ import xlight.engine.pool.XPoolable;
 
 public final class XSceneComponent implements XComponent, XDataMapListener, XPoolable {
 
-
     public int fileHandleType = XAssetUtil.getFileTypeValue(Files.FileType.Internal);
     public String scenePath = "";
     public int entityId = -1;
-
-
 
     public static final int MAP_ENTITY_ID = 1;
     public static final int MAP_SCENE_PATH = 2;

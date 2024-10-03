@@ -4,7 +4,6 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.core.asset.XAssetUtil;
-import xlight.engine.core.register.XMetaClass;
 import xlight.engine.core.register.XRegisterManager;
 import xlight.engine.datamap.XDataMap;
 import xlight.engine.datamap.XDataMapArray;
@@ -17,6 +16,7 @@ import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
+import xlight.engine.scene.XSceneMapUtils;
 import xlight.engine.scene.XSceneTypeValue;
 import xlight.engine.scene.ecs.component.XSceneComponent;
 
@@ -36,22 +36,22 @@ class XLoadEntity {
             if(entitiesArray != null) {
                 int size = entitiesArray.getSize();
                 for(int i = 0; i < size; i++) {
-                    XDataMap entityDataMap = entitiesArray.get(i);
-                    int entityType = entityDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
+                    XDataMap entityMap = entitiesArray.get(i);
+                    int entityType = entityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
                     if(entityType == XSceneTypeValue.ENTITY.getValue()) {
-                        loadEntityAndInit(world, scene, poolController, entityDataMap);
+                        loadEntityAndInit(world, scene, poolController, entityMap);
                     }
                 }
             }
         }
     }
 
-    private XEntity loadEntityAndInit(XWorld world, XScene scene, XPoolController poolController, XDataMap entityDataMap) {
+    private XEntity loadEntityAndInit(XWorld world, XScene scene, XPoolController poolController, XDataMap entityMap) {
         // TODO remove loading recursive
         XEntityService entityService = world.getWorldService().getEntityService();
-        XEntity entity = loadEntity(world, scene, poolController, entityDataMap);
+        XEntity entity = loadEntity(world, scene, poolController, entityMap);
         entityService.attachEntity(entity);
-        XDataMapArray childEntitiesArray = entityDataMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
+        XDataMapArray childEntitiesArray = entityMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
         if(childEntitiesArray != null) {
             XList<XDataMap> list = childEntitiesArray.getList();
             for(XDataMap childDataMap : list) {
@@ -67,14 +67,14 @@ class XLoadEntity {
         return entity;
     }
 
-    private XEntity loadEntity(XWorld world, XScene scene, XPoolController poolController, XDataMap entityDataMap) {
+    private XEntity loadEntity(XWorld world, XScene scene, XPoolController poolController, XDataMap entityMap) {
         XEntityService entityService = world.getWorldService().getEntityService();
         XRegisterManager registerManager = world.getManager(XRegisterManager.class);
-        String entityName = entityDataMap.getString(XSceneKeys.NAME.getKey(), "");
-        boolean isEnable = entityDataMap.getBoolean(XSceneKeys.ENABLE.getKey(), true);
-        boolean isVisible = entityDataMap.getBoolean(XSceneKeys.VISIBLE.getKey(), true);
-        int jsonId = entityDataMap.getInt(XSceneKeys.JSON_ID.getKey(), -1);
-        String tag = entityDataMap.getString(XSceneKeys.TAG.getKey(), "");
+        String entityName = entityMap.getString(XSceneKeys.NAME.getKey(), "");
+        boolean isEnable = entityMap.getBoolean(XSceneKeys.ENABLE.getKey(), true);
+        boolean isVisible = entityMap.getBoolean(XSceneKeys.VISIBLE.getKey(), true);
+        int jsonId = entityMap.getInt(XSceneKeys.JSON_ID.getKey(), -1);
+        String tag = entityMap.getString(XSceneKeys.TAG.getKey(), "");
 
         XEntity entity = entityService.obtain();
         entity.setVisible(isVisible);
@@ -82,30 +82,26 @@ class XLoadEntity {
 //            entity.setTag(tag);
         entity.setSavable(true);
 
-        XDataMapArray componentsDataMap = entityDataMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
-        if(componentsDataMap != null) {
-            addEntityComponents(scene, registerManager, poolController, entity, componentsDataMap, false);
+        XDataMapArray componentArray = entityMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
+        if(componentArray != null) {
+            addEntityComponents(scene, registerManager, poolController, entity, componentArray, false);
         }
         return entity;
     }
 
-    private void addEntityComponents(XScene scene, XRegisterManager registerManager, XPoolController poolController, XEntity entity, XDataMapArray componentsDataMap, boolean isSubScene) {
-        int size = componentsDataMap.getSize();
+    private void addEntityComponents(XScene scene, XRegisterManager registerManager, XPoolController poolController, XEntity entity, XDataMapArray componentArray, boolean isSubScene) {
+        int size = componentArray.getSize();
         for(int i = 0; i < size; i++) {
-            XDataMap componentDataMap = componentsDataMap.get(i);
-            int sceneType = componentDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-            if(sceneType == XSceneTypeValue.COMPONENT.getValue()) {
-                Class<?> componentType = getComponentType(registerManager, componentDataMap);
-                if(componentType != null) {
-                    XComponent component = loadComponent(poolController, componentDataMap, componentType);
-                    entity.attachComponent(component);
-                }
+            XDataMap componentMap = componentArray.get(i);
+            Class<?> componentType = XSceneMapUtils.getComponentTypeFromComponentMap(registerManager, componentMap);
+            if(componentType != null) {
+                XComponent component = loadComponent(poolController, componentMap, componentType);
+                entity.attachComponent(component);
             }
         }
 
         if(!isSubScene) {
             XSceneComponent sceneComponent = entity.getComponent(XSceneComponent.class);
-
             if(sceneComponent != null) {
                 // search for component entityId in scene path add all recursive components from it
                 try {
@@ -137,7 +133,7 @@ class XLoadEntity {
             String jsonStr = fileHandle.readString();
             XDataMap sceneDataMap = XDataMap.obtain(poolController);
             sceneDataMap.loadJson(jsonStr);
-            XDataMap sceneEntityDataMap = getSceneEntityMap(sceneEntityId, sceneDataMap);
+            XDataMap sceneEntityDataMap = XSceneMapUtils.getEntityMapFromSceneMap(sceneDataMap, sceneEntityId);
             if(sceneEntityDataMap != null) {
                 XDataMapArray componentsDataMap = sceneEntityDataMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
                 if(componentsDataMap != null) {
@@ -149,40 +145,6 @@ class XLoadEntity {
         else {
             System.err.println("Scene path not found: " + fileHandle + " - " + scenePath);
         }
-    }
-
-    private XDataMap getSceneEntityMap(int sceneEntityId, XDataMap sceneDataMap) {
-        int sceneType = sceneDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-        if(sceneType == XSceneTypeValue.SCENE.getValue()) {
-            XDataMapArray entitiesArray = sceneDataMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
-            if(entitiesArray != null) {
-                // TODO change to a int map?
-                int size = entitiesArray.getSize();
-                for(int i = 0; i < size; i++) {
-                    XDataMap entityDataMap = entitiesArray.get(i);
-                    int entityType = entityDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-                    if(entityType == XSceneTypeValue.ENTITY.getValue()) {
-                        int jsonId = entityDataMap.getInt(XSceneKeys.JSON_ID.getKey(), -1);
-                        if(sceneEntityId == jsonId) {
-                            return entityDataMap;
-                        }
-                    }
-                }
-            }
-
-        }
-        return null;
-    }
-
-    private Class<?> getComponentType(XRegisterManager registerManager, XDataMap componentDataMap) {
-        int key = componentDataMap.getInt(XSceneKeys.CLASS.getKey(), -1);
-        if(key != -1) {
-            XMetaClass registeredClass = registerManager.getRegisteredClass(key);
-            if(registeredClass != null) {
-                return registeredClass.getType();
-            }
-        }
-        return null;
     }
 
     private XComponent loadComponent(XPoolController poolController, XDataMap componentMap, Class<?> componentType) {
