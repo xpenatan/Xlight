@@ -3,10 +3,6 @@ plugins {
     id("java-library")
 }
 
-group = LibExt.GROUP_ID
-
-val moduleName = "imgui"
-
 dependencies {
     implementation(project(":engine:core"))
 

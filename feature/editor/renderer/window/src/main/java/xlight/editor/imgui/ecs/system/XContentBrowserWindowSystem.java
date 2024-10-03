@@ -3,6 +3,7 @@ package xlight.editor.imgui.ecs.system;
 import imgui.ImGui;
 import imgui.ImGuiWindowClass;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
+import xlight.editor.imgui.ui.filebrowser.XContentBrowser;
 import xlight.editor.imgui.window.XImGuiWindowContext;
 import xlight.editor.imgui.window.XMainWindow;
 import xlight.engine.ecs.XWorld;
@@ -16,19 +17,24 @@ public class XContentBrowserWindowSystem implements XSystem {
 
     private ImGuiWindowClass windowClass;
 
+    private XContentBrowser contentBrowser;
+
     @Override
     public void onAttach(XWorld world, XSystemData systemData) {
         XImGuiManager imguiManager = world.getManager(XImGuiManager.class);
         XImGuiWindowContext windowContext = imguiManager.getWindowContext(XMainWindow.CLASS_ID);
         windowClass = windowContext.getWindowClass();
+        contentBrowser = new XContentBrowser();
+        contentBrowser.init(world);
     }
 
     @Override
     public void onTick(XWorld world) {
         ImGui.SetNextWindowClass(windowClass);
-
         ImGui.Begin(name);
-
+        {
+            contentBrowser.render();
+        }
         ImGui.End();
     }
 

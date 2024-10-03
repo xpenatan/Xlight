@@ -3,10 +3,6 @@ plugins {
     id("java-library")
 }
 
-group = LibExt.GROUP_ID
-
-val moduleName = "imgui"
-
 dependencies {
     implementation(project(":engine:core"))
 
@@ -15,6 +11,7 @@ dependencies {
     implementation(project(":feature:editor:editor-assets"))
     implementation(project(":feature:editor:game-editor"))
     implementation(project(":feature:editor:renderer:imgui-util"))
+    implementation(project(":feature:editor:renderer:content-browser"))
 
     implementation(project(":feature:lib:ecs"))
     implementation(project(":feature:lib:list"))
