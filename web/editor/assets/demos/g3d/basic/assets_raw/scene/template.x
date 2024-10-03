@@ -11,7 +11,8 @@
 				"31": 22,
 				"32": 7,
 				"33": {
-					"1": "models/DamagedHelmet.glb"
+					"1": "models/DamagedHelmet.glb",
+					"2": 2
 				}
 			},
 			{
