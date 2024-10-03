@@ -20,8 +20,8 @@ i:b:/models/ground/ground.gltf:3090:1
 i:b:/models/ground/ground0.png:134:1
 i:b:/models/ground/Image_0.png:6046:1
 i:d:/scene:0:1
-i:b:/scene/root.x:1222:1
-i:b:/scene/template.x:589:1
+i:b:/scene/template.xscene:589:1
+i:b:/scene/root.xscene:1227:1
 c:b:/net/mgsx/gltf/shaders/pbr/lights.glsl:9214:1
 c:b:/net/mgsx/gltf/shaders/pbr/material.glsl:6993:1
 c:b:/net/mgsx/gltf/shaders/pbr/iridescence.glsl:5118:1
