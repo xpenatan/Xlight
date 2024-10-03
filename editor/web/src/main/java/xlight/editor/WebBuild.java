@@ -40,14 +40,14 @@ public class WebBuild {
                 System.out.println("Dir: " + list[i]);
             }
             AssetFilter filter = (file, isDirectory, op) -> {
-                if(file.contains(demoPath + "/core/") || file.contains(demoPath + "/desktop/") || file.contains(demoPath + "/teavm/")) {
+                if(file.contains(demoPath + "/core/") || file.contains(demoPath + "/desktop/") || file.contains(demoPath + "/web/")) {
                     return false;
                 }
                 return true;
             };
 
             // Will copy the demo path folders to assets
-            webConfiguration.assetsPath.add(AssetFileHandle.createCopyHandle(projectPathStr, Files.FileType.Internal, demoPath, filter));
+            webConfiguration.assetsPath.add(AssetFileHandle.createCopyHandle(projectPathStr, Files.FileType.Local, demoPath, filter));
 
             // Add the demo path build classes so teavm know what to compile
             webConfiguration.additionalClasspath.add(new File(demoCompiledClassesPath).toURL());

@@ -1,5 +1,6 @@
 package xlight.demo.basic;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -91,7 +92,7 @@ public class MainApp implements XApplication {
         FileHandle assetFile = Gdx.files.internal(asset);
         String name = assetFile.nameWithoutExtension();
         e.setName(name);
-        e.attachComponent(new XGLTFComponent(asset));
+        e.attachComponent(new XGLTFComponent(asset, Files.FileType.Local));
         e.attachComponent(new XTransformComponent().position(x, y, z));
         e.attachComponent(new XGameWorldComponent());
         es.attachEntity(e);
@@ -100,7 +101,7 @@ public class MainApp implements XApplication {
     public void createGroundEntity(XEntityService es) {
         XEntity e = es.obtain();
         e.setName("Ground");
-        e.attachComponent(new XGLTFComponent("models/ground/ground.gltf"));
+        e.attachComponent(new XGLTFComponent("models/ground/ground.gltf", Files.FileType.Local));
         e.attachComponent(new XTransformComponent().position(0, -2, 0).scale(5, 1, 5));
         e.attachComponent(new XGameWorldComponent());
         es.attachEntity(e);

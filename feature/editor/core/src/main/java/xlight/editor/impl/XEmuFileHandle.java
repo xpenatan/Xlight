@@ -55,41 +55,64 @@ public class XEmuFileHandle extends FileHandle {
 
     @Override
     public File file() {
-        if(fileHandle.type() == Files.FileType.Local) {
-            String path = fileHandle.file().getPath();
-            FileHandle absolute = Gdx.files.absolute(path);
-            return absolute.file();
+        FileHandle absolutePath = isAbsolute();
+        if(absolutePath != null) {
+            return absolutePath.file();
         }
         return fileHandle.file();
     }
 
     @Override
     public InputStream read() {
+        FileHandle absolutePath = isAbsolute();
+        if(absolutePath != null) {
+            return absolutePath.read();
+        }
         return fileHandle.read();
     }
 
     @Override
     public BufferedInputStream read(int bufferSize) {
+        FileHandle absolutePath = isAbsolute();
+        if(absolutePath != null) {
+            return absolutePath.read(bufferSize);
+        }
         return fileHandle.read(bufferSize);
     }
 
     @Override
     public Reader reader() {
+        FileHandle absolutePath = isAbsolute();
+        if(absolutePath != null) {
+            return absolutePath.reader();
+        }
         return fileHandle.reader();
     }
 
     @Override
     public Reader reader(String charset) {
+        FileHandle absolutePath = isAbsolute();
+        if(absolutePath != null) {
+            return absolutePath.reader(charset);
+        }
         return fileHandle.reader();
     }
 
     @Override
     public BufferedReader reader(int bufferSize) {
+        FileHandle absolutePath = isAbsolute();
+        if(absolutePath != null) {
+            return absolutePath.reader(bufferSize);
+        }
         return fileHandle.reader(bufferSize);
     }
 
     @Override
     public BufferedReader reader(int bufferSize, String charset) {
+        FileHandle absolutePath = isAbsolute();
+        if(absolutePath != null) {
+            return absolutePath.reader(bufferSize, charset);
+        }
         return fileHandle.reader(bufferSize, charset);
     }
 

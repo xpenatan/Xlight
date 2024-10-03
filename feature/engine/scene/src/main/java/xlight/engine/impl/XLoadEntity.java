@@ -3,6 +3,7 @@ package xlight.engine.impl;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import xlight.engine.core.asset.XAssetUtil;
 import xlight.engine.core.register.XMetaClass;
 import xlight.engine.core.register.XRegisterManager;
 import xlight.engine.datamap.XDataMap;
@@ -118,7 +119,7 @@ class XLoadEntity {
                 if(loadSubScene) {
                     sceneComponent = poolController.obtainObject(XSceneComponent.class);
                     sceneComponent.scenePath = scene.getPath();
-                    sceneComponent.fileHandleType = XSceneComponent.getFileTypeValue(scene.getFileType());
+                    sceneComponent.fileHandleType = XAssetUtil.getFileTypeValue(scene.getFileType());
                     entity.attachComponent(sceneComponent);
                 }
             }
@@ -130,7 +131,7 @@ class XLoadEntity {
             return;
         }
 
-        Files.FileType fileType = XSceneComponent.getFileTypeEnum(fileHandleType);
+        Files.FileType fileType = XAssetUtil.getFileTypeEnum(fileHandleType);
         FileHandle fileHandle = Gdx.files.getFileHandle(scenePath, fileType);
         if(fileHandle.exists()) {
             String jsonStr = fileHandle.readString();

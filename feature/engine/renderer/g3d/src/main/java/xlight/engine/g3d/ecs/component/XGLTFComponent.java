@@ -10,6 +10,7 @@ import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.loaders.gltf.GLTFLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
+import xlight.engine.core.asset.XAssetUtil;
 import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.core.editor.ui.XUIDataListener;
 import xlight.engine.core.editor.ui.options.XUIOpStringEditText;
@@ -21,6 +22,7 @@ import xlight.engine.g3d.XBatch3D;
 
 public class XGLTFComponent extends XRender3DComponent implements XUIDataListener, XDataMapListener {
     private static final int DATAMAP_ASSETPATH = 1;
+    private static final int DATAMAP_ASSET_TYPE = 2;
 
     private SceneAsset sceneAsset;
     private Scene scene;
@@ -30,20 +32,24 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
 
     private boolean componentAttached;
 
-    Files.FileType fileType = Files.FileType.Internal;
+    private int fileType = XAssetUtil.getFileTypeValue(Files.FileType.Internal);
 
     public XGLTFComponent() {
     }
 
     public XGLTFComponent(String path) {
-        setAssetInternal(path);
+        setAssetInternal(path, fileType);
+    }
+
+    public XGLTFComponent(String path, Files.FileType fileType) {
+        setAssetInternal(path, XAssetUtil.getFileTypeValue(fileType));
     }
 
     @Override
     protected void onComponentAttach(XWorld world, XEntity entity) {
         componentAttached = true;
         if(assetToLoad) {
-            setAssetInternal(assetPath);
+            setAssetInternal(assetPath, fileType);
         }
     }
 
@@ -53,7 +59,11 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
     }
 
     public void setAsset(String path) {
-        setAssetInternal(path);
+        setAssetInternal(path, XAssetUtil.getFileTypeValue(Files.FileType.Internal));
+    }
+
+    public void setAsset(String path, Files.FileType fileType) {
+        setAssetInternal(path, XAssetUtil.getFileTypeValue(fileType));
     }
 
     @Override
@@ -77,19 +87,22 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
         }
     }
 
-    private void setAssetInternal(String path) {
+    private void setAssetInternal(String path, int fileType) {
         if(path != null) {
             path = path.trim();
         }
         if(!componentAttached) {
             assetToLoad = true;
             assetPath = path;
+            this.fileType = fileType;
             return;
         }
         assetToLoad = false;
         clearAsset();
 
-        FileHandle fileHandle = Gdx.files.getFileHandle(path, fileType);
+        this.fileType = fileType;
+        Files.FileType type = XAssetUtil.getFileTypeEnum(fileType);
+        FileHandle fileHandle = Gdx.files.getFileHandle(path, type);
 
         if(path == null || !fileHandle.exists() || fileHandle.isDirectory()) {
             return;
@@ -126,6 +139,7 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
 
     private void clearAsset() {
         assetPath = "";
+        fileType = XAssetUtil.getFileTypeValue(Files.FileType.Internal);
         if(sceneAsset != null) {
             sceneAsset.dispose();
             sceneAsset = null;
@@ -137,14 +151,16 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
     public void onSave(XDataMap map) {
         if(!assetPath.isEmpty()) {
             map.put(DATAMAP_ASSETPATH, assetPath);
+            map.put(DATAMAP_ASSET_TYPE, fileType);
         }
     }
 
     @Override
     public void onLoad(XDataMap map) {
         String asset = map.getString(DATAMAP_ASSETPATH, null);
+        int type = map.getInt(DATAMAP_ASSET_TYPE, XAssetUtil.getFileTypeValue(Files.FileType.Internal));
         if(asset != null) {
-            setAssetInternal(asset);
+            setAssetInternal(asset, type);
         }
     }
 
@@ -155,7 +171,7 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
         }
         XUIOpStringEditText op = XUIOpStringEditText.get();
         if(uiData.editText("Asset Path", assetPath, op)) {
-            setAssetInternal(op.value);
+            setAssetInternal(op.value, fileType);
         }
     }
 }
