@@ -21,14 +21,6 @@ class XApplicationInternal implements ApplicationListener {
     public void create() {
         engine.update(1); // Do a single update so default manager/services are initialized
         applicationListener.onSetup(engine);
-
-//        engine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
-//            @Override
-//            public void onEndEvent(XEvent event) {
-//                XSceneManager sceneManager = engine.getWorld().getManager(XSceneManager.class);
-//                sceneManager.newScene(0, "default");
-//            }
-//        });
     }
 
     @Override

@@ -22,7 +22,6 @@ public interface XImGuiManager {
     void removeWindowContext(int classID);
     ImGuiContext getEditorContext();
 
-
     void registerEntityUIListener(XUIDataTypeListener<XEntity> listener);
     XUIDataTypeListener<XEntity> getEntityUIListener();
 
