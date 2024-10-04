@@ -10,11 +10,11 @@ import xlight.engine.ecs.component.XComponent;
 import xlight.engine.transform.XTransform;
 
 public class XTransformComponent implements XComponent, XUIDataListener, XDataMapListener {
-    private static final int DATAMAP_POSITION = 1;
-    private static final int DATAMAP_ROTATION = 2;
-    private static final int DATAMAP_SCALE = 3;
-    private static final int DATAMAP_SIZE = 4;
-    private static final int DATAMAP_OFFSET = 5;
+    private static final int DATA_POSITION = 1;
+    private static final int DATA_ROTATION = 2;
+    private static final int DATA_SCALE = 3;
+    private static final int DATA_SIZE = 4;
+    private static final int DATA_OFFSET = 5;
 
     public final XTransform transform;
 
@@ -41,41 +41,41 @@ public class XTransformComponent implements XComponent, XUIDataListener, XDataMa
     @Override
     public void onSave(XDataMap map) {
         Vector3 position = transform.getPosition();
-        map.put(DATAMAP_POSITION, position);
+        map.put(DATA_POSITION, position);
 
         Vector3 rotation = transform.getRotation();
-        map.put(DATAMAP_ROTATION, rotation);
+        map.put(DATA_ROTATION, rotation);
 
         Vector3 scale = transform.getScale();
-        map.put(DATAMAP_SCALE, scale);
+        map.put(DATA_SCALE, scale);
 
         Vector3 size = transform.getSize();
-        map.put(DATAMAP_SIZE, size);
+        map.put(DATA_SIZE, size);
 
         Vector3 offset = transform.getOffset();
-        map.put(DATAMAP_OFFSET, offset);
+        map.put(DATA_OFFSET, offset);
     }
 
     @Override
     public void onLoad(XDataMap map) {
         Vector3 position = transform.getPosition();
-        map.getVector3(DATAMAP_POSITION, position);
+        map.getVector3(DATA_POSITION, position);
         transform.setPosition(position);
 
         Vector3 rotation = transform.getRotation();
-        map.getVector3(DATAMAP_ROTATION, rotation);
+        map.getVector3(DATA_ROTATION, rotation);
         transform.setRotation(rotation);
 
         Vector3 scale = transform.getScale();
-        map.getVector3(DATAMAP_SCALE, scale);
+        map.getVector3(DATA_SCALE, scale);
         transform.setScale(scale);
 
         Vector3 size = transform.getSize();
-        map.getVector3(DATAMAP_SIZE, size);
+        map.getVector3(DATA_SIZE, size);
         transform.setSize(size);
 
         Vector3 offset = transform.getOffset();
-        map.getVector3(DATAMAP_OFFSET, offset);
+        map.getVector3(DATA_OFFSET, offset);
         transform.setOffset(offset);
     }
 

@@ -3,7 +3,6 @@ package xlight.editor.imgui.ecs.system.hierarchy;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import imgui.ImGui;
@@ -44,7 +43,7 @@ import xlight.engine.transform.ecs.component.XTransformComponent;
 import static imgui.ImGuiCond.ImGuiCond_Once;
 import static imgui.ImGuiHoveredFlags.ImGuiHoveredFlags_ChildWindows;
 
-public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListener<XEntityHierarchyRenderer.HierarchyEntityNode> {
+public class XEntityHierarchyRenderer {
 
     private final static String TAB = "Entities";
 
@@ -83,7 +82,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
 
     }
 
-    public void renderEntities(XWorld world, XEditorManager editorManager) {
+    public void render(XWorld world, XEditorManager editorManager) {
         if(ImGui.BeginTabItem(TAB)) {
             if(renderTree) {
                 renderContent(editorManager);
@@ -174,8 +173,7 @@ public class XEntityHierarchyRenderer { // implements HierarchyPrintFolderListen
                     pathString.clear();
                     if(!newPath.isEmpty()) {
                         XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
-                        XScene scene = sceneManager.loadScene(newPath, Files.FileType.Local);
-                        sceneManager.addScene(scene);
+                        sceneManager.addScene(newPath, Files.FileType.Local);
                     }
                     ImGui.CloseCurrentPopup();
                 }

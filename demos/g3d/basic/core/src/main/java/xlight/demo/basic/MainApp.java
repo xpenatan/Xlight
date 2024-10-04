@@ -71,6 +71,8 @@ public class MainApp implements XApplication {
                 }
             }
         });
+
+        sceneManager.loadFromFile("scene/default.xscene", Files.FileType.Local);
     }
 
     public void createCameraEntity(XEntityService es, float x, float y, float z) {

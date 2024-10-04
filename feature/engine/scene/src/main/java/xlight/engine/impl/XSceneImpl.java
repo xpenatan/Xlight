@@ -7,18 +7,19 @@ import xlight.engine.datamap.XDataMap;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.pool.XPoolable;
 import xlight.engine.scene.XScene;
+import xlight.engine.scene.XSceneKeys;
 import xlight.engine.scene.XSceneTypeValue;
 
 class XSceneImpl implements XScene, XPoolable {
 
     public int id = -1;
-    public String name;
+    public String name = "";
 
     public XDataMap sceneDataMap;
 
     public XSceneTypeValue type = XSceneTypeValue.SCENE;
 
-    private String path;
+    private String path = "";
     private Files.FileType fileType;
 
     public XSceneImpl(XPoolController poolController) {
@@ -31,6 +32,7 @@ class XSceneImpl implements XScene, XPoolable {
         return id;
     }
 
+    @Override
     public void setId(int id) {
         this.id = id;
     }
@@ -40,6 +42,7 @@ class XSceneImpl implements XScene, XPoolable {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -51,6 +54,8 @@ class XSceneImpl implements XScene, XPoolable {
         if(fileHandle.exists()) {
             String jsonStr = fileHandle.readString();
             sceneDataMap.loadJson(jsonStr);
+            id = sceneDataMap.getInt(XSceneKeys.SCENE_ID.getKey(), -1);
+            name = sceneDataMap.getString(XSceneKeys.NAME.getKey(), "");
             boolean flag = sceneDataMap.getSize() > 0;
             return flag;
         }
@@ -59,12 +64,15 @@ class XSceneImpl implements XScene, XPoolable {
 
     @Override
     public String getJson() {
+        sceneDataMap.put(XSceneKeys.SCENE_TYPE.getKey(), type.getValue());
+        sceneDataMap.put(XSceneKeys.SCENE_ID.getKey(), id);
+        sceneDataMap.put(XSceneKeys.NAME.getKey(), name);
         return sceneDataMap.saveJsonStr();
     }
 
     @Override
     public void clear() {
-        sceneDataMap.clear();
+        onReset();
     }
 
     @Override
@@ -82,9 +90,26 @@ class XSceneImpl implements XScene, XPoolable {
         return path;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     @Override
     public Files.FileType getFileType() {
         return fileType;
+    }
+
+    public void setFileType(Files.FileType type) {
+        fileType = type;
+    }
+
+    @Override
+    public boolean doFileExists() {
+        if(fileType != null && !path.isEmpty()) {
+            FileHandle fileHandle = Gdx.files.getFileHandle(path, fileType);
+            return fileHandle.exists();
+        }
+        return false;
     }
 
     public void setType(XSceneTypeValue type) {
@@ -94,8 +119,8 @@ class XSceneImpl implements XScene, XPoolable {
     @Override
     public void onReset() {
         id = -1;
-        name = null;
-        path = null;
+        name = "";
+        path = "";
         fileType = null;
         type = XSceneTypeValue.SCENE;
         sceneDataMap.clear();

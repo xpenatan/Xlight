@@ -1,6 +1,7 @@
 package xlight.engine.impl;
 
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.core.XEngineEvent;
 import xlight.engine.datamap.XDataMap;
@@ -11,13 +12,14 @@ import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.ecs.manager.XManager;
 import xlight.engine.pool.XPoolController;
-import xlight.engine.pool.ecs.manager.XPoolManager;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
 import xlight.engine.scene.XSceneListener;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 
 class XSceneManagerImpl implements XSceneManager, XManager {
+
+    private boolean loadSceneCalled;
 
     XSceneImpl currentScene;
     XWorld world;
@@ -41,48 +43,71 @@ class XSceneManagerImpl implements XSceneManager, XManager {
 
     @Override
     public void save() {
-        saveInternal(currentScene);
+        if(currentScene.doFileExists()) {
+            saveToFile(currentScene.getPath(), currentScene.getFileType());
+        }
+        else {
+            saveInternal(currentScene);
+        }
     }
 
     @Override
     public void load() {
-        loadInternal(currentScene);
-    }
-
-    @Override
-    public String saveCurrentScene() {
-        saveInternal(currentScene);
-        // Parse to json
-        return currentScene.getJson();
-    }
-
-    @Override
-    public boolean loadToCurrentScene(String path, Files.FileType filetype) {
-        currentScene.onReset();
-        if(currentScene.loadJson(path, filetype)) {
+        if(currentScene.doFileExists()) {
+            loadFromFile(currentScene.getPath(), currentScene.getFileType());
+        }
+        else {
             loadInternal(currentScene);
+        }
+    }
+
+    @Override
+    public boolean saveToFile(String path, Files.FileType filetype) {
+        try {
+            saveInternal(currentScene);
+            // Parse to json
+            String json = currentScene.getJson();
+            FileHandle fileHandle = Gdx.files.getFileHandle(path, filetype);
+            fileHandle.writeString(json, false);
             return true;
+        }
+        catch(Throwable e) {
+            e.printStackTrace();
         }
         return false;
     }
 
     @Override
-    public void addScene(XScene scene) {
-        if(scene != null) {
-            loadEntity.load(world, scene, true);
+    public boolean loadFromFile(String path, Files.FileType filetype) {
+        try {
+            currentScene.clear();
+            if(currentScene.loadJson(path, filetype)) {
+                loadInternal(currentScene);
+                return true;
+            }
         }
+        catch(Throwable e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
-    public XScene loadScene(String path, Files.FileType filetype) {
+    public boolean addScene(String path, Files.FileType filetype) {
         XSceneImpl scene = null;
         scene = poolController.obtainObject(XScene.class);
-        if(scene.loadJson(path, filetype)) {
-
-            return scene;
+        try {
+            if(scene.loadJson(path, filetype)) {
+                loadEntity.load(world, scene, true);
+                poolController.releaseObject(XScene.class, scene);
+                return true;
+            }
+        }
+        catch(Throwable t) {
+            t.printStackTrace();
         }
         poolController.releaseObject(XScene.class, scene);
-        return null;
+        return false;
     }
 
     @Override
@@ -96,7 +121,14 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     }
 
     @Override
-    public void setScene(int id, String name) {
+    public void newScene(int id, String name) {
+        if(name == null) {
+            return;
+        }
+        name = name.trim();
+        if(name.isEmpty()) {
+            return;
+        }
         currentScene.clear();
         XEntityService entityService = world.getWorldService().getEntityService();
         entityService.clear();
@@ -116,6 +148,7 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     }
 
     public void loadInternal(XScene scene) {
+        loadSceneCalled = true;
         XWorldService worldService = world.getWorldService();
         XEntityService entityService = worldService.getEntityService();
         entityService.clear();
@@ -142,12 +175,8 @@ class XSceneManagerImpl implements XSceneManager, XManager {
         loadEntity.load(world, scene, false);
     }
 
-    public void saveInternal(XScene scene) {
-        scene.clear();
-
-        XDataMap sceneDataMap = currentScene.sceneDataMap;
-        sceneDataMap.put(XSceneKeys.SCENE_TYPE.getKey(), currentScene.type.getValue());
-
+    public void saveInternal(XSceneImpl scene) {
+        scene.getSceneDataMap().clear();
         XSaveSystem.save(world, currentScene);
         XSaveManager.save(world, currentScene);
         XSaveEntity.save(world, currentScene);

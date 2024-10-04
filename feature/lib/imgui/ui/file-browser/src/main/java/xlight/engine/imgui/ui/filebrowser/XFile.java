@@ -68,7 +68,7 @@ public class XFile {
             }
             cur = cur.parent;
         }
-        return path + "/";
+        return path;
     }
 
     public boolean isDirectory() {

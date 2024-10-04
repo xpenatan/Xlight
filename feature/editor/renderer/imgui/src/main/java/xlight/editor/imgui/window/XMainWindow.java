@@ -3,14 +3,12 @@ package xlight.editor.imgui.window;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import imgui.ImGui;
 import imgui.ImGuiCol;
 import imgui.ImGuiDockNodeFlags;
 import imgui.ImGuiDockNodeFlagsPrivate_;
-import imgui.ImGuiInputTextFlags;
 import imgui.ImGuiMouseButton;
 import imgui.ImGuiString;
 import imgui.ImGuiStyleVar;
@@ -24,8 +22,6 @@ import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.editor.imgui.util.XImGuiPopUpWidget;
 import xlight.engine.core.XEngine;
 import xlight.engine.ecs.XWorld;
-import xlight.engine.ecs.entity.XEntity;
-import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 
 public class XMainWindow extends XImGuiWindowContext {
@@ -259,7 +255,7 @@ public class XMainWindow extends XImGuiWindowContext {
                 pathString.clear();
                 if(!newPath.isEmpty()) {
                     XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
-                    sceneManager.loadToCurrentScene(newPath, Files.FileType.Local);
+                    sceneManager.loadFromFile(newPath, Files.FileType.Local);
                 }
                 ImGui.CloseCurrentPopup();
             }
@@ -271,10 +267,8 @@ public class XMainWindow extends XImGuiWindowContext {
                 String newPath = pathString.getValue().trim();
                 pathString.clear();
                 if(!newPath.isEmpty()) {
-                    FileHandle path = Gdx.files.local(newPath);
                     XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
-                    String jsonStr = sceneManager.saveCurrentScene();
-                    path.writeString(jsonStr, false);
+                    sceneManager.saveToFile(newPath, Files.FileType.Local);
                 }
                 ImGui.CloseCurrentPopup();
             }

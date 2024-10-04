@@ -4,7 +4,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import imgui.ImGui;
 import imgui.ImGuiTableFlags;
 import imgui.ImVec2;
@@ -92,7 +91,7 @@ public class XContentBrowser {
                             if(gameEngine != null) {
                                 XWorld gameWorld = gameEngine.getWorld();
                                 XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
-                                sceneManager.loadToCurrentScene(path, Files.FileType.Local);
+                                sceneManager.loadFromFile(path, Files.FileType.Local);
                             }
                         }
                     }
@@ -146,6 +145,12 @@ public class XContentBrowser {
             ImVec2 cursorPos = ImGui.GetCursorPos();
             ImVec2 imVec2 = ImGui.GetContentRegionAvail();
             ImGui.GetWindowDrawList().AddRectFilled(imGuiLayout1.get_position(), imGuiLayout1.getAbsoluteSize(), menuColor);
+
+            if(ImGui.SmallButton("Refresh")) {
+                fileManager.refreshCurrentFolder();
+            }
+
+            ImGui.SameLine();
 
             {
                 //            ImLayout.ShowLayoutDebug();

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import imgui.ImGui;
 import imgui.ImGuiString;
+import imgui.ImGuiStyleVar;
 import imgui.idl.helper.IDLBool;
 import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.core.editor.ui.options.XUIOpButton;
@@ -344,7 +345,13 @@ class XUIDataImpl implements XUIData {
         if(op.width != 0) {
             ImGui.SetNextItemWidth(op.width);
         }
+        if(!op.enabled) {
+            ImGui.BeginDisabled();
+        }
         boolean flag = XEditText.render(line, ImGuiString.TMP_1);
+        if(!op.enabled) {
+            ImGui.EndDisabled();
+        }
         if(flag) {
             op.value = ImGuiString.TMP_1.getValue();
         }

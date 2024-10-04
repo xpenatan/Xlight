@@ -12,6 +12,7 @@ public class XUIOpStringEditText {
     public int width;
     public String label;
     public String tooltip;
+    public boolean enabled;
 
     public String value;
 
@@ -19,5 +20,6 @@ public class XUIOpStringEditText {
         label = "";
         tooltip = "";
         width = -1;
+        enabled = true;
     }
 }

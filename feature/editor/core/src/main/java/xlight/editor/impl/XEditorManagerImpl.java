@@ -83,6 +83,8 @@ class XEditorManagerImpl implements XEditorManager, XManager {
                 XEngine gameEngine = XEngine.newInstance();
                 gameEngine.update(1);
                 boolean error = false;
+                editorManager.rootEmuFiles.setInternalPrefix(projectOptions.getProjectAssetPath());
+                editorManager.rootEmuFiles.setLocalPrefix(projectOptions.getProjectAssetPath());
                 try {
                     applicationListener.onSetup(gameEngine);
                 }catch(Throwable t) {
@@ -92,8 +94,6 @@ class XEditorManagerImpl implements XEditorManager, XManager {
                 }
 
                 if(!error) {
-                    editorManager.rootEmuFiles.setInternalPrefix(projectOptions.getProjectAssetPath());
-                    editorManager.rootEmuFiles.setLocalPrefix(projectOptions.getProjectAssetPath());
 
                     // Update 1 time so all systems are created
                     gameEngine.update(1);
@@ -111,8 +111,6 @@ class XEditorManagerImpl implements XEditorManager, XManager {
                             gameEngine.getWorld().getWorldService().getEventService().sendEvent(XEngineEvent.EVENT_CREATE, null, new XEventService.XSendEventListener() {
                                 @Override
                                 public void onEndEvent(XEvent event) {
-                                    XSceneManager sceneManager = gameEngine.getWorld().getManager(XSceneManager.class);
-                                    sceneManager.setScene(0, "default");
                                 }
                             });
                         }
