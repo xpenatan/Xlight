@@ -86,7 +86,7 @@ include(":demos:g3d:basic:web")
 
 //includeBuild("E:\\Dev\\Projects\\java\\gdx-gltf") {
 //    dependencySubstitution {
-//        substitute(module("com.github.mgsx-dev.gdx-gltf:gltf")).using(project(":gltf"))
+//        substitute(module("com.github.xpenatan.gdx-gltf:core")).using(project(":gltf"))
 //    }
 //}
 
