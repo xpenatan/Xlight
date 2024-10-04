@@ -39,6 +39,7 @@ l:b:/demos/g3d/basic/assets_raw/models/ground/Image_0.png:6046:1
 l:d:/demos/g3d/basic/assets_raw/scene:0:1
 l:b:/demos/g3d/basic/assets_raw/scene/template.xscene:589:1
 l:b:/demos/g3d/basic/assets_raw/scene/root.xscene:1227:1
+l:b:/demos/g3d/basic/assets_raw/scene/default.xscene:8970:1
 c:b:/net/mgsx/gltf/shaders/pbr/lights.glsl:9214:1
 c:b:/net/mgsx/gltf/shaders/default.vs.glsl:8824:1
 c:b:/editor/images/menu/ic_stop.png:157:1
