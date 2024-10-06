@@ -150,7 +150,7 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
                                     XMath.QUAT_1.set(node.startQuaternion);
                                     XMath.QUAT_2.setEulerAngles(tRotY, tRotX, tRotZ);
                                     XMath.QUAT_1.mulLeft(XMath.QUAT_2);
-                                    transform.setQuaternion(XMath.QUAT_1);
+                                    transform.setRotation(XMath.QUAT_1);
                                 }
                             }
                             else if(transformMode == XTransformMode.LOCAL) {
@@ -159,7 +159,7 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
                                     XMath.QUAT_1.set(node.startQuaternion);
                                     XMath.QUAT_2.setEulerAngles(tRotY, tRotX, tRotZ);
                                     XMath.QUAT_1.mul(XMath.QUAT_2);
-                                    transform.setQuaternion(XMath.QUAT_1);
+                                    transform.setRotation(XMath.QUAT_1);
                                 }
                             }
                             else {
@@ -228,7 +228,7 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
                     XMatrix4Utils.rotateAtOrigin(XMath.MAT4_2, XMath.MAT4_3, XMath.MAT4_1);
 
                     XMath.MAT4_1.getRotation(XMath.QUAT_1);
-                    transform.setQuaternion(XMath.QUAT_1);
+                    transform.setRotation(XMath.QUAT_1);
                 }
             }
         }

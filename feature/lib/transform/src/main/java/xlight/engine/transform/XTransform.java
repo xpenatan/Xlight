@@ -35,7 +35,7 @@ public interface XTransform {
     void setRotation(Vector3 value);
     void setRotation(float x, float y, float z);
     /** Will copy quat values and convert it to euler. */
-    void setQuaternion(Quaternion quat);
+    void setRotation(Quaternion quat);
 
     /** Return read-only scale. */
     Vector3 getScale();

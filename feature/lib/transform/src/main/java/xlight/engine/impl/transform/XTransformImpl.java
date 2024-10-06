@@ -313,7 +313,7 @@ public class XTransformImpl implements XTransform {
     }
 
     @Override
-    public void setQuaternion(Quaternion quat) {
+    public void setRotation(Quaternion quat) {
         // We round it to skip small numbers
         float x1 = XMath.round(quat.x, scalenRoundScale);
         float y1 = XMath.round(quat.y, scalenRoundScale);
