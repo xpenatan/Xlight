@@ -13,22 +13,31 @@ public class XSceneMapUtils {
         }
         int sceneType = sceneDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
         if(sceneType == XSceneTypeValue.SCENE.getValue()) {
-            XDataMapArray entitiesArray = sceneDataMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
-            if(entitiesArray != null) {
-                // TODO change to a int map?
-                int size = entitiesArray.getSize();
-                for(int i = 0; i < size; i++) {
-                    XDataMap entityDataMap = entitiesArray.get(i);
-                    int entityType = entityDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-                    if(entityType == XSceneTypeValue.ENTITY.getValue()) {
-                        int jsonId = entityDataMap.getInt(XSceneKeys.JSON_ID.getKey(), -1);
-                        if(sceneEntityId == jsonId) {
-                            return entityDataMap;
-                        }
+            return getEntityMapFromEntities(sceneDataMap, sceneEntityId);
+        }
+        return null;
+    }
+
+    private static XDataMap getEntityMapFromEntities(XDataMap entityMap, int sceneEntityId) {
+        XDataMapArray entitiesArray = entityMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
+        if(entitiesArray != null) {
+            // TODO change to a int map?
+            int size = entitiesArray.getSize();
+            for(int i = 0; i < size; i++) {
+                XDataMap entityDataMap = entitiesArray.get(i);
+                int entityType = entityDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
+                if(entityType == XSceneTypeValue.ENTITY.getValue()) {
+                    int jsonId = entityDataMap.getInt(XSceneKeys.JSON_ID.getKey(), -1);
+                    if(sceneEntityId == jsonId) {
+                        return entityDataMap;
+                    }
+                    // Check sub entities
+                    XDataMap subEntityMap = getEntityMapFromEntities(entityDataMap, sceneEntityId);
+                    if(subEntityMap != null) {
+                        return subEntityMap;
                     }
                 }
             }
-
         }
         return null;
     }

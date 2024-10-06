@@ -20,7 +20,6 @@ import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.ecs.manager.XManager;
-import xlight.engine.scene.ecs.manager.XSceneManager;
 
 class XEditorManagerImpl implements XEditorManager, XManager {
 
