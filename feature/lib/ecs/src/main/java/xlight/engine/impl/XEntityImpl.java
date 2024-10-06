@@ -10,6 +10,7 @@ import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.entity.XEntityState;
 import xlight.engine.list.XIntSet;
+import xlight.engine.list.XIntSetNode;
 import xlight.engine.list.XList;
 
 class XEntityImpl implements XEntity {
@@ -196,12 +197,12 @@ class XEntityImpl implements XEntity {
     }
 
     @Override
-    public XList<XIntSet.XIntSetNode> getChildList() {
+    public XList<XIntSetNode> getChildList() {
         return children.getNodeList();
     }
 
     @Override
-    public XIntSet.XIntSetNode getChildHead() {
+    public XIntSetNode getChildHead() {
         return children.getHead();
     }
 
@@ -223,8 +224,7 @@ class XEntityImpl implements XEntity {
 
     @Override
     public void clearChildren() {
-        XList<XIntSet.XIntSetNode> nodeList = children.getNodeList();
-        for(XIntSet.XIntSetNode node : children.getNodeList()) {
+        for(XIntSetNode node : children.getNodeList()) {
             int id = node.getKey();
             XEntityService entityService = world.getWorldService().getEntityService();
             XEntityImpl entity = (XEntityImpl)entityService.getEntity(id);

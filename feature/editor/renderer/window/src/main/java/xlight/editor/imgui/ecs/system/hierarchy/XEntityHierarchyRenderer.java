@@ -32,10 +32,9 @@ import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.g3d.ecs.component.XGLTFComponent;
-import xlight.engine.list.XIntSet;
+import xlight.engine.list.XIntSetNode;
 import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
-import xlight.engine.scene.XScene;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.string.XStringUtil;
 import xlight.engine.string.XTextBuilder;
@@ -261,13 +260,13 @@ public class XEntityHierarchyRenderer {
         }
     }
 
-    Array<XIntSet.XIntSetNode> list = new Array<>();
+    Array<XIntSetNode> list = new Array<>();
 
     private void renderEntityItem(XWorld gameWorld, XEntity entity, boolean leftControl) {
         boolean isOpen = renderEntity(gameWorld, entity, leftControl);
         if(isOpen) {
             XEntityService entityService = gameWorld.getWorldService().getEntityService();
-            XIntSet.XIntSetNode cur = entity.getChildHead();
+            XIntSetNode cur = entity.getChildHead();
             while(cur != null) {
                 int key = cur.getKey();
                 XEntity child = entityService.getEntity(key);

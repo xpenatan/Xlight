@@ -40,7 +40,7 @@ public class XIntSetDataList<NODE_TYPE extends XIntDataMapListNode<Object, NODE_
         return false;
     }
 
-    public void removeNode(XIntSet.XIntSetNode node) {
+    public void removeNode(XIntSetNode node) {
         NODE_TYPE oldNode = map.remove(node.key);
         if(oldNode != null) {
             linkedList.removeNode(oldNode);

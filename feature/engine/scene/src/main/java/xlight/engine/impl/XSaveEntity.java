@@ -13,7 +13,7 @@ import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
-import xlight.engine.list.XIntSet;
+import xlight.engine.list.XIntSetNode;
 import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.XScene;
@@ -56,9 +56,9 @@ class XSaveEntity {
         XDataMap entityDataMap = saveEntity(poolController, registerManager, entity);
         if(saveChild) {
             boolean initSavableArray = false;
-            XList<XIntSet.XIntSetNode> childIntList = entity.getChildList();
+            XList<XIntSetNode> childIntList = entity.getChildList();
             XDataMapArray childEtitiesDataMapArray = null;
-            for(XIntSet.XIntSetNode node : childIntList) {
+            for(XIntSetNode node : childIntList) {
                 int key = node.getKey();
                 XEntity child = entityService.getEntity(key);
                 if(child.isSavable()) {

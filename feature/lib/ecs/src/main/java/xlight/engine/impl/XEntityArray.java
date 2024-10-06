@@ -3,6 +3,7 @@ package xlight.engine.impl;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.entity.XEntityState;
 import xlight.engine.list.XIntSet;
+import xlight.engine.list.XIntSetNode;
 
 class XEntityArray {
     public XEntityImpl[] items;
@@ -147,7 +148,7 @@ class XEntityArray {
             resize(newSize);
             fillEntities(items);
         }
-        XIntSet.XIntSetNode head = reusableIds.getHead();
+        XIntSetNode head = reusableIds.getHead();
         int key = head.getKey();
         reusableIds.removeNode(head);
         return key;

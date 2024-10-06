@@ -3,6 +3,7 @@ package xlight.engine.ecs.entity;
 import com.badlogic.gdx.utils.Bits;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.list.XIntSet;
+import xlight.engine.list.XIntSetNode;
 import xlight.engine.list.XList;
 
 public interface XEntity {
@@ -60,9 +61,9 @@ public interface XEntity {
     /**
      * Return children list
      */
-    XList<XIntSet.XIntSetNode> getChildList();
+    XList<XIntSetNode> getChildList();
 
-    XIntSet.XIntSetNode getChildHead();
+    XIntSetNode getChildHead();
 
     boolean putChild(XEntity entity);
 
