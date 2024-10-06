@@ -1,11 +1,12 @@
 package xlight.engine.ecs.system;
 
 import xlight.engine.ecs.XWorld;
+import xlight.engine.pool.XClassOrInterface;
 
 /**
  * XSystem is a processing class related ECS. Its purpose is to process entity components.
  */
-public interface XSystem {
+public interface XSystem extends XClassOrInterface {
 
     int DEFAULT_CONTROLLER = 941231;
 
@@ -23,10 +24,6 @@ public interface XSystem {
 
     default XSystemType getType() {
         return XSystemType.UPDATE;
-    }
-
-    default Class<?> getClassType() {
-        return getClass();
     }
 
     default int getSystemController() {

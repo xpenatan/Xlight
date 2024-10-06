@@ -29,7 +29,7 @@ class XSystemServiceImpl implements XSystemService {
 
     @Override
     public boolean attachSystem(XSystem system) {
-        Class<?> classType = system.getClassType();
+        Class<?> classType = system.getClassOrInterfaceType();
         XSystemData systemData = getSystemData(classType);
         if(systemData != null) {
             return false;

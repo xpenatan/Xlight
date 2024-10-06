@@ -1,6 +1,7 @@
 package xlight.engine.impl;
 
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import xlight.engine.pool.XClassOrInterface;
 import xlight.engine.pool.XPool;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.pool.XPoolable;
@@ -33,22 +34,18 @@ public class XPoolControllerImpl implements XPoolController {
 
     @Override
     public void releaseObject(Object poolObject) {
-        if(poolObject instanceof XPoolable) {
-            pools.free(poolObject);
+        if(poolObject instanceof XClassOrInterface) {
+            Class<?> type = ((XClassOrInterface)poolObject).getClassOrInterfaceType();
+            pools.free(type, poolObject);
         }
         else {
-            throw new GdxRuntimeException("Pool controller can only release a XPoolable object");
+            pools.free(poolObject);
         }
     }
 
     @Override
     public void releaseObject(Class<?> type, Object poolObject) {
-        if(poolObject instanceof XPoolable) {
-            pools.free(type, poolObject);
-        }
-        else {
-            throw new GdxRuntimeException("Pool controller can only release a XPoolable object");
-        }
+        pools.free(type, poolObject);
     }
 
     @Override

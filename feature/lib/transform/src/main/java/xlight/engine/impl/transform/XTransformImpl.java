@@ -88,6 +88,8 @@ public class XTransformImpl implements XTransform {
         rotationSequence = XRotSeq.yxz;
 
         isDragging = false;
+
+        transformListeners.clear();
     }
 
     @Override

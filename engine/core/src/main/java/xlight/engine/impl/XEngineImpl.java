@@ -20,6 +20,7 @@ import xlight.engine.pool.ecs.manager.XPoolManager;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.ecs.component.XSceneComponent;
 import xlight.engine.scene.ecs.manager.XSceneManager;
+import xlight.engine.transform.ecs.component.XLocalTransformComponent;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 import xlight.engine.ecs.component.XUIWorldComponent;
 import xlight.engine.camera.ecs.manager.XCameraManager;
@@ -96,12 +97,16 @@ public class XEngineImpl implements XEngine {
         metaClass = registerManager.registerClass(4, XUIWorldComponent.class, new XPool<>() { protected XComponent newObject() { return new XUIWorldComponent(); } });
         metaClass.setMetaClassGroup("World type");
         metaClass = registerManager.registerClass(5, XTransformComponent.class, new XPool<>() { protected XComponent newObject() { return new XTransformComponent(); } });
-        metaClass.setMetaClassGroup("Position");
+        metaClass.setMetaClassGroup("Position", "Transform");
+        metaClass.setName("Transform");
         metaClass = registerManager.registerClass(6, XCameraComponent.class, new XPool<>() { protected XComponent newObject() { return new XCameraComponent(); } });
         metaClass.setMetaClassGroup("Camera");
         metaClass = registerManager.registerClass(7, XGLTFComponent.class, new XPool<>() { protected XComponent newObject() { return new XGLTFComponent(); } });
         metaClass.setMetaClassGroup("g3d");
         metaClass.setParentType(XRender3DComponent.class);
+        metaClass = registerManager.registerClass(8, XLocalTransformComponent.class, new XPool<>() { protected XComponent newObject() { return new XLocalTransformComponent(); } });
+        metaClass.setMetaClassGroup("Position", "Local Transform");
+        metaClass.setName("Local Transform");
 
         XPoolController poolController = world.getGlobalData(XPoolController.class);
         poolController.registerPool(XScene.class, new XPool<>() { protected XScene newObject() { return new XSceneImpl(poolController); } });

@@ -88,7 +88,7 @@ class XComponentServiceImpl implements XComponentService {
 
     @Override
     public boolean attachComponent(XEntity entity, XComponent component) {
-        XComponentType componentType = getComponentInternal(component.getClassType());
+        XComponentType componentType = getComponentInternal(component.getMatcherType());
         if(componentType != null) {
             int index = componentType.getIndex();
             XPair<XComponentType, XComponentArray> pair = components.get(index);
@@ -115,7 +115,7 @@ class XComponentServiceImpl implements XComponentService {
         if(component == null) {
             return false;
         }
-        return detachComponent(entity, component.getClassType());
+        return detachComponent(entity, component.getMatcherType());
     }
 
     @Override

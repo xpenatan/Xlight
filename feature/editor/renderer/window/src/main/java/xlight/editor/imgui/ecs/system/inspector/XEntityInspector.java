@@ -10,6 +10,7 @@ import xlight.engine.core.editor.ui.XUIDataListener;
 import xlight.engine.core.editor.ui.XUIDataTypeListener;
 import xlight.engine.core.editor.ui.options.XUIOpCheckbox;
 import xlight.engine.core.editor.ui.options.XUIOpStringEditText;
+import xlight.engine.core.register.XRegisterManager;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.entity.XEntity;
@@ -72,6 +73,7 @@ public class XEntityInspector {
     }
 
     private void renderComponents(XWorld editorWorld, XWorld gameWorld, XEntity entity, XUIData uiData) {
+        XRegisterManager registerManager = gameWorld.getManager(XRegisterManager.class);
         String groupName = "Components - " + entity.getComponentsSize();
         Texture[] texturesArray = XCollapseWidget.getTexturesArray();
 
@@ -98,14 +100,16 @@ public class XEntityInspector {
         if(widgetData.isOpen) {
             for(int i = 0; i < entity.getComponentsSize(); i++) {
                 XComponent component = entity.getComponentAt(i);
-                renderComponent(editorWorld, gameWorld, entity, uiData, component);
+                Class<?> classOrInterfaceType = component.getClassOrInterfaceType();
+                registerManager.getRegisteredClass(classOrInterfaceType);
+                renderComponent(registerManager, gameWorld, entity, uiData, component);
             }
         }
 
         XCollapseWidget.end();
     }
 
-    private void renderComponent(XWorld editorWorld, XWorld gameWorld, XEntity entity, XUIData uiData, XComponent component) {
+    private void renderComponent(XRegisterManager registerManager, XWorld gameWorld, XEntity entity, XUIData uiData, XComponent component) {
         String groupName = component.getClass().getSimpleName();
         Texture[] texturesArray = XCollapseWidget.getTexturesArray();
         texturesArray[0] = XEditorAssets.ic_trashTexture;
@@ -130,7 +134,7 @@ public class XEntityInspector {
                 XUIDataListener dataListener = (XUIDataListener)component;
                 dataListener.onUIDraw(uiData);
             }
-            Class<XComponent> classType = (Class<XComponent>)component.getClassType();
+            Class<XComponent> classType = (Class<XComponent>)component.getMatcherType();
             XUIDataTypeListener<XComponent> uiListener = imguiManager.getUIComponentListener(classType);
             if(uiListener != null) {
                 uiListener.onUIDraw(component, uiData);

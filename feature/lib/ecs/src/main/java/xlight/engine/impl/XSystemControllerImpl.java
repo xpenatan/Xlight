@@ -98,7 +98,7 @@ class XSystemControllerImpl implements XSystemController, XStepUpdate {
     }
 
     public boolean detachSystem(XSystem system) {
-        Class<?> classType = system.getClassType();
+        Class<?> classType = system.getClassOrInterfaceType();
         XSystemType type = system.getType();
 
         switch(type) {
@@ -162,7 +162,7 @@ class XSystemControllerImpl implements XSystemController, XStepUpdate {
         for(int i = 0; i < systems.size; i++) {
             XSystemServiceImpl.XSystemInternalData data = systems.get(i);
             XSystem system = data.system;
-            if(system.getClassType() == type) {
+            if(system.getClassOrInterfaceType() == type) {
                 return i;
             }
 
