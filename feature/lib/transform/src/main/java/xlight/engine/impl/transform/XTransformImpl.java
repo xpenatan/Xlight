@@ -4,29 +4,32 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.utils.Array;
 import xlight.engine.math.XMath;
 import xlight.engine.math.XRotSeq;
 import xlight.engine.math.XRotationUtils;
 import xlight.engine.transform.XTransform;
+import xlight.engine.transform.XTransformListener;
+import xlight.engine.transform.XTransformType;
 
 public class XTransformImpl implements XTransform {
-    final private Vector3 previousPosition = new Vector3();
-    final private Vector3 position = new Vector3();
-    final private Vector3 rotation = new Vector3();
-    final private Vector3 scale = new Vector3();
-    final private Vector3 size = new Vector3();
-    final private Vector3 offset = new Vector3();
-    final private BoundingBox boundingBox = new BoundingBox();
-    final private Matrix4 matrix = new Matrix4();
-    final private Matrix4 matrixNotScaled = new Matrix4();
-    final private Quaternion quaternion = new Quaternion();
+    final private Vector3 previousPosition;
+    final private Vector3 position;
+    final private Vector3 rotation;
+    final private Vector3 scale;
+    final private Vector3 size;
+    final private Vector3 offset;
+    final private BoundingBox boundingBox;
+    final private Matrix4 matrix;
+    final private Matrix4 matrixNotScaled;
+    final private Quaternion quaternion;
     // Temp values are used for read only return values
-    final private Vector3 tmpPosition = new Vector3();
-    final private Vector3 tmpRotation = new Vector3();
-    final private Vector3 tmpScale = new Vector3();
-    final private Vector3 tmpSize = new Vector3();
-    final private Vector3 tmpOffset = new Vector3();
-    final private Quaternion tmpQuaternion = new Quaternion();
+    final private Vector3 tmpPosition;
+    final private Vector3 tmpRotation;
+    final private Vector3 tmpScale;
+    final private Vector3 tmpSize;
+    final private Vector3 tmpOffset;
+    final private Quaternion tmpQuaternion;
     private XRotSeq rotationSequence;
     private boolean forceUpdate;
 
@@ -37,7 +40,26 @@ public class XTransformImpl implements XTransform {
 
     private boolean isDragging;
 
+    private Array<XTransformListener> transformListeners;
+
     public XTransformImpl() {
+        previousPosition = new Vector3();
+        position = new Vector3();
+        rotation = new Vector3();
+        scale = new Vector3();
+        size = new Vector3();
+        offset = new Vector3();
+        boundingBox = new BoundingBox();
+        matrix = new Matrix4();
+        matrixNotScaled = new Matrix4();
+        quaternion = new Quaternion();
+        tmpPosition = new Vector3();
+        tmpRotation = new Vector3();
+        tmpScale = new Vector3();
+        tmpSize = new Vector3();
+        tmpOffset = new Vector3();
+        tmpQuaternion = new Quaternion();
+        transformListeners = new Array<>();
         reset();
     }
 
@@ -66,6 +88,8 @@ public class XTransformImpl implements XTransform {
         rotationSequence = XRotSeq.yxz;
 
         isDragging = false;
+
+        transformListeners.clear();
     }
 
     @Override
@@ -270,14 +294,25 @@ public class XTransformImpl implements XTransform {
         forceUpdate = true;
     }
 
-    /**
-     * Return read-only rotation.
-     */
+    @Override
+    public void addTransformListener(XTransformListener listener) {
+        if(!transformListeners.contains(listener, true)) {
+            transformListeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeTransformListener(XTransformListener listener) {
+        transformListeners.removeValue(listener, true);
+    }
+
+    @Override
     public Quaternion getQuaternion() {
         tmpQuaternion.set(quaternion);
         return tmpQuaternion;
     }
 
+    @Override
     public void setQuaternion(Quaternion quat) {
         // We round it to skip small numbers
         float x1 = XMath.round(quat.x, scalenRoundScale);
@@ -317,6 +352,20 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public void setPosition(float x, float y, float z) {
+        setPositionInternal(x, y, z);
+    }
+
+    @Override
+    public void setRotation(float rotationX, float rotationY, float rotationZ) {
+        setRotationInternal(rotationX, rotationY,rotationZ, true);
+    }
+
+    @Override
+    public void setScale(float x, float y, float z) {
+        setScaleInternal(x, y, z);
+    }
+
+    private void setPositionInternal(float x, float y, float z) {
         boolean forceChange = forceUpdate;
         forceUpdate = false;
 
@@ -350,35 +399,10 @@ public class XTransformImpl implements XTransform {
 
             if(flag) {
                 updateValuesToMatrix(matrix, matrixNotScaled);
+                for(int i = 0; i < transformListeners.size; i++) {
+                    transformListeners.get(i).onUpdate(XTransformType.POSITION, this);
+                }
             }
-        }
-    }
-
-    @Override
-    public void setRotation(float rotationX, float rotationY, float rotationZ) {
-        setRotationInternal(rotationX, rotationY,rotationZ, true);
-    }
-
-    @Override
-    public void setScale(float scaleX, float scaleY, float scaleZ) {
-        boolean forceChange = forceUpdate;
-        forceUpdate = false;
-
-        boolean toUpdate = false;
-        if(forceChange) {
-            toUpdate = true;
-        }
-        else {
-            if(!isDragging && (scale.x != scaleX || scale.y != scaleY || scale.z != scaleZ)) {
-                toUpdate = true;
-            }
-        }
-
-        if(toUpdate) {
-            scale.x = scaleX;
-            scale.y = scaleY;
-            scale.z = scaleZ;
-            updateValuesToMatrix(matrix, matrixNotScaled);
         }
     }
 
@@ -418,6 +442,34 @@ public class XTransformImpl implements XTransform {
                     XRotationUtils.convertEulerToQuat(rotationSequence, rotation, quaternion, negAxis);
                 }
                 updateValuesToMatrix(matrix, matrixNotScaled);
+                for(int i = 0; i < transformListeners.size; i++) {
+                    transformListeners.get(i).onUpdate(XTransformType.ROTATE, this);
+                }
+            }
+        }
+    }
+
+    private void setScaleInternal(float x, float y, float z) {
+        boolean forceChange = forceUpdate;
+        forceUpdate = false;
+
+        boolean toUpdate = false;
+        if(forceChange) {
+            toUpdate = true;
+        }
+        else {
+            if(!isDragging && (scale.x != x || scale.y != y || scale.z != z)) {
+                toUpdate = true;
+            }
+        }
+
+        if(toUpdate) {
+            scale.x = x;
+            scale.y = y;
+            scale.z = z;
+            updateValuesToMatrix(matrix, matrixNotScaled);
+            for(int i = 0; i < transformListeners.size; i++) {
+                transformListeners.get(i).onUpdate(XTransformType.SCALE, this);
             }
         }
     }

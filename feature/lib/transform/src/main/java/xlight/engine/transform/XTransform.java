@@ -71,4 +71,7 @@ public interface XTransform {
     boolean isDragging();
     void setDragging(boolean flag);
     void forceUpdate();
+
+    void addTransformListener(XTransformListener listener);
+    void removeTransformListener(XTransformListener listener);
 }
