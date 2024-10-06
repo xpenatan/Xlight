@@ -29,6 +29,7 @@ public class XTransformImpl implements XTransform {
     final private Vector3 tmpSize;
     final private Vector3 tmpOffset;
     final private Quaternion tmpQuaternion;
+    final private Matrix4 tmpMatrix;
     private XRotSeq rotationSequence;
     private boolean forceUpdate;
 
@@ -59,6 +60,7 @@ public class XTransformImpl implements XTransform {
         tmpSize = new Vector3();
         tmpOffset = new Vector3();
         tmpQuaternion = new Quaternion();
+        tmpMatrix = new Matrix4();
         transformListeners = new Array<>();
         reset();
     }
@@ -353,9 +355,9 @@ public class XTransformImpl implements XTransform {
     @Override
     public Matrix4 getMatrix4(boolean applyScale) {
         if(!applyScale) {
-            return matrixNotScaled;
+            return tmpMatrix.set(matrixNotScaled);
         }
-        return matrix;
+        return tmpMatrix.set(matrix);
     }
 
     @Override
