@@ -71,9 +71,4 @@ public interface XTransform {
     boolean isDragging();
     void setDragging(boolean flag);
     void forceUpdate();
-
-    class XTransformMode {
-        final public static int GLOBAL = 0;
-        final public static int LOCAL = 1;
-    }
 }

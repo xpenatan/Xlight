@@ -24,6 +24,7 @@ import xlight.engine.math.XRotationUtils;
 import xlight.engine.pool.XPool;
 import xlight.engine.transform.XGizmoType;
 import xlight.engine.transform.XTransform;
+import xlight.engine.transform.XTransformMode;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 
 class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelectionManagerImpl.XEntitySelectionNode> implements XEntitySelectionManager, XManager {
@@ -143,7 +144,7 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
                             firstZ = targetZ;
                         }
                         else if(transformType == XGizmoType.ROTATE) {
-                            if(transformMode == XTransform.XTransformMode.GLOBAL) {
+                            if(transformMode == XTransformMode.GLOBAL) {
                                 if(!fixRotation(rotationSequence, transform, node, tRotX, tRotY, tRotZ)) {
                                     XRotationUtils.convertEulerToQuat(rotationSequence, node.startRotation, XMath.QUAT_1, true);
                                     XMath.QUAT_1.set(node.startQuaternion);
@@ -152,7 +153,7 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
                                     transform.setQuaternion(XMath.QUAT_1);
                                 }
                             }
-                            else if(transformMode == XTransform.XTransformMode.LOCAL) {
+                            else if(transformMode == XTransformMode.LOCAL) {
                                 if(!fixRotation(rotationSequence, transform, node, tRotX, tRotY, tRotZ)) {
 //                                XpeRotation.convertEulerToQuat(rotationSequence, node.startRotation, XpeMath.QUAT_1, true);
                                     XMath.QUAT_1.set(node.startQuaternion);

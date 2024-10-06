@@ -35,6 +35,7 @@ import xlight.engine.outline.XPicker2DFrameBuffer;
 import xlight.engine.outline.XPicker3DFrameBuffer;
 import xlight.engine.transform.XTransform;
 import xlight.engine.transform.XGizmoType;
+import xlight.engine.transform.XTransformMode;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 
 public class XSelectingSystem extends XGameEditorSystem {
@@ -149,7 +150,7 @@ public class XSelectingSystem extends XGameEditorSystem {
                 if(gizmoRenderer.isDragging()) {
                     selectionManager.moveAndStartDragging(
                             gizmoRenderer.getTransformType(),
-                            gizmoRenderer.isGlobalTransform() ? XTransform.XTransformMode.GLOBAL : XTransform.XTransformMode.LOCAL,
+                            gizmoRenderer.isGlobalTransform() ? XTransformMode.GLOBAL : XTransformMode.LOCAL,
                             gizmoRenderer.getObjectVirtualPosition(),
                             gizmoRenderer.getObjectVirtualTotalVectorTargetAngle()
                     );
