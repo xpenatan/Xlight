@@ -29,7 +29,7 @@ import xlight.engine.input.XInputStateController;
 import xlight.engine.math.XAngleDirection;
 import xlight.engine.math.XMath;
 import xlight.engine.math.XRotSeq;
-import xlight.engine.transform.XGizmoType;
+import xlight.engine.transform.XTransformType;
 
 public class XGizmoRenderer {
 
@@ -69,7 +69,7 @@ public class XGizmoRenderer {
     private XMeshData meshData;
 
     private boolean isGlobalTransform = true;
-    private XGizmoType transformType = XGizmoType.POSITION;
+    private XTransformType transformType = XTransformType.POSITION;
 
     private XInputStateController onInput = new XInputStateController();
 
@@ -288,7 +288,7 @@ public class XGizmoRenderer {
     }
 
     public Vector3 getObjectVirtualPosition() {
-        if(!isDragging() || transformType != XGizmoType.POSITION) {
+        if(!isDragging() || transformType != XTransformType.POSITION) {
             objectVirtualPosition.set(objectPosition);
         }
         return objectVirtualPosition;
@@ -319,11 +319,11 @@ public class XGizmoRenderer {
         return targetType != null && onInput.isButtonDragging();
     }
 
-    public void setTransformType(XGizmoType type) {
+    public void setTransformType(XTransformType type) {
         transformType = type;
     }
 
-    public XGizmoType getTransformType() {
+    public XTransformType getTransformType() {
         return transformType;
     }
 
@@ -376,13 +376,13 @@ public class XGizmoRenderer {
 
         XMeshData meshData = null;
 
-        if(transformType == XGizmoType.POSITION) {
+        if(transformType == XTransformType.POSITION) {
             meshData = positionGizmoModelInstance.rayCast(null, camera, Gdx.input.getX(), Gdx.input.getY(), intersection);
         }
-        else if(transformType == XGizmoType.ROTATE) {
+        else if(transformType == XTransformType.ROTATE) {
             meshData = rotationGizmoModelInstance.rayCast(null, camera, Gdx.input.getX(), Gdx.input.getY(), intersection);
         }
-        else if(transformType == XGizmoType.SCALE) {
+        else if(transformType == XTransformType.SCALE) {
             meshData = scaleGizmoModelInstance.rayCast(null, camera, Gdx.input.getX(), Gdx.input.getY(), intersection);
         }
         if(targetType == null) {
@@ -423,7 +423,7 @@ public class XGizmoRenderer {
 
             objectVirtualTotalVectorTargetAngle.setZero();
 
-            if(transformType == XGizmoType.ROTATE) {
+            if(transformType == XTransformType.ROTATE) {
                 updateDraggingRotation();
             }
         }
@@ -431,15 +431,15 @@ public class XGizmoRenderer {
         // Makes model render on top of the game models
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
         modelBatch.begin(camera);
-        if(transformType == XGizmoType.POSITION) {
+        if(transformType == XTransformType.POSITION) {
             modelBatch.render(positionGizmoModelInstance, environment);
         }
-        else if(transformType == XGizmoType.ROTATE) {
+        else if(transformType == XTransformType.ROTATE) {
             modelBatch.render(rotationInvisibleGizmoModelInstance, environment);
             modelBatch.flush();
             modelBatch.render(rotationGizmoModelInstance, environment);
         }
-        else if(transformType == XGizmoType.SCALE) {
+        else if(transformType == XTransformType.SCALE) {
             modelBatch.render(scaleGizmoModelInstance, environment);
         }
         modelBatch.end();
@@ -466,7 +466,7 @@ public class XGizmoRenderer {
         if(meshData == null)
             return null;
         XCursor3DRenderer.AXIS_TYPE type = null;
-        if(transformType == XGizmoType.POSITION) {
+        if(transformType == XTransformType.POSITION) {
             Node parent = meshData.parentNode.getParent();
             String id = parent.id;
             if(id.equals("axisX")) {
@@ -488,7 +488,7 @@ public class XGizmoRenderer {
                 type = XCursor3DRenderer.AXIS_TYPE.Y_Z;
             }
         }
-        else if(transformType == XGizmoType.ROTATE) {
+        else if(transformType == XTransformType.ROTATE) {
             Node parent = meshData.parentNode;
             String id = parent.id;
 
@@ -502,7 +502,7 @@ public class XGizmoRenderer {
                 type = XCursor3DRenderer.AXIS_TYPE.X_Y;
             }
         }
-        else if(transformType == XGizmoType.SCALE) {
+        else if(transformType == XTransformType.SCALE) {
             Node parent = meshData.parentNode.getParent();
             String id = parent.id;
             if(id.equals("axisX")) {
@@ -608,7 +608,7 @@ public class XGizmoRenderer {
         Node axisXZ = null;
         Node axisYZ = null;
 
-        if(transformType == XGizmoType.POSITION) {
+        if(transformType == XTransformType.POSITION) {
             axisX = positionGizmoModelInstance.getNode("axisX");
             axisY = positionGizmoModelInstance.getNode("axisY");
             axisZ = positionGizmoModelInstance.getNode("axisZ");
@@ -617,7 +617,7 @@ public class XGizmoRenderer {
             axisXZ = positionGizmoModelInstance.getNode("axisXZ");
             axisYZ = positionGizmoModelInstance.getNode("axisYZ");
         }
-        else if(transformType == XGizmoType.SCALE) {
+        else if(transformType == XTransformType.SCALE) {
             axisX = scaleGizmoModelInstance.getNode("axisX");
             axisY = scaleGizmoModelInstance.getNode("axisY");
             axisZ = scaleGizmoModelInstance.getNode("axisZ");

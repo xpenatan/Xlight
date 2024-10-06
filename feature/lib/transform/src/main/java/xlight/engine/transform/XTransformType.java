@@ -1,5 +1,5 @@
 package xlight.engine.transform;
 
-public enum XGizmoType {
+public enum XTransformType {
     POSITION, ROTATE, SCALE
 }

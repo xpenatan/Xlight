@@ -3,7 +3,7 @@ package xlight.editor.core.ecs.manager;
 import com.badlogic.gdx.math.Vector3;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.list.XList;
-import xlight.engine.transform.XGizmoType;
+import xlight.engine.transform.XTransformType;
 
 public interface XEntitySelectionManager {
     void selectTarget(XEntity target, boolean multiSelect);
@@ -14,7 +14,7 @@ public interface XEntitySelectionManager {
     boolean isSelected(XEntity target);
     boolean changeCurrentSelectedTarget(XEntity target);
 
-    void moveAndStartDragging(XGizmoType transformType, int transformMode, Vector3 position, Vector3 rotation);
+    void moveAndStartDragging(XTransformType transformType, int transformMode, Vector3 position, Vector3 rotation);
     void removeDragging();
 
 }

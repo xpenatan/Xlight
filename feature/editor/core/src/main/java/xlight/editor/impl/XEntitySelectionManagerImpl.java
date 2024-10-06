@@ -22,7 +22,7 @@ import xlight.engine.math.XMatrix4Utils;
 import xlight.engine.math.XRotSeq;
 import xlight.engine.math.XRotationUtils;
 import xlight.engine.pool.XPool;
-import xlight.engine.transform.XGizmoType;
+import xlight.engine.transform.XTransformType;
 import xlight.engine.transform.XTransform;
 import xlight.engine.transform.XTransformMode;
 import xlight.engine.transform.ecs.component.XTransformComponent;
@@ -70,7 +70,7 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
     }
 
     @Override
-    public void moveAndStartDragging(XGizmoType transformType, int transformMode, Vector3 pos, Vector3 rot) {
+    public void moveAndStartDragging(XTransformType transformType, int transformMode, Vector3 pos, Vector3 rot) {
         XList<XEntitySelectionNode> selectedTargets = getSelectedTargetsNode();
 
         float targetX = pos.x;
@@ -136,14 +136,14 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
                     XMath.QUAT_2.idt();
 
                     {
-                        if(transformType == XGizmoType.POSITION) {
+                        if(transformType == XTransformType.POSITION) {
                             transform.forceUpdate();
                             transform.setPosition(targetX, targetY, targetZ);
                             firstX = targetX;
                             firstY = targetY;
                             firstZ = targetZ;
                         }
-                        else if(transformType == XGizmoType.ROTATE) {
+                        else if(transformType == XTransformType.ROTATE) {
                             if(transformMode == XTransformMode.GLOBAL) {
                                 if(!fixRotation(rotationSequence, transform, node, tRotX, tRotY, tRotZ)) {
                                     XRotationUtils.convertEulerToQuat(rotationSequence, node.startRotation, XMath.QUAT_1, true);

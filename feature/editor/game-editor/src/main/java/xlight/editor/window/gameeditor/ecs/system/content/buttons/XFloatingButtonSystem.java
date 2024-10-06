@@ -16,7 +16,7 @@ import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.XWorldService;
 import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
-import xlight.engine.transform.XGizmoType;
+import xlight.engine.transform.XTransformType;
 
 public class XFloatingButtonSystem extends XGameEditorSystem {
 
@@ -50,39 +50,39 @@ public class XFloatingButtonSystem extends XGameEditorSystem {
                 ImGui.SameLine(0, 2);
 
                 ImVec4 buttonSelectedColor = ImGui.GetStyle().Colors(ImGuiCol.ImGuiCol_ButtonActive);
-                XGizmoType transformType = selectingSystem.getTransformType();
+                XTransformType transformType = selectingSystem.getTransformType();
 
-                if(transformType == XGizmoType.POSITION) {
+                if(transformType == XTransformType.POSITION) {
                     ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, buttonSelectedColor);
                 }
                 if(ImGui.ImageButton("position", XEditorAssets.axisPositionTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(buttonSize, buttonSize), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(1, 1))) {
-                    selectingSystem.setTransformType(XGizmoType.POSITION);
+                    selectingSystem.setTransformType(XTransformType.POSITION);
                 }
-                if(transformType == XGizmoType.POSITION) {
+                if(transformType == XTransformType.POSITION) {
                     ImGui.PopStyleColor();
                 }
 
                 ImGui.SameLine(0, 2);
 
-                if(transformType == XGizmoType.ROTATE) {
+                if(transformType == XTransformType.ROTATE) {
                     ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, buttonSelectedColor);
                 }
                 if(ImGui.ImageButton("rotate", XEditorAssets.axisRotateTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(buttonSize, buttonSize), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(1, 1))) {
-                    selectingSystem.setTransformType(XGizmoType.ROTATE);
+                    selectingSystem.setTransformType(XTransformType.ROTATE);
                 }
-                if(transformType == XGizmoType.ROTATE) {
+                if(transformType == XTransformType.ROTATE) {
                     ImGui.PopStyleColor();
                 }
 
                 ImGui.SameLine(0, 2);
 
-                if(transformType == XGizmoType.SCALE) {
+                if(transformType == XTransformType.SCALE) {
                     ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, buttonSelectedColor);
                 }
                 if(ImGui.ImageButton("scale", XEditorAssets.axisScaleTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(buttonSize, buttonSize), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(1, 1))) {
-                    selectingSystem.setTransformType(XGizmoType.SCALE);
+                    selectingSystem.setTransformType(XTransformType.SCALE);
                 }
-                if(transformType == XGizmoType.SCALE) {
+                if(transformType == XTransformType.SCALE) {
                     ImGui.PopStyleColor();
                 }
 

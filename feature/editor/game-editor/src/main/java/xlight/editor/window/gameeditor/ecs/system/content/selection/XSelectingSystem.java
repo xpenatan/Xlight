@@ -34,7 +34,7 @@ import xlight.engine.math.XRotSeq;
 import xlight.engine.outline.XPicker2DFrameBuffer;
 import xlight.engine.outline.XPicker3DFrameBuffer;
 import xlight.engine.transform.XTransform;
-import xlight.engine.transform.XGizmoType;
+import xlight.engine.transform.XTransformType;
 import xlight.engine.transform.XTransformMode;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 
@@ -52,7 +52,7 @@ public class XSelectingSystem extends XGameEditorSystem {
 
     private final Array<XAABBTreeNode> hitList = new Array<>();
 
-    private XGizmoType transformType = XGizmoType.POSITION;
+    private XTransformType transformType = XTransformType.POSITION;
     private boolean isGlobalTransform = true;
 
     private boolean targetLock = false;
@@ -170,7 +170,7 @@ public class XSelectingSystem extends XGameEditorSystem {
         return XSystemType.RENDER;
     }
 
-    public void setTransformType(XGizmoType transformType) {
+    public void setTransformType(XTransformType transformType) {
         this.transformType = transformType;
     }
 
@@ -182,7 +182,7 @@ public class XSelectingSystem extends XGameEditorSystem {
         return isGlobalTransform;
     }
 
-    public XGizmoType getTransformType() {
+    public XTransformType getTransformType() {
         return transformType;
     }
 
