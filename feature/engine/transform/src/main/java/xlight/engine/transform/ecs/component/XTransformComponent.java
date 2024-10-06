@@ -1,5 +1,7 @@
 package xlight.engine.transform.ecs.component;
 
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.core.editor.ui.options.XUIOpTransform;
@@ -11,7 +13,6 @@ import xlight.engine.list.XIntSetNode;
 import xlight.engine.list.XList;
 import xlight.engine.transform.XTransform;
 import xlight.engine.transform.XTransformListener;
-import xlight.engine.transform.XTransformType;
 
 public class XTransformComponent extends XLocalTransformComponent {
     private static final int DATA_SIZE = 4;
@@ -22,14 +23,39 @@ public class XTransformComponent extends XLocalTransformComponent {
 
     private XTransformListener listener = new XTransformListener() {
         @Override
-        public void onUpdate(XTransformType type, XTransform transform) {
+        public void onChange(XTransform transform) {
             if(entity != null) {
+                Matrix4 transformMatrix4 = transform.getMatrix4();
                 XList<XIntSetNode> list = entity.getChildList();
                 for(XIntSetNode node : list) {
                     int entityId = node.getKey();
                     XEntity childEntity = entityService.getEntity(entityId);
                     if(childEntity.isAttached()) {
+                        XLocalTransformComponent localTransformComponent = childEntity.getComponent(XLocalTransformComponent.class);
+                        XLocalTransformComponent transformComponent = childEntity.getComponent(XTransformComponent.class);
+                        if(localTransformComponent != null && transformComponent != null) {
+                            XTransform childLocalTransform = localTransformComponent.transform;
+                            XTransform childTransform = transformComponent.transform;
+                            Matrix4 localMatrix4 = childLocalTransform.getMatrix4();
+                            Matrix4 mul = transformMatrix4.mul(localMatrix4);
+                            Vector3 position = childTransform.getPosition();
+                            Vector3 scale = childTransform.getScale();
+                            Quaternion quaternion = childTransform.getQuaternion();
+                            mul.getTranslation(position);
+                            mul.getRotation(quaternion);
+                            mul.getScale(scale);
+                            // Ignore Listeners so we call only one time.
+                            childTransform.ignoreOnChangeListener();
+                            childTransform.setPosition(position);
 
+                            childTransform.ignoreOnChangeListener();
+                            childTransform.setRotation(quaternion);
+
+                            childTransform.ignoreOnChangeListener();
+                            childTransform.setScale(scale);
+
+                            childTransform.callOnChangeListeners();
+                        }
                     }
                 }
             }

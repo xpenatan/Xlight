@@ -74,4 +74,15 @@ public interface XTransform {
 
     void addTransformListener(XTransformListener listener);
     void removeTransformListener(XTransformListener listener);
+
+    /**
+     * Call this to not call onChangeListener when position, rotation or scale is called.
+     * Must be called before updating values.
+     */
+    void ignoreOnChangeListener();
+
+    /**
+     * Force listener to call onUpdate
+     */
+    void callOnChangeListeners();
 }
