@@ -97,7 +97,7 @@ public class XEngineImpl implements XEngine {
         metaClass = registerManager.registerClass(4, XUIWorldComponent.class, new XPool<>() { protected XComponent newObject() { return new XUIWorldComponent(); } });
         metaClass.setMetaClassGroup("World type");
         metaClass = registerManager.registerClass(5, XTransformComponent.class, new XPool<>() { protected XComponent newObject() { return new XTransformComponent(); } });
-        metaClass.setMetaClassGroup("Position");
+        metaClass.setMetaClassGroup("Transform");
         metaClass.setName("Transform");
         metaClass = registerManager.registerClass(6, XCameraComponent.class, new XPool<>() { protected XComponent newObject() { return new XCameraComponent(); } });
         metaClass.setMetaClassGroup("Camera");
@@ -105,7 +105,7 @@ public class XEngineImpl implements XEngine {
         metaClass.setMetaClassGroup("g3d");
         metaClass.setParentType(XRender3DComponent.class);
         metaClass = registerManager.registerClass(8, XLocalTransformComponent.class, new XPool<>() { protected XComponent newObject() { return new XLocalTransformComponent(); } });
-        metaClass.setMetaClassGroup("Position");
+        metaClass.setMetaClassGroup("Transform");
         metaClass.setName("Local Transform");
 
         XPoolController poolController = world.getGlobalData(XPoolController.class);
