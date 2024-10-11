@@ -21,17 +21,7 @@ public interface XUIData {
     void beginLine(String name);
     void endLine();
 
-    /**
-     * Begin group add a header before adding the UI elements. Must call endGroup to close it.
-     * Grouping does not stack.
-     */
-    boolean beginHeader(String groupName);
-
-    /**
-     * Call when beginHeader returns true
-     */
-    void endHeader();
-
+    boolean collapsingHeader(String name);
 
     void text(String line, String text);
     boolean button(String line, String buttonName);

@@ -83,4 +83,9 @@ public class XIntSetDataList<NODE_TYPE extends XIntDataMapListNode<Object, NODE_
     public boolean containsKey(int key) {
         return map.containsKey(key);
     }
+
+    @Override
+    public String toString() {
+        return map.toString();
+    }
 }

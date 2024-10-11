@@ -72,6 +72,13 @@ public abstract class XObjectSelection<T, NODE extends XDataArray.XDataArrayNode
         return null;
     }
 
+    public T getSelectedTargetIndex(int index) {
+        if(index >= 0 && index< selectedTargets.getSize()) {
+            return selectedTargets.get(index);
+        }
+        return null;
+    }
+
     public XList<T> getSelectedTargets() {
         return selectedTargets.getList();
     }

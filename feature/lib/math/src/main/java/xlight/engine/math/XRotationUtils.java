@@ -138,11 +138,7 @@ public class XRotationUtils {
     private static Quaternion QUAT = new Quaternion();
     public static Matrix4 MAT4_1 = new Matrix4();
 
-    public static void convertQuatToEuler(XRotSeq rotSeq, final Quaternion quaternion, Vector3 out) {
-        convertQuatToEuler(rotSeq, quaternion, out, true, false);
-    }
-
-    public static void convertQuatToEuler(XRotSeq rotSeq, final Quaternion quaternion, Vector3 out, boolean invert, boolean negAxis) {
+    public static void convertQuatToEuler(XRotSeq rotSeq, final Quaternion quaternion, Vector3 out, boolean invert) {
         //http://bediyap.com/programming/convert-quaternion-to-euler-rotations/
         //https://forum.unity.com/threads/rotation-order.13469/
 
@@ -274,18 +270,12 @@ public class XRotationUtils {
             default:
                 break;
         }
-
-        if(negAxis) {
-            out.y *= -1;
-            out.z *= -1;
-        }
-
-        out.x = XMath.normalizeAngle(out.x, 0 , 360);
-        out.y = XMath.normalizeAngle(out.y, 0 , 360);
-        out.z = XMath.normalizeAngle(out.z, 0 , 360);
+//        out.x = XMath.normalizeAngle(out.x, 0 , 360);
+//        out.y = XMath.normalizeAngle(out.y, 0 , 360);
+//        out.z = XMath.normalizeAngle(out.z, 0 , 360);
     }
 
-    public static void convertEulerToQuat(XRotSeq rotSeq, Vector3 in, Quaternion q, boolean negAxis) {
+    public static void convertEulerToQuat(XRotSeq rotSeq, Vector3 in, Quaternion q) {
         // https://raw.githubusercontent.com/waiwnf/pilotguru/master/img/readme/pitch-roll-yaw.png
         // https://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
         // http://www.euclideanspace.com/maths/geometry/rotations/euler/
@@ -294,35 +284,10 @@ public class XRotationUtils {
         float y = in.y;
         float z = in.z;
 
-        if(negAxis) {
-            y = -y;
-            z = -z;
-        }
-
         MAT4_1.idt();
-        XRotationUtils.rotateMatrix(rotSeq, x, y, z, MAT4_1, false, false);
+        XRotationUtils.rotateMatrix(rotSeq, x, y, z, MAT4_1, false);
         MAT4_1.getRotation(q);
-
-//        switch(rotSeq) {
-//            case yzx:
-//                q.setEulerAngles(y, z, x);
-//                break;
-//            case xyz:
-//                q.setEulerAngles(x, y, z);
-//                break;
-//            case xzy:
-//                q.setEulerAngles(x, z, y);
-//                break;
-//            case yxz:
-//                q.setEulerAngles(y, x, z);
-//                break;
-//            case zxy:
-//                q.setEulerAngles(z, x, y);
-//                break;
-//            case zyx:
-//                q.setEulerAngles(z, y, x);
-//                break;
-//        }
+        q.nor();
     }
 
     /**
@@ -360,34 +325,7 @@ public class XRotationUtils {
         q.z = (float)(c1*s2*c3 - s1*c2*s3);
     }
 
-
-    public static void rotateMatrix(XRotSeq rotSeq, Vector3 in, Matrix4 out) {
-        rotateMatrix(rotSeq, in.x, in.y, in.z, out);
-    }
-
-    public static void rotateMatrix(XRotSeq rotSeq, Vector3 in, Matrix4 out, boolean invert) {
-        rotateMatrix(rotSeq, in.x, in.y, in.z, out, invert);
-    }
-
-    public static void rotateMatrix(XRotSeq rotSeq, Vector3 in, Matrix4 out, boolean invert, boolean negAxis) {
-        rotateMatrix(rotSeq, in.x, in.y, in.z, out, invert, negAxis);
-    }
-
-    public static void rotateMatrix(XRotSeq rotSeq, float x, float y, float z, Matrix4 out) {
-        rotateMatrix(rotSeq, x, y, z, out, false, true);
-    }
-
     public static void rotateMatrix(XRotSeq rotSeq, float x, float y, float z, Matrix4 out, boolean invert) {
-        rotateMatrix(rotSeq, x, y, z, out, invert, true);
-    }
-
-    public static void rotateMatrix(XRotSeq rotSeq, float x, float y, float z, Matrix4 out, boolean invert, boolean negAxis) {
-        // Makes positive rotation values;
-        if(negAxis) {
-            y *= -1;
-            z *= -1;
-        }
-
         switch(rotSeq) {
             case yxz:
                 if(invert) {
@@ -471,7 +409,7 @@ public class XRotationUtils {
     public static void getMatrixRotation(XRotSeq rotSec, Matrix4 mat, boolean normalizeAxe, Vector3 returnValue) {
         Quaternion quat = QUAT;
         mat.getRotation(quat, normalizeAxe);
-        convertQuatToEuler(rotSec, quat, returnValue);
+        convertQuatToEuler(rotSec, quat, returnValue, true);
     }
 
     // Testing method

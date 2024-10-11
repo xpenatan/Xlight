@@ -80,14 +80,14 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
         }));
     }
 
-    private void init(XWorld world, XInitFeature feature) {
-        XSystemService systemService = world.getWorldService().getSystemService();
+    private void init(XWorld editorWorld, XInitFeature feature) {
+        XSystemService systemService = editorWorld.getWorldService().getSystemService();
 
         addWindowContext(XMainWindow.CLASS_ID, new XMainWindow());
 
         systemService.addTickListener(XSystemType.UI, this);
 
-        initImGui(world);
+        initImGui(editorWorld);
 
         feature.initFeature();
     }
@@ -148,6 +148,8 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
                 return false;
             }
         });
+
+
     }
 
     @Override

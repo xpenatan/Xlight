@@ -233,6 +233,11 @@ class XEntityImpl implements XEntity {
         children.clear();
     }
 
+    @Override
+    public String toString() {
+        return getName() + "[" + "id:" + index + ";parent:" + parentId + ";attached:" + isAttached() + ";components:" + children + "]";
+    }
+
     public void reset(boolean isFirst) {
         if(!isFirst) {
             clearChildren();

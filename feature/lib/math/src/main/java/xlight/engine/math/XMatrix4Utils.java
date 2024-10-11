@@ -7,6 +7,10 @@ import com.badlogic.gdx.math.Vector3;
 
 public class XMatrix4Utils {
 
+    private static Matrix4 tmpTransform = new Matrix4();
+    private static Matrix4 tmpRotate = new Matrix4();
+    private static Matrix4 tmpScale = new Matrix4();
+
     public static void rotateAroundOrigin(Matrix4 translate, Matrix4 rotation, Matrix4 out) {
         // https://www.youtube.com/watch?v=IZFHwd03nO4
         // T * R = out
@@ -24,6 +28,49 @@ public class XMatrix4Utils {
         // Or
 //        out.set(translate);
 //        out.mul(rotation);
+    }
+
+    /**
+     * B_local = A_world^-1 * B_world
+     */
+    public static void getChildLocalFromWorld(Matrix4 A_world, Matrix4 B_world, Matrix4 B_local) {
+        if(B_local == A_world || B_local == B_world) {
+            throw  new RuntimeException("Out Matrix should not be parent or child");
+        }
+        B_local.set(A_world).inv().mul(B_world);
+    }
+
+    /**
+     * B_world = A_world * B_local
+     */
+    public static void getChildWorldFromLocal(Matrix4 A_world, Matrix4 B_local, Matrix4 B_world) {
+        if(B_world == A_world || B_world == B_local) {
+            throw  new RuntimeException("Out Matrix should not be parent or child");
+        }
+        B_world.set(A_world).mul(B_local);
+    }
+
+    public static void toMatrix(MatrixOrder order, Vector3 position, Quaternion rotation, Vector3 scale, Matrix4 outWorldChild) {
+        outWorldChild.idt();
+        tmpTransform.idt();
+        tmpRotate.idt();
+        tmpScale.idt();
+        if(position != null) {
+            tmpTransform.translate(position);
+        }
+        if(rotation != null) {
+            tmpRotate.rotate(rotation);
+        }
+        if(scale != null) {
+            tmpScale.scale(scale.x, scale.y, scale.z);
+        }
+
+        if(order == MatrixOrder.TRS) {
+            outWorldChild.set(tmpTransform).mul(tmpRotate).mul(tmpScale);
+        }
+        else if(order == MatrixOrder.SRT) {
+            outWorldChild.set(tmpScale).mul(tmpRotate).mul(tmpTransform);
+        }
     }
 
     static Quaternion row(Matrix4 mat, int row) {
@@ -58,5 +105,10 @@ public class XMatrix4Utils {
         float rry = XMath.round((float)ry, rotationRoundScale);
         float rrz = XMath.round((float)rz, rotationRoundScale);
         out.set(rrx, rry, rrz);
+    }
+
+    public enum MatrixOrder {
+        TRS,
+        SRT
     }
 }

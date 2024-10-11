@@ -11,6 +11,7 @@ public class XUIOpTransform {
 
     public boolean drawPosition;
     public boolean drawRotation;
+    public boolean drawQuaternion;
     public boolean drawScale;
     public boolean drawSize;
     public boolean drawOffset;
@@ -30,6 +31,17 @@ public class XUIOpTransform {
     public String rotTooltip1;
     public String rotTooltip2;
     public String rotTooltip3;
+
+    public String quatLine;
+    public String quatLabel1;
+    public String quatLabel2;
+    public String quatLabel3;
+    public String quatLabel4;
+    public String quatTooltip1;
+    public String quatTooltip2;
+    public String quatTooltip3;
+    public String quatTooltip4;
+
 
     public String sclLine;
     public String sclLabel1;
@@ -58,6 +70,7 @@ public class XUIOpTransform {
     public void reset() {
         drawPosition = true;
         drawRotation = true;
+        drawQuaternion = true;
         drawScale = true;
         drawSize = true;
         drawOffset = true;
@@ -77,6 +90,16 @@ public class XUIOpTransform {
         rotTooltip1 = "Rotation X";
         rotTooltip2 = "Rotation Y";
         rotTooltip3 = "Rotation Z";
+
+        quatLine = "Quaternion";
+        quatLabel1 = "X:";
+        quatLabel2 = "Y:";
+        quatLabel3 = "Z:";
+        quatLabel4 = "W:";
+        quatTooltip1 = "Quaternion X";
+        quatTooltip2 = "Quaternion Y";
+        quatTooltip3 = "Quaternion Z";
+        quatTooltip4 = "Quaternion W";
 
         sclLine = "Scale";
         sclLabel1 = "X:";

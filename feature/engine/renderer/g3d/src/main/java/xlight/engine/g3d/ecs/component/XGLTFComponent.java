@@ -3,6 +3,7 @@ package xlight.engine.g3d.ecs.component;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -58,14 +59,6 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
         componentAttached = false;
     }
 
-    public void setAsset(String path) {
-        setAssetInternal(path, XAssetUtil.getFileTypeValue(Files.FileType.Internal));
-    }
-
-    public void setAsset(String path, Files.FileType fileType) {
-        setAssetInternal(path, XAssetUtil.getFileTypeValue(fileType));
-    }
-
     @Override
     public void calculateBoundingBox(BoundingBox boundingBox) {
         if(scene != null) {
@@ -85,6 +78,55 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
         if(scene != null) {
             scene.modelInstance.transform.set(transform);
         }
+    }
+
+    @Override
+    public void onReset() {
+        super.onReset();
+        clearAsset();
+    }
+
+    @Override
+    public void onSave(XDataMap map) {
+        if(!assetPath.isEmpty()) {
+            map.put(DATAMAP_ASSETPATH, assetPath);
+            map.put(DATAMAP_ASSET_TYPE, fileType);
+        }
+    }
+
+    @Override
+    public void onLoad(XDataMap map) {
+        String asset = map.getString(DATAMAP_ASSETPATH, null);
+        int type = map.getInt(DATAMAP_ASSET_TYPE, XAssetUtil.getFileTypeValue(Files.FileType.Internal));
+        if(asset != null) {
+            setAssetInternal(asset, type);
+        }
+    }
+
+    @Override
+    public void onUIDraw(XUIData uiData) {
+        if(uiData.button("Bounding Box", "Calculate")) {
+            flags.put(FLAG_CALCULATE_BOUNDING_BOX);
+        }
+        XUIOpStringEditText op = XUIOpStringEditText.get();
+        if(uiData.editText("Asset Path", assetPath, op)) {
+            setAssetInternal(op.value, fileType);
+        }
+    }
+
+    public void setAsset(String path) {
+        setAssetInternal(path, XAssetUtil.getFileTypeValue(Files.FileType.Internal));
+    }
+
+    public void setAsset(String path, Files.FileType fileType) {
+        setAssetInternal(path, XAssetUtil.getFileTypeValue(fileType));
+    }
+
+    public ModelInstance getModelInstance() {
+        if(scene != null) {
+            return scene.modelInstance;
+        }
+        return null;
     }
 
     private void setAssetInternal(String path, int fileType) {
@@ -131,12 +173,6 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
         updateModelInstance(scene.modelInstance);
     }
 
-    @Override
-    public void onReset() {
-        super.onReset();
-        clearAsset();
-    }
-
     private void clearAsset() {
         assetPath = "";
         fileType = XAssetUtil.getFileTypeValue(Files.FileType.Internal);
@@ -144,34 +180,6 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
             sceneAsset.dispose();
             sceneAsset = null;
             scene = null;
-        }
-    }
-
-    @Override
-    public void onSave(XDataMap map) {
-        if(!assetPath.isEmpty()) {
-            map.put(DATAMAP_ASSETPATH, assetPath);
-            map.put(DATAMAP_ASSET_TYPE, fileType);
-        }
-    }
-
-    @Override
-    public void onLoad(XDataMap map) {
-        String asset = map.getString(DATAMAP_ASSETPATH, null);
-        int type = map.getInt(DATAMAP_ASSET_TYPE, XAssetUtil.getFileTypeValue(Files.FileType.Internal));
-        if(asset != null) {
-            setAssetInternal(asset, type);
-        }
-    }
-
-    @Override
-    public void onUIDraw(XUIData uiData) {
-        if(uiData.button("Bounding Box", "Calculate")) {
-            flags.put(FLAG_CALCULATE_BOUNDING_BOX);
-        }
-        XUIOpStringEditText op = XUIOpStringEditText.get();
-        if(uiData.editText("Asset Path", assetPath, op)) {
-            setAssetInternal(op.value, fileType);
         }
     }
 }

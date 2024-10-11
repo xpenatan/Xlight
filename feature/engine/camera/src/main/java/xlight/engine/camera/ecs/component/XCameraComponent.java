@@ -81,15 +81,17 @@ public class XCameraComponent implements XComponent, XDataMapListener, XUIDataLi
         XUIOpCheckbox chkOp = XUIOpCheckbox.get();
         XUIOpEditText edtOp = XUIOpEditText.get();
 
-        if(uiData.beginHeader("Local Transform")) {
+        if(uiData.collapsingHeader("Local Transform")) {
+            uiData.beginTable();
             op.drawOffset = false;
             op.drawScale = false;
             op.drawSize = false;
             uiData.transform(localTransform, op);
+            uiData.endTable();
         }
-        uiData.endHeader();
 
-        if(uiData.beginHeader("Camera")) {
+        if(uiData.collapsingHeader("Camera")) {
+            uiData.beginTable();
             edtOp.reset();
             if(uiData.checkbox("IsActive", camera.isActiveCamera(), chkOp)) {
                 camera.setActiveCamera(chkOp.value);
@@ -117,7 +119,7 @@ public class XCameraComponent implements XComponent, XDataMapListener, XUIDataLi
             if(uiData.editText("FOV", camera.getFieldOfView(), edtOp)) {
                 camera.setFieldOfView(edtOp.value);
             }
+            uiData.endTable();
         }
-        uiData.endHeader();
     }
 }

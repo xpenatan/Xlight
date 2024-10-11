@@ -155,7 +155,6 @@ class XComponentServiceImpl implements XComponentService {
                     entity.componentMask.set(componentIndex);
                     entity.componentsIndex.add(componentIndex);
                     componentList.set(entityIndex, component);
-                    component.onAttach(world, entity);
                     entityService.onComponentAdded(entity, component);
                     ret = true;
                 }

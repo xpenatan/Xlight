@@ -39,7 +39,7 @@ public class XEntityInspector {
         ImGuiCollapseLayoutOptions defaultOptions = XCollapseWidget.defaultOptions;
         defaultOptions.set_paddingBottom(2);
         XCollapseWidget.defaultOptions.set_openDefault(true);
-        int id = groupName.hashCode();
+        int id = groupName.hashCode() + entity.hashCode();
         XCollapseWidget.CollaspeWidgetData widgetData = XCollapseWidget.begin(id, groupName, XCollapseWidget.WHITE_COLOR, texturesArray, defaultOptions);
         if(widgetData.isOpen) {
 
@@ -134,12 +134,12 @@ public class XEntityInspector {
                 XUIDataListener dataListener = (XUIDataListener)component;
                 dataListener.onUIDraw(uiData);
             }
-            Class<XComponent> classType = (Class<XComponent>)component.getMatcherType();
+            Class<XComponent> classType = (Class<XComponent>)component.getClassOrInterfaceType();
             XUIDataTypeListener<XComponent> uiListener = imguiManager.getUIComponentListener(classType);
+            uiData.endTable();
             if(uiListener != null) {
                 uiListener.onUIDraw(component, uiData);
             }
-            uiData.endTable();
         }
 
         XCollapseWidget.end();

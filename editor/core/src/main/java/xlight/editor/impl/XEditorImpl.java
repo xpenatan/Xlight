@@ -8,6 +8,7 @@ import java.io.IOException;
 import xlight.editor.assets.XEditorAssets;
 import xlight.editor.core.XEditor;
 import xlight.editor.core.ecs.manager.XEntitySelectionManager;
+import xlight.editor.imgui.XUIRegisterComponents;
 import xlight.engine.core.ecs.XPreferencesManager;
 import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
@@ -65,6 +66,7 @@ public class XEditorImpl implements XEditor {
     }
 
     private void onEditorReady(XWorld world) {
+        XUIRegisterComponents.init(world);
         loadBasicDemo(world);
     }
 

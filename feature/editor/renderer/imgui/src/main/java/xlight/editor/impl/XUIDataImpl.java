@@ -1,6 +1,7 @@
 package xlight.editor.impl;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import imgui.ImGui;
@@ -39,6 +40,7 @@ class XUIDataImpl implements XUIData {
     private static int xColor = Color.RED.toIntBits();
     private static int yColor = Color.GREEN.toIntBits();
     private static int zColor = Color.toIntBits(0, 150, 255, 255);
+    private static int wColor = Color.toIntBits(255, 255, 255, 255);
 
     public XUIDataImpl() {
         FLOAT_D_1 = new XEditTextFloatData();
@@ -76,21 +78,12 @@ class XUIDataImpl implements XUIData {
     }
 
     @Override
-    public boolean beginHeader(String groupName) {
+    public boolean collapsingHeader(String name) {
         XUITableUtil.endTable();
-        boolean flag = ImGui.CollapsingHeader(groupName, ImGuiTreeNodeFlags_DefaultOpen);
-        if(flag) {
-            XUITableUtil.beginTable();
-        }
+        boolean flag = ImGui.CollapsingHeader(name, ImGuiTreeNodeFlags_DefaultOpen);
         return flag;
     }
 
-    @Override
-    public void endHeader() {
-        XUITableUtil.endTable();
-    }
-
-    @Override
     public void text(String line, String text) {
         beginTable();
         boolean addLine = !beginLine;
@@ -495,6 +488,39 @@ class XUIDataImpl implements XUIData {
                 float value2 = FLOAT_D_2.value.getValue();
                 float value3 = FLOAT_D_3.value.getValue();
                 transform.setRotation(value1, value2, value3);
+                flag = true;
+            }
+            XUITableUtil.endLine();
+        }
+
+        if(op.drawQuaternion) {
+            XUITableUtil.beginLine(op.quatLine);
+            Quaternion rotation = transform.getQuaternion();
+            FLOAT_D_1.clear();
+            FLOAT_D_2.clear();
+            FLOAT_D_3.clear();
+            FLOAT_D_1.value.set(rotation.x);
+            FLOAT_D_2.value.set(rotation.y);
+            FLOAT_D_3.value.set(rotation.z);
+            FLOAT_D_4.value.set(rotation.w);
+            FLOAT_D_1.leftLabel = op.quatLabel1;
+            FLOAT_D_2.leftLabel = op.quatLabel2;
+            FLOAT_D_3.leftLabel = op.quatLabel3;
+            FLOAT_D_4.leftLabel = op.quatLabel4;
+            FLOAT_D_1.tooltip = op.quatTooltip1;
+            FLOAT_D_2.tooltip = op.quatTooltip2;
+            FLOAT_D_3.tooltip = op.quatTooltip3;
+            FLOAT_D_4.tooltip = op.quatTooltip4;
+            FLOAT_D_1.labelClickDragColor = xColor;
+            FLOAT_D_2.labelClickDragColor = yColor;
+            FLOAT_D_3.labelClickDragColor = zColor;
+            FLOAT_D_4.labelClickDragColor = wColor;
+            if(XEditText.render("##QUAT", FLOAT_D_1, FLOAT_D_2, FLOAT_D_3, FLOAT_D_4)) {
+                float value1 = FLOAT_D_1.value.getValue();
+                float value2 = FLOAT_D_2.value.getValue();
+                float value3 = FLOAT_D_3.value.getValue();
+                float value4 = FLOAT_D_4.value.getValue();
+                transform.setRotation(value1, value2, value3, value4);
                 flag = true;
             }
             XUITableUtil.endLine();

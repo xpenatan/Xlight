@@ -1,6 +1,5 @@
 package xlight.engine.transform.ecs.component;
 
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import xlight.engine.core.editor.ui.XUIData;
@@ -11,6 +10,7 @@ import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.list.XIntSetNode;
 import xlight.engine.list.XList;
+import xlight.engine.math.XMath;
 import xlight.engine.transform.XTransform;
 import xlight.engine.transform.XTransformListener;
 
@@ -18,44 +18,34 @@ public class XTransformComponent extends XLocalTransformComponent {
     private static final int DATA_SIZE = 4;
     private static final int DATA_OFFSET = 5;
 
+    public static final int LISTENER_CODE_UPDATE_CHILD_TRANSFORM = -1;
+    public static final int LISTENER_CODE_LOCAL_TRANSFORM_CHANGED = -2;
+    public static final int LISTENER_CODE_LOCAL_TRANSFORM_UPDATE_OFFSET = -3;
+
     private XEntityService entityService;
     private XEntity entity;
 
     private XTransformListener listener = new XTransformListener() {
         @Override
-        public void onChange(XTransform transform) {
+        public void onChange(XTransform transform, int code) {
             if(entity != null) {
-                Matrix4 transformMatrix4 = transform.getMatrix4();
+                XLocalTransformComponent localTransformComponent = entity.getComponent(XLocalTransformComponent.class);
+                XEntity parent = entity.getParent();
+                if(code != LISTENER_CODE_UPDATE_CHILD_TRANSFORM &&
+                        code != LISTENER_CODE_LOCAL_TRANSFORM_CHANGED
+                        && parent != null && localTransformComponent != null) {
+                    // code != LISTENER_CODE_UPDATE_CHILD_TRANSFORM prevents a scaling bug from happening
+                    XTransformComponent parentTransformComponent = parent.getComponent(XTransformComponent.class);
+                    if(parentTransformComponent != null) {
+                        updateTransformOffset(parentTransformComponent.transform, transform, localTransformComponent.transform);
+                    }
+                }
                 XList<XIntSetNode> list = entity.getChildList();
                 for(XIntSetNode node : list) {
                     int entityId = node.getKey();
                     XEntity childEntity = entityService.getEntity(entityId);
                     if(childEntity.isAttached()) {
-                        XLocalTransformComponent localTransformComponent = childEntity.getComponent(XLocalTransformComponent.class);
-                        XLocalTransformComponent transformComponent = childEntity.getComponent(XTransformComponent.class);
-                        if(localTransformComponent != null && transformComponent != null) {
-                            XTransform childLocalTransform = localTransformComponent.transform;
-                            XTransform childTransform = transformComponent.transform;
-                            Matrix4 localMatrix4 = childLocalTransform.getMatrix4();
-                            Matrix4 mul = transformMatrix4.mul(localMatrix4);
-                            Vector3 position = childTransform.getPosition();
-                            Vector3 scale = childTransform.getScale();
-                            Quaternion quaternion = childTransform.getQuaternion();
-                            mul.getTranslation(position);
-                            mul.getRotation(quaternion);
-                            mul.getScale(scale);
-                            // Ignore Listeners so we call only one time.
-                            childTransform.ignoreOnChangeListener();
-                            childTransform.setPosition(position);
-
-                            childTransform.ignoreOnChangeListener();
-                            childTransform.setRotation(quaternion);
-
-                            childTransform.ignoreOnChangeListener();
-                            childTransform.setScale(scale);
-
-                            childTransform.callOnChangeListeners();
-                        }
+                        updateTransformChildEntity(transform, childEntity, true);
                     }
                 }
             }
@@ -66,7 +56,6 @@ public class XTransformComponent extends XLocalTransformComponent {
     public void onAttach(XWorld world, XEntity entity) {
         this.entity = entity;
         entityService = world.getWorldService().getEntityService();
-
         transform.addTransformListener(listener);
     }
 
@@ -74,7 +63,6 @@ public class XTransformComponent extends XLocalTransformComponent {
     public void onDetach(XWorld world, XEntity entity) {
         this.entity = null;
         entityService = null;
-
         transform.removeTransformListener(listener);
     }
 
@@ -106,5 +94,98 @@ public class XTransformComponent extends XLocalTransformComponent {
     public void onUIDraw(XUIData uiData) {
         XUIOpTransform op = XUIOpTransform.get();
         uiData.transform(transform, op);
+    }
+
+    private static boolean updateTransformChildEntity(XTransform parentTransform, XEntity childEntity, boolean callListener) {
+        XLocalTransformComponent childLocalTransformComponent = childEntity.getComponent(XLocalTransformComponent.class);
+        XTransformComponent childTransformComponent = childEntity.getComponent(XTransformComponent.class);
+        if (childLocalTransformComponent != null && childTransformComponent != null) {
+            XTransform childLocalTransform = childLocalTransformComponent.transform;
+            XTransform childTransform = childTransformComponent.transform;
+            calculateWorldTransform(parentTransform, childLocalTransform, childTransform, callListener);
+            return true;
+        }
+        return false;
+    }
+
+    private static void updateTransformOffset(XTransform parentTransform, XTransform transform, XTransform localTransform) {
+        Vector3 parentPosition = parentTransform.getPosition();
+        Quaternion parentRotation = parentTransform.getQuaternion();
+        Vector3 parentScale = parentTransform.getScale();
+
+        Vector3 worldPosition = transform.getPosition();
+        Quaternion worldRotation = transform.getQuaternion();
+        Vector3 worldScale = transform.getScale();
+
+        // 1. Calculate Local Position
+        Vector3 localPosition = XMath.VEC3_1.set(worldPosition).sub(parentPosition); // Relative to parent
+        localPosition = XMath.QUAT_1.set(parentRotation).conjugate().transform(localPosition); // Unrotate by parent
+        localPosition.scl(1f / parentScale.x, 1f / parentScale.y, 1f / parentScale.z); // Unscale by parent
+        float localPosX = localPosition.x;
+        float localPosY = localPosition.y;
+        float localPosZ = localPosition.z;
+
+        // 2. Calculate Local Rotation
+        Quaternion localRotation = XMath.QUAT_1.set(worldRotation).mulLeft(XMath.QUAT_2.set(parentRotation).conjugate());
+        float localRotationX = localRotation.x;
+        float localRotationY = localRotation.y;
+        float localRotationZ = localRotation.z;
+        float localRotationW = localRotation.w;
+
+        // 3. Calculate Local Scale
+        Vector3 localScale = XMath.VEC3_1.set(worldScale).scl(1f / parentScale.x, 1f / parentScale.y, 1f / parentScale.z);
+        float localScaleX = localScale.x;
+        float localScaleY = localScale.y;
+        float localScaleZ = localScale.z;
+
+        // Apply calculated local transformations
+        localTransform.setPosition(localPosX, localPosY, localPosZ, false);
+        localTransform.setRotation(localRotationX, localRotationY, localRotationZ, localRotationW, false);
+        localTransform.setScale(localScaleX, localScaleY, localScaleZ, false);
+    }
+
+    private static void calculateWorldTransform(XTransform parentTransform, XTransform childLocalTransform, XTransform childTransform, boolean callListener) {
+        Vector3 parentPosition = parentTransform.getPosition();
+        Quaternion parentRotation = parentTransform.getQuaternion();
+        Vector3 parentScale = parentTransform.getScale();
+
+        Vector3 localPosition = childLocalTransform.getPosition();
+        Quaternion localRotation = childLocalTransform.getQuaternion();
+        Vector3 localScale = childLocalTransform.getScale();
+
+        // 1. Scale Local Position by Parent Scale
+        Vector3 scaledLocalPosition = XMath.VEC3_1.set(localPosition).scl(parentScale);
+
+        // 2. Rotate Scaled Position by Parent Rotation
+        Vector3 worldPosition = XMath.QUAT_1.set(parentRotation).transform(scaledLocalPosition);
+
+        // 3. Add Parent Position
+        worldPosition.add(parentPosition);
+        float worldX = worldPosition.x;
+        float worldY = worldPosition.y;
+        float worldZ = worldPosition.z;
+
+        // 4. Calculate World Rotation
+        Quaternion worldRotation = XMath.QUAT_1.set(parentRotation).mul(localRotation);
+        float worldRotationX = worldRotation.x;
+        float worldRotationY = worldRotation.y;
+        float worldRotationZ = worldRotation.z;
+        float worldRotationW = worldRotation.w;
+
+        // 5. Calculate World Scale
+        Vector3 worldScale = XMath.VEC3_1.set(localScale).scl(parentScale);
+        float worldScaleX = worldScale.x;
+        float worldScaleY = worldScale.y;
+        float worldScaleZ = worldScale.z;
+
+        // Apply transformations
+        childTransform.setPosition(worldX, worldY, worldZ, false);
+        childTransform.setRotation(worldRotationX, worldRotationY, worldRotationZ, worldRotationW, false);
+        childTransform.setScale(worldScaleX, worldScaleY, worldScaleZ, false);
+
+        // Notify listeners if required
+        if (callListener) {
+            childTransform.callOnChangeListeners(LISTENER_CODE_UPDATE_CHILD_TRANSFORM);
+        }
     }
 }

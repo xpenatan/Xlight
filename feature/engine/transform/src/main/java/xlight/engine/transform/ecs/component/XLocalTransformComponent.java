@@ -6,9 +6,12 @@ import xlight.engine.core.editor.ui.XUIDataListener;
 import xlight.engine.core.editor.ui.options.XUIOpTransform;
 import xlight.engine.datamap.XDataMap;
 import xlight.engine.datamap.XDataMapListener;
+import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
+import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.pool.XPoolable;
 import xlight.engine.transform.XTransform;
+import xlight.engine.transform.XTransformListener;
 
 public class XLocalTransformComponent implements XComponent, XUIDataListener, XDataMapListener, XPoolable {
     private static final int DATA_POSITION = 1;
@@ -17,8 +20,40 @@ public class XLocalTransformComponent implements XComponent, XUIDataListener, XD
 
     public final XTransform transform;
 
+    private XEntity entity;
+
+    private XTransformListener listener = new XTransformListener() {
+        @Override
+        public void onChange(XTransform transform, int code) {
+            if(entity != null) {
+                XEntity parent = entity.getParent();
+                if(parent != null) {
+                    XTransformComponent parentTransformComponent = parent.getComponent(XTransformComponent.class);
+                    if(parentTransformComponent != null) {
+                        XTransform parentTransform = parentTransformComponent.transform;
+                        parentTransform.callOnChangeListeners(XTransformComponent.LISTENER_CODE_LOCAL_TRANSFORM_CHANGED);
+                    }
+                }
+            }
+        }
+    };
+
     public XLocalTransformComponent() {
         transform = XTransform.newInstance();
+    }
+
+    @Override
+    public void onAttach(XWorld world, XEntity entity) {
+        this.entity = entity;
+        XTransformComponent transformComponent = entity.getComponent(XTransformComponent.class);
+        if(getClass() == XLocalTransformComponent.class && transformComponent != null) {
+            transform.addTransformListener(listener);
+            // Force Calculating offset
+            XTransform otherTransform = transformComponent.transform;
+            otherTransform.setDragging(true);
+            otherTransform.callOnChangeListeners(XTransformComponent.LISTENER_CODE_LOCAL_TRANSFORM_UPDATE_OFFSET);
+            otherTransform.setDragging(false);
+        }
     }
 
     public XLocalTransformComponent position(float x, float y, float z) {

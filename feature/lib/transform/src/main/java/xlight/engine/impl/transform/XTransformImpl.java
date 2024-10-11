@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 import xlight.engine.math.XMath;
+import xlight.engine.math.XMatrix4Utils;
 import xlight.engine.math.XRotSeq;
 import xlight.engine.math.XRotationUtils;
 import xlight.engine.transform.XTransform;
@@ -35,13 +36,15 @@ public class XTransformImpl implements XTransform {
 
     private boolean enableX = true, enableY = true, enableZ = true;
     private boolean enableRotateX = true, enableRotateY = true, enableRotateZ = true;
-    private boolean negAxis = true;
     private int scalenRoundScale = 4;
 
     private boolean isDragging;
 
     private Array<XTransformListener> transformListeners;
-    private boolean shouldCallListener = true;
+
+    public static final int LISTENER_CODE_TRANSFORM = 0;
+    public static final int LISTENER_CODE_ROTATE = 1;
+    public static final int LISTENER_CODE_SCALE = 2;
 
     public XTransformImpl() {
         previousPosition = new Vector3();
@@ -85,13 +88,11 @@ public class XTransformImpl implements XTransform {
         matrix.idt();
         matrixNotScaled.idt();
         boundingBox.clr();
-        negAxis = true;
         scalenRoundScale = 4;
         rotationSequence = XRotSeq.yxz;
 
         isDragging = false;
 
-        shouldCallListener = true;
         transformListeners.clear();
     }
 
@@ -124,6 +125,11 @@ public class XTransformImpl implements XTransform {
     }
 
     @Override
+    public void setPosition(Vector3 value, boolean callListener) {
+        setPositionInternal(value.x, value.y, value.z, callListener);
+    }
+
+    @Override
     public void setRX(float rx) {
         setRotation(rx, rotation.y, rotation.z);
     }
@@ -149,6 +155,11 @@ public class XTransformImpl implements XTransform {
     }
 
     @Override
+    public void setRotation(Vector3 value, boolean callListener) {
+        setRotation(value.x, value.y, value.z, callListener);
+    }
+
+    @Override
     public void setSX(float sx) {
         setScale(sx, scale.y, scale.z);
     }
@@ -171,6 +182,11 @@ public class XTransformImpl implements XTransform {
     @Override
     public void setScale(Vector3 value) {
         setScale(value.x, value.y, value.z);
+    }
+
+    @Override
+    public void setScale(Vector3 value, boolean callListener) {
+        setScaleInternal(value.x, value.y, value.z, callListener);
     }
 
     @Override
@@ -289,6 +305,7 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public void setDragging(boolean flag) {
+        // TODO fix this
         isDragging = false;
     }
 
@@ -310,14 +327,9 @@ public class XTransformImpl implements XTransform {
     }
 
     @Override
-    public void ignoreOnChangeListener() {
-        shouldCallListener = false;
-    }
-
-    @Override
-    public void callOnChangeListeners() {
+    public void callOnChangeListeners(int code) {
         for(int i = 0; i < transformListeners.size; i++) {
-            transformListeners.get(i).onChange(this);
+            transformListeners.get(i).onChange(this, code);
         }
     }
 
@@ -329,21 +341,37 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public void setRotation(Quaternion quat) {
-        // We round it to skip small numbers
-        float x1 = XMath.round(quat.x, scalenRoundScale);
-        float y1 = XMath.round(quat.y, scalenRoundScale);
-        float z1 = XMath.round(quat.z, scalenRoundScale);
-        float w1 = XMath.round(quat.w, scalenRoundScale);
+        setRotation(quat.x, quat.y, quat.z, quat.w);
+    }
+
+    @Override
+    public void setRotation(Quaternion quat, boolean callListener) {
+        setRotation(quat.x, quat.y, quat.z, quat.w, callListener);
+    }
+
+    @Override
+    public void setRotation(float x, float y, float z, float w) {
+        setRotation(x, y, z, w, true);
+    }
+
+    @Override
+    public void setRotation(float x, float y, float z, float w, boolean callListener) {
+// We round it to skip small numbers
+        float x1 = XMath.round(x, scalenRoundScale);
+        float y1 = XMath.round(y, scalenRoundScale);
+        float z1 = XMath.round(z, scalenRoundScale);
+        float w1 = XMath.round(w, scalenRoundScale);
         float x2 = XMath.round(quaternion.x, scalenRoundScale);
         float y2 = XMath.round(quaternion.y, scalenRoundScale);
         float z2 = XMath.round(quaternion.z, scalenRoundScale);
         float w2 = XMath.round(quaternion.w, scalenRoundScale);
         if(!(x1 == x2 && y1 == y2 && z1 == z2 && w1 == w2)) {
             tmpQuaternion.set(x1, y1, z1, w1);
-            XRotationUtils.convertQuatToEuler(rotationSequence, tmpQuaternion, XMath.VEC3_1, true, negAxis);
+            tmpQuaternion.nor();
+            XRotationUtils.convertQuatToEuler(rotationSequence, tmpQuaternion, XMath.VEC3_1, true);
             quaternion.set(tmpQuaternion);
             forceUpdate = true;
-            setRotationInternal(XMath.VEC3_1.x, XMath.VEC3_1.y, XMath.VEC3_1.z, false);
+            setRotationInternal(XMath.VEC3_1.x, XMath.VEC3_1.y, XMath.VEC3_1.z, false, callListener);
         }
     }
 
@@ -367,20 +395,35 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public void setPosition(float x, float y, float z) {
-        setPositionInternal(x, y, z);
+        setPositionInternal(x, y, z, true);
     }
 
     @Override
-    public void setRotation(float rotationX, float rotationY, float rotationZ) {
-        setRotationInternal(rotationX, rotationY,rotationZ, true);
+    public void setPosition(float x, float y, float z, boolean callListener) {
+        setPositionInternal(x, y, z, callListener);
+    }
+
+    @Override
+    public void setRotation(float x, float y, float z) {
+        setRotationInternal(x, y,z, true, true);
+    }
+
+    @Override
+    public void setRotation(float x, float y, float z, boolean callListener) {
+        setRotationInternal(x, y, z, true, callListener);
     }
 
     @Override
     public void setScale(float x, float y, float z) {
-        setScaleInternal(x, y, z);
+        setScaleInternal(x, y, z, true);
     }
 
-    private void setPositionInternal(float x, float y, float z) {
+    @Override
+    public void setScale(float x, float y, float z, boolean callListener) {
+        setScaleInternal(x, y, z, callListener);
+    }
+
+    private void setPositionInternal(float x, float y, float z, boolean shouldCallListener) {
         boolean forceChange = forceUpdate;
         forceUpdate = false;
 
@@ -413,16 +456,15 @@ public class XTransformImpl implements XTransform {
             }
 
             if(flag) {
-                updateValuesToMatrix(matrix, matrixNotScaled);
+                updateValuesToMatrix();
                 if(shouldCallListener) {
-                    callOnChangeListeners();
+                    callOnChangeListeners(LISTENER_CODE_TRANSFORM);
                 }
             }
         }
-        shouldCallListener = true;
     }
 
-    private void setRotationInternal(float rotationX, float rotationY, float rotationZ, boolean convertToQuat) {
+    private void setRotationInternal(float rotationX, float rotationY, float rotationZ, boolean convertToQuat, boolean shouldCallListener) {
         boolean forceChange = forceUpdate;
         forceUpdate = false;
 
@@ -455,18 +497,17 @@ public class XTransformImpl implements XTransform {
 
             if(flag) {
                 if(convertToQuat) {
-                    XRotationUtils.convertEulerToQuat(rotationSequence, rotation, quaternion, negAxis);
+                    XRotationUtils.convertEulerToQuat(rotationSequence, rotation, quaternion);
                 }
-                updateValuesToMatrix(matrix, matrixNotScaled);
+                updateValuesToMatrix();
                 if(shouldCallListener) {
-                    callOnChangeListeners();
+                    callOnChangeListeners(LISTENER_CODE_ROTATE);
                 }
             }
         }
-        shouldCallListener = true;
     }
 
-    private void setScaleInternal(float x, float y, float z) {
+    private void setScaleInternal(float x, float y, float z, boolean shouldCallListener) {
         boolean forceChange = forceUpdate;
         forceUpdate = false;
 
@@ -475,8 +516,10 @@ public class XTransformImpl implements XTransform {
             toUpdate = true;
         }
         else {
-            if(!isDragging && (scale.x != x || scale.y != y || scale.z != z)) {
-                toUpdate = true;
+            if(x > 0f && y > 0f && z > 0f) {
+                if(!isDragging && (scale.x != x || scale.y != y || scale.z != z)) {
+                    toUpdate = true;
+                }
             }
         }
 
@@ -484,23 +527,29 @@ public class XTransformImpl implements XTransform {
             scale.x = x;
             scale.y = y;
             scale.z = z;
-            updateValuesToMatrix(matrix, matrixNotScaled);
+            updateValuesToMatrix();
             if(shouldCallListener) {
-                callOnChangeListeners();
+                callOnChangeListeners(LISTENER_CODE_SCALE);
             }
         }
-        shouldCallListener = true;
     }
 
-    private void updateValuesToMatrix(Matrix4 scaledMatrix, Matrix4 notScaledMatrix) {
-        scaledMatrix.idt();
-        scaledMatrix.translate(position.x, position.y, position.z);
+    private void updateValuesToMatrix() {
 //            XRotationUtils.rotateMatrix(rotationSequence, rotation.x, rotation.y, rotation.z, matrix, false, true);
-        scaledMatrix.rotate(getQuaternion());
-        if(notScaledMatrix != null) {
-            notScaledMatrix.idt();
-            notScaledMatrix.set(scaledMatrix);
-        }
-        scaledMatrix.scale(scale.x, scale.y, scale.z);
+//        matrix.set(position, quaternion, scale);
+//        matrixNotScaled.set(position, quaternion);
+//        Quaternion quat = getQuaternion();
+//        matrix.idt();
+//        matrix.scale(scale.x, scale.y, scale.z);
+//        matrix.rotate(quaternion);
+//        matrix.translate(position);
+//
+//
+//        matrixNotScaled.idt();
+//        matrixNotScaled.rotate(quaternion);
+//        matrixNotScaled.translate(position);
+
+        XMatrix4Utils.toMatrix(XMatrix4Utils.MatrixOrder.TRS, position, quaternion, scale, matrix);
+        XMatrix4Utils.toMatrix(XMatrix4Utils.MatrixOrder.TRS, position, quaternion, null, matrixNotScaled);
     }
 }

@@ -3,6 +3,7 @@ package xlight.engine.impl;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import xlight.engine.core.asset.XAssetUtil;
 import xlight.engine.core.register.XRegisterManager;
 import xlight.engine.datamap.XDataMap;
@@ -24,6 +25,8 @@ class XLoadEntity {
 
     private boolean loadSubScene;
 
+    private Array<XEntity> entitiesToAttach = new Array<>();
+
     public void load(XWorld world, XScene scene, boolean isSubScene) {
         System.out.println("LOAD SCENE:");
         loadSubScene = isSubScene;
@@ -39,25 +42,30 @@ class XLoadEntity {
                     XDataMap entityMap = entitiesArray.get(i);
                     int entityType = entityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
                     if(entityType == XSceneTypeValue.ENTITY.getValue()) {
-                        loadEntityAndInit(world, scene, poolController, entityMap);
+                        loadEntityAndAdd(world, scene, entitiesToAttach, poolController, entityMap);
                     }
                 }
             }
+
+            XEntityService entityService = world.getWorldService().getEntityService();
+            for(int i = 0; i < entitiesToAttach.size; i++) {
+                XEntity entity = entitiesToAttach.get(i);
+                entityService.attachEntity(entity);
+            }
+            entitiesToAttach.clear();
         }
     }
 
-    private XEntity loadEntityAndInit(XWorld world, XScene scene, XPoolController poolController, XDataMap entityMap) {
+    private XEntity loadEntityAndAdd(XWorld world, XScene scene, Array<XEntity> tmpEntities, XPoolController poolController, XDataMap entityMap) {
         // TODO remove loading recursive
-        XEntityService entityService = world.getWorldService().getEntityService();
-        XEntity entity = loadEntity(world, scene, poolController, entityMap);
-        entityService.attachEntity(entity);
+        XEntity entity = loadEntity(world, scene, tmpEntities, poolController, entityMap);
         XDataMapArray childEntitiesArray = entityMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
         if(childEntitiesArray != null) {
             XList<XDataMap> list = childEntitiesArray.getList();
             for(XDataMap childDataMap : list) {
                 int entityType = childDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
                 if(entityType == XSceneTypeValue.ENTITY.getValue()) {
-                    XEntity childEntity = loadEntityAndInit(world, scene, poolController, childDataMap);
+                    XEntity childEntity = loadEntityAndAdd(world, scene, tmpEntities, poolController, childDataMap);
                     if(childEntity != null) {
                         childEntity.setParent(entity);
                     }
@@ -67,7 +75,7 @@ class XLoadEntity {
         return entity;
     }
 
-    private XEntity loadEntity(XWorld world, XScene scene, XPoolController poolController, XDataMap entityMap) {
+    private XEntity loadEntity(XWorld world, XScene scene, Array<XEntity> tmpEntities, XPoolController poolController, XDataMap entityMap) {
         XEntityService entityService = world.getWorldService().getEntityService();
         XRegisterManager registerManager = world.getManager(XRegisterManager.class);
         String entityName = entityMap.getString(XSceneKeys.NAME.getKey(), "");
@@ -77,6 +85,7 @@ class XLoadEntity {
         String tag = entityMap.getString(XSceneKeys.TAG.getKey(), "");
 
         XEntity entity = entityService.obtain();
+        tmpEntities.add(entity);
         entity.setVisible(isVisible);
         entity.setName(entityName);
 //            entity.setTag(tag);

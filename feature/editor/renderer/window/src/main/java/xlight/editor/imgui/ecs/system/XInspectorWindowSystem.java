@@ -15,6 +15,7 @@ import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.system.XSystem;
 import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
+import xlight.engine.list.XList;
 import xlight.engine.pool.XPoolController;
 
 public class XInspectorWindowSystem implements XSystem {
@@ -57,6 +58,10 @@ public class XInspectorWindowSystem implements XSystem {
             XEntity currentEntity = entitySelectionManager.getCurrentSelectedTarget();
             if(currentEntity != null) {
                 entityInspector.renderEntity(editorWorld, engineWorld, currentEntity, uiData);
+                XEntity secondEntity = entitySelectionManager.getSelectedTargetIndex(1);
+                if(secondEntity != null) {
+                    entityInspector.renderEntity(editorWorld, engineWorld, secondEntity, uiData);
+                }
             }
         }
         ImGui.End();

@@ -19,7 +19,9 @@ public interface XTransform {
     void setY(float value);
     void setZ(float value);
     void setPosition(Vector3 value);
+    void setPosition(Vector3 value, boolean callListener);
     void setPosition(float x, float y, float z);
+    void setPosition(float x, float y, float z, boolean callListener);
 
     /** Return read-only rotation. */
     Vector3 getRotation();
@@ -33,9 +35,14 @@ public interface XTransform {
     void setRY(float value);
     void setRZ(float value);
     void setRotation(Vector3 value);
+    void setRotation(Vector3 value, boolean callListener);
     void setRotation(float x, float y, float z);
+    void setRotation(float x, float y, float z, boolean callListener);
     /** Will copy quat values and convert it to euler. */
     void setRotation(Quaternion quat);
+    void setRotation(Quaternion quat, boolean callListener);
+    void setRotation(float x, float y, float z, float w);
+    void setRotation(float x, float y, float z, float w, boolean callListener);
 
     /** Return read-only scale. */
     Vector3 getScale();
@@ -43,7 +50,9 @@ public interface XTransform {
     void setSY(float value);
     void setSZ(float value);
     void setScale(Vector3 value);
+    void setScale(Vector3 value, boolean callListener);
     void setScale(float x, float y, float z);
+    void setScale(float x, float y, float z, boolean callListener);
 
     /** Return read-only size. */
     Vector3 getSize();
@@ -76,13 +85,7 @@ public interface XTransform {
     void removeTransformListener(XTransformListener listener);
 
     /**
-     * Call this to not call onChangeListener when position, rotation or scale is called.
-     * Must be called before updating values.
-     */
-    void ignoreOnChangeListener();
-
-    /**
      * Force listener to call onUpdate
      */
-    void callOnChangeListeners();
+    void callOnChangeListeners(int code);
 }

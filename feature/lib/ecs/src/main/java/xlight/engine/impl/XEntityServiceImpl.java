@@ -79,6 +79,13 @@ class XEntityServiceImpl implements XEntityService {
     public boolean attachEntity(XEntity entity) {
         if(entities.attachEntity(entity.getId())) {
             entitySize++;
+
+            int componentsSize = entity.getComponentsSize();
+            for(int i = 0; i < componentsSize; i++) {
+                XComponent c = entity.getComponentAt(i);
+                c.onAttach(world, entity);
+            }
+
             // Loop all matchers if entity mask bits match
             updateEntityAdded((XEntityImpl)entity);
 
@@ -160,6 +167,7 @@ class XEntityServiceImpl implements XEntityService {
     public void onComponentAdded(XEntityImpl entity, XComponent component) {
         // Loop all matchers if entity mask bits match
         if(entity.isAttached()) {
+            component.onAttach(world, entity);
             updateEntityAdded(entity);
         }
     }

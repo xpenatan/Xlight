@@ -9,6 +9,7 @@ public interface XEntitySelectionManager {
     void selectTarget(XEntity target, boolean multiSelect);
     void unselectAllTargets();
     XEntity getCurrentSelectedTarget();
+    XEntity getSelectedTargetIndex(int index);
     XList<XEntity> getSelectedTargets();
     void unselectTarget(XEntity target);
     boolean isSelected(XEntity target);

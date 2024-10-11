@@ -925,7 +925,7 @@ public class XShapeRenderer implements Disposable {
             z = z + centerZZ;
 
             XMath.MAT4_1.idt();
-            XRotationUtils.rotateMatrix(rotSeq, rX, rY, rZ, XMath.MAT4_1);
+            XRotationUtils.rotateMatrix(rotSeq, rX, rY, rZ, XMath.MAT4_1, false);
             XMath.MAT4_1.translate(x, y, z);
             XMath.MAT4_1.getTranslation(XMath.VEC3_1);
 

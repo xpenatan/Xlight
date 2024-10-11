@@ -35,6 +35,7 @@ public class XMath {
     public static Vector3 VEC3_3 = new Vector3();
     public static Vector3 VEC3_4 = new Vector3();
     public static Vector3 VEC3_5 = new Vector3();
+    public static Vector3 VEC3_6 = new Vector3();
     public static Vector4 VEC4_1 = new Vector4();
     public static Vector4 VEC4_2 = new Vector4();
     public static Vector4 VEC4_3 = new Vector4();
@@ -466,5 +467,19 @@ public class XMath {
         // (x2 - x1 or otherX - origin) = offset
         // offset should add from origin.  origin + offset = real position
         return other - origin;
+    }
+
+    public static Matrix4 getRotationOffset(Quaternion first, Quaternion second) {
+        XMath.MAT4_1.idt();
+        XMath.MAT4_1.rotate(first);
+        XMath.MAT4_1.inv();
+
+        XMath.MAT4_2.idt();
+        XMath.MAT4_2.rotate(second);
+
+        XMath.MAT4_3.idt();
+        XMath.MAT4_3.mul(XMath.MAT4_2); // Multiplication order is important here
+        XMath.MAT4_3.mul(XMath.MAT4_1);
+        return XMath.MAT4_3;
     }
 }
