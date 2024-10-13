@@ -1,6 +1,8 @@
 package xlight.engine.imgui.ui.filebrowser;
 
+import com.badlogic.gdx.utils.Array;
+
 public interface XFileOpenListener {
-    boolean allowFile(XFile file);
-    void onOpenFile(XFile file);
+    Array<String> allowFile(XFile file);
+    void onOpenFile(XFile file, int index);
 }

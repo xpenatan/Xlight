@@ -2,6 +2,7 @@ package xlight.engine.imgui.ui.filebrowser;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import imgui.ImGui;
 import imgui.ImGuiContext;
@@ -17,6 +18,7 @@ import imgui.ImRect;
 import imgui.ImVec2;
 import imgui.extension.imlayout.ImGuiLayoutOptions;
 import imgui.extension.imlayout.ImLayout;
+import xlight.editor.imgui.util.XImGuiButton;
 import xlight.engine.list.XLinkedListNode;
 import xlight.engine.math.XColor;
 import static imgui.ImGuiHoveredFlags.ImGuiHoveredFlags_None;
@@ -273,7 +275,8 @@ public class XFileBrowserRenderer {
                 renderNewTextFile(fileData);
             }
             else {
-                renderOpen(fileData);
+                renderOpenDirectory(fileData);
+                renderOpenFile(fileData);
                 renderRename(fileData);
                 renderCopy(fileData);
                 renderCopyPath(fileData);
@@ -291,7 +294,7 @@ public class XFileBrowserRenderer {
 
     private int renderPaste(XFileManager fileData) {
         if(fileData.haveCurOrPaste()) {
-            if(ImGui.Button("Paste", ImVec2.TMP_1.set(-1, 0))) {
+            if(XImGuiButton.buttonMatchOrWrap("Paste")) {
                 ImGui.CloseCurrentPopup();
                 return fileData.pasteSelectedFiles();
             }
@@ -299,27 +302,27 @@ public class XFileBrowserRenderer {
         return -1;
     }
     private void renderNewFolder(XFileManager fileData) {
-        if(ImGui.Button("New Folder")) {
+        if(XImGuiButton.buttonMatchOrWrap("New Folder")) {
             ImGui.CloseCurrentPopup();
             fileData.createNewFolder();
         }
     }
     private void renderNewTextFile(XFileManager fileData) {
-        if(ImGui.Button("New text", ImVec2.TMP_1.set(-1, 0))) {
+        if(XImGuiButton.buttonMatchOrWrap("New text")) {
             ImGui.CloseCurrentPopup();
             fileData.createNewTxtFile();
         }
     }
 
     private void renderCopy(XFileManager fileData) {
-        if(ImGui.Button("Copy", ImVec2.TMP_1.set(-1, 0))) {
+        if(XImGuiButton.buttonMatchOrWrap("Copy")) {
             ImGui.CloseCurrentPopup();
             fileData.copySelectedFiles();
         }
     }
 
     private void renderCopyPath(XFileManager fileData) {
-        if(ImGui.Button("Copy Path", ImVec2.TMP_1.set(0, 0))) {
+        if(XImGuiButton.buttonMatchOrWrap("Copy Path")) {
             ImGui.CloseCurrentPopup();
             String path = fileData.getFilePath();
             if(path != null) {
@@ -329,31 +332,50 @@ public class XFileBrowserRenderer {
     }
 
     private void renderCut(XFileManager fileData) {
-        if(ImGui.Button("Cut", ImVec2.TMP_1.set(-1, 0))) {
+        if(XImGuiButton.buttonMatchOrWrap("Cut")) {
             ImGui.CloseCurrentPopup();
             fileData.cutSelectedFiles();
         }
     }
 
     private void renderRename(XFileManager fileData) {
-        if(ImGui.Button("Rename", ImVec2.TMP_1.set(-1, 0))) {
+        if(XImGuiButton.buttonMatchOrWrap("Rename")) {
             ImGui.CloseCurrentPopup();
             fileData.setFileRenameState();
         }
     }
 
-    private void renderOpen(XFileManager fileData) {
+    private void renderOpenDirectory(XFileManager fileData) {
         if(fileData.selectedFiles.size == 1) {
             XFile selected = fileData.selectedFiles.first();
             boolean isDirectory = selected.isDirectory();
-            if(isDirectory || (fileOpenListener != null && fileOpenListener.allowFile(selected))) {
-                if(ImGui.Button("Open", ImVec2.TMP_1.set(-1, 0))) {
+            if(isDirectory) {
+                if(XImGuiButton.buttonMatchOrWrap("Open")) {
                     ImGui.CloseCurrentPopup();
-                    if(isDirectory) {
-                        fileData.updatedFolder(selected);
-                    }
-                    else {
-                        fileOpenListener.onOpenFile(selected);
+                    fileData.updatedFolder(selected);
+                }
+            }
+        }
+    }
+
+    private void renderOpenFile(XFileManager fileData) {
+        if(fileData.selectedFiles.size == 1) {
+            XFile selected = fileData.selectedFiles.first();
+            boolean isDirectory = selected.isDirectory();
+            if(!isDirectory && fileOpenListener != null) {
+                Array<String> actions = fileOpenListener.allowFile(selected);
+                if(actions != null && actions.size > 0) {
+                    for(int i = 0; i < actions.size; i++) {
+                        String action = actions.get(i);
+                        if(XImGuiButton.buttonMatchOrWrap(action)) {
+                            ImGui.CloseCurrentPopup();
+                            if(isDirectory) {
+                                fileData.updatedFolder(selected);
+                            }
+                            else {
+                                fileOpenListener.onOpenFile(selected, i);
+                            }
+                        }
                     }
                 }
             }
@@ -362,7 +384,7 @@ public class XFileBrowserRenderer {
 
     private void renderDeleteModal(XFileManager fileData) {
         boolean closeDeleteMenu = false;
-        if(ImGui.Button("Delete", ImVec2.TMP_1.set(-1, 0))) {
+        if(XImGuiButton.buttonMatchOrWrap("Delete")) {
             ImGui.OpenPopup(MODAL_DELETE);
         }
         int flag = ImGuiWindowFlags.ImGuiWindowFlags_NoResize | ImGuiWindowFlags.ImGuiWindowFlags_NoSavedSettings;

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import imgui.ImGui;
 import imgui.ImGuiTableFlags;
 import imgui.ImVec2;
@@ -67,19 +68,24 @@ public class XContentBrowser {
         });
 
         fileBrowserRenderer.setFileOpenListener(new XFileOpenListener() {
+            private Array<String> path = new Array<>();
             @Override
-            public boolean allowFile(XFile file) {
+            public Array<String> allowFile(XFile file) {
                 if(file.fileHandle != null) {
                     String ext = file.fileHandle.extension();
                     if(ext.equals("xscene")) {
-                        return true;
+                        if(path.size == 0) {
+                            path.add("Open");
+                            path.add("Add scene");
+                        }
+                        return path;
                     }
                 }
-                return false;
+                return null;
             }
 
             @Override
-            public void onOpenFile(XFile file) {
+            public void onOpenFile(XFile file, int index) {
                 Gdx.app.postRunnable(() -> {
                     if(file.fileHandle != null) {
                         String path = file.getPath();
@@ -87,9 +93,15 @@ public class XContentBrowser {
                         if(ext.equals("xscene")) {
                             XEngine gameEngine = editorManager.getGameEngine();
                             if(gameEngine != null) {
+                                Files.FileType fileType = Files.FileType.Local;
                                 XWorld gameWorld = gameEngine.getWorld();
                                 XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
-                                sceneManager.loadFromFile(path, Files.FileType.Local);
+                                if(index == 0) {
+                                    sceneManager.loadFromFile(path, fileType);
+                                }
+                                else if(index == 1) {
+                                    sceneManager.addScene(path, fileType);
+                                }
                             }
                         }
                     }
