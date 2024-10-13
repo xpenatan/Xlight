@@ -2,9 +2,8 @@ l:d:/demos/g3d/basic/assets_raw:0:1
 l:d:/demos/g3d/basic/assets_raw/scene:0:1
 l:d:/demos/g3d/basic/assets_raw/scene/Test:0:1
 l:b:/demos/g3d/basic/assets_raw/scene/Test/test_models.xscene:9390:1
-l:b:/demos/g3d/basic/assets_raw/scene/stall_template_bk.xscene:3275:1
 l:b:/demos/g3d/basic/assets_raw/scene/default.xscene:1917:1
-l:b:/demos/g3d/basic/assets_raw/scene/stall_template.xscene:1996:1
+l:b:/demos/g3d/basic/assets_raw/scene/stall_template.xscene:3275:1
 l:d:/demos/g3d/basic/assets_raw/models:0:1
 l:b:/demos/g3d/basic/assets_raw/models/DamagedHelmet.glb:3773916:1
 l:d:/demos/g3d/basic/assets_raw/models/ground:0:1
