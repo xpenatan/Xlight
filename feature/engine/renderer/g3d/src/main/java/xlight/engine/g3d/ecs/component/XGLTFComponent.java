@@ -3,9 +3,9 @@ package xlight.engine.g3d.ecs.component;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import net.mgsx.gltf.loaders.glb.GLBLoader;
 import net.mgsx.gltf.loaders.gltf.GLTFLoader;
@@ -34,6 +34,8 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
     private boolean componentAttached;
 
     private int fileType = XAssetUtil.getFileTypeValue(Files.FileType.Internal);
+
+    private boolean assetError;
 
     public XGLTFComponent() {
     }
@@ -109,6 +111,10 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
             flags.put(FLAG_CALCULATE_BOUNDING_BOX);
         }
         XUIOpStringEditText op = XUIOpStringEditText.get();
+
+        if(assetError) {
+            op.lineColor = Color.RED.toIntBits();
+        }
         if(uiData.editText("Asset Path", assetPath, op)) {
             setAssetInternal(op.value, fileType);
         }
@@ -146,9 +152,16 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
         Files.FileType type = XAssetUtil.getFileTypeEnum(fileType);
         FileHandle fileHandle = Gdx.files.getFileHandle(path, type);
 
-        if(path == null || !fileHandle.exists() || fileHandle.isDirectory()) {
+        if(path == null) {
             return;
         }
+
+        assetPath = path;
+        if(!fileHandle.exists() || fileHandle.isDirectory()) {
+            assetError = true;
+            return;
+        }
+
         String extension = fileHandle.extension();
 
         try {
@@ -159,6 +172,7 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
                 sceneAsset = new GLTFLoader().load(fileHandle);
             }
             else {
+                assetError = true;
                 return;
             }
         }
@@ -167,13 +181,13 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
             return;
         }
 
-        assetPath = path;
         scene = new Scene(sceneAsset.scene);
         flags.put(FLAG_CALCULATE_BOUNDING_BOX);
         updateModelInstance(scene.modelInstance);
     }
 
     private void clearAsset() {
+        assetError = false;
         assetPath = "";
         fileType = XAssetUtil.getFileTypeValue(Files.FileType.Internal);
         if(sceneAsset != null) {

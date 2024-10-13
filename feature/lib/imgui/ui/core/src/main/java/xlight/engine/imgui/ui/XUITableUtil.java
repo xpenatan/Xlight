@@ -9,6 +9,7 @@ import imgui.ImVec2;
 import imgui.extension.imlayout.ImLayout;
 import xlight.engine.string.XStringUtil;
 import xlight.engine.string.XTextBuilder;
+import static imgui.ImGuiCol.ImGuiCol_Text;
 
 public class XUITableUtil {
 
@@ -52,6 +53,10 @@ public class XUITableUtil {
     }
 
     public static void beginLine(String lineName) {
+        beginLine(lineName, 0);
+    }
+
+    public static void beginLine(String lineName, int lineColor) {
         nextColum();
         if(!lineName.startsWith("#")) {
             int lineHash = lineName.hashCode();
@@ -65,7 +70,14 @@ public class XUITableUtil {
 
             ImGui.Dummy(ImVec2.TMP_1.set(0, 0));
             ImGui.SameLine(0, 4);
+
+            if(lineColor != 0) {
+                ImGui.PushStyleColor(ImGuiCol_Text, lineColor);
+            }
             ImGui.Text(lineName);
+            if(lineColor != 0) {
+                ImGui.PopStyleColor();
+            }
             //        ImLayout.ShowLayoutDebug();
             //        ImLayout.ShowLayoutDebugClipping();
             ImLayout.EndAlign();

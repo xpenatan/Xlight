@@ -19,6 +19,7 @@ public interface XUIData {
      */
     void endTable();
     void beginLine(String name);
+    void beginLine(String name, int lineColor);
     void endLine();
 
     boolean collapsingHeader(String name);

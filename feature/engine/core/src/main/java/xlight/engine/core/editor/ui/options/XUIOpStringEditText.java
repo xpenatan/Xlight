@@ -14,9 +14,12 @@ public class XUIOpStringEditText {
     public String tooltip;
     public boolean enabled;
 
+    public int lineColor;
+
     public String value;
 
     public void reset() {
+        lineColor = 0; // 0 = don't change color
         label = "";
         tooltip = "";
         width = -1;

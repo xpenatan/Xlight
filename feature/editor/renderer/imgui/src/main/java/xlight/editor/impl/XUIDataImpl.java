@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import imgui.ImGui;
 import imgui.ImGuiString;
-import imgui.ImGuiStyleVar;
 import imgui.idl.helper.IDLBool;
 import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.core.editor.ui.options.XUIOpButton;
@@ -65,8 +64,13 @@ class XUIDataImpl implements XUIData {
 
     @Override
     public void beginLine(String name) {
+        beginLine(name, 0);
+    }
+
+    @Override
+    public void beginLine(String name, int lineColor) {
         beginLine = true;
-        XUITableUtil.beginLine(name);
+        XUITableUtil.beginLine(name, lineColor);
         ImGui.PushID(name);
     }
 
@@ -326,7 +330,7 @@ class XUIDataImpl implements XUIData {
 
         boolean addLine = !beginLine;
         if(addLine) {
-            beginLine(line);
+            beginLine(line, op.lineColor);
             line = "##edittext";
         }
 
