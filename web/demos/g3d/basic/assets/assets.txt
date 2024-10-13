@@ -1,9 +1,8 @@
 i:d:/scene:0:1
 i:d:/scene/Test:0:1
 i:b:/scene/Test/test_models.xscene:9390:1
-i:b:/scene/stall_template_bk.xscene:3275:1
 i:b:/scene/default.xscene:1917:1
-i:b:/scene/stall_template.xscene:1996:1
+i:b:/scene/stall_template.xscene:3275:1
 i:d:/models:0:1
 i:b:/models/DamagedHelmet.glb:3773916:1
 i:d:/models/ground:0:1
