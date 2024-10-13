@@ -42,6 +42,10 @@ public interface XUIData {
 
     boolean checkbox(String line, boolean value, XUIOpCheckbox op);
 
+    void setDropTarget(Object object);
+    boolean dropTarget(String source);
+    Object consumeDropTarget();
+
     /**
      * Return true when one of transform values is updated.
      */

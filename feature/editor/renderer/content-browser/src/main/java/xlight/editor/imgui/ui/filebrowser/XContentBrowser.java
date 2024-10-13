@@ -17,6 +17,7 @@ import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.editor.core.project.XProjectOptions;
 import xlight.engine.core.XEngine;
+import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
@@ -36,6 +37,7 @@ public class XContentBrowser {
     private XFileManager fileManager;
     private XFileBrowserRenderer fileBrowserRenderer;
     private XTreeBrowserRenderer treeBrowser;
+    private XUIData uiData;
 
     int menuColor = XColor.toABGRIntBits(255, 255, 255, 15);
 
@@ -49,6 +51,7 @@ public class XContentBrowser {
         XEventService eventService = editorWorld.getWorldService().getEventService();
         XEditorManager editorManager = editorWorld.getManager(XEditorManager.class);
         XProjectManager projectManager = editorWorld.getManager(XProjectManager.class);
+        uiData = editorWorld.getGlobalData(XUIData.class);
 
         eventService.addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, new XEventListener() {
             @Override
@@ -188,7 +191,7 @@ public class XContentBrowser {
         ImLayout.EndLayout();
 
         if(ImGui.BeginChild(9013)) {
-            fileBrowserRenderer.render(fileManager);
+            fileBrowserRenderer.render(fileManager, uiData);
         }
         ImGui.EndChild();
     }

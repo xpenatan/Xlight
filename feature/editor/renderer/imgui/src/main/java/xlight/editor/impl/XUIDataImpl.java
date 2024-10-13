@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import imgui.ImGui;
+import imgui.ImGuiPayload;
 import imgui.ImGuiString;
 import imgui.idl.helper.IDLBool;
 import xlight.engine.core.editor.ui.XUIData;
@@ -40,6 +41,8 @@ class XUIDataImpl implements XUIData {
     private static int yColor = Color.GREEN.toIntBits();
     private static int zColor = Color.toIntBits(0, 150, 255, 255);
     private static int wColor = Color.toIntBits(255, 255, 255, 255);
+
+    private Object targetData;
 
     public XUIDataImpl() {
         FLOAT_D_1 = new XEditTextFloatData();
@@ -435,6 +438,31 @@ class XUIDataImpl implements XUIData {
         }
 
         return flag;
+    }
+
+    @Override
+    public void setDropTarget(Object object) {
+        targetData = object;
+    }
+
+    @Override
+    public boolean dropTarget(String source) {
+        boolean ret = false;
+        if(ImGui.BeginDragDropTarget()) {
+            ImGuiPayload dragDropPayload = ImGui.AcceptDragDropPayload(source);
+            if(dragDropPayload != null) {
+                ret = true;
+            }
+            ImGui.EndDragDropTarget();
+        }
+        return ret;
+    }
+
+    @Override
+    public Object consumeDropTarget() {
+        Object data = targetData;
+        targetData = null;
+        return data;
     }
 
     @Override

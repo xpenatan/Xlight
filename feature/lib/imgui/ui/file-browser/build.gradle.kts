@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":feature:lib:list"))
     implementation(project(":feature:lib:math"))
     implementation(project(":feature:editor:renderer:imgui-util"))
+    implementation(project(":feature:engine:core"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
 

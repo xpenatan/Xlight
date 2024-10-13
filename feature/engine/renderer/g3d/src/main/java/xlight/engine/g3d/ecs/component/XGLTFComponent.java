@@ -12,6 +12,7 @@ import net.mgsx.gltf.loaders.gltf.GLTFLoader;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import xlight.engine.core.asset.XAssetUtil;
+import xlight.engine.core.editor.ui.XDragDropTarget;
 import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.core.editor.ui.XUIDataListener;
 import xlight.engine.core.editor.ui.options.XUIOpStringEditText;
@@ -117,6 +118,13 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
         }
         if(uiData.editText("Asset Path", assetPath, op)) {
             setAssetInternal(op.value, fileType);
+        }
+        if(uiData.dropTarget(XDragDropTarget.FILE_SOURCE)) {
+            Object data = uiData.consumeDropTarget();
+            if(data instanceof String) {
+                String path = (String)data;
+                setAsset(path);
+            }
         }
     }
 

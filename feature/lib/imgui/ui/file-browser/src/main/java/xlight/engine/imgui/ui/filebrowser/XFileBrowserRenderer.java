@@ -19,6 +19,8 @@ import imgui.ImVec2;
 import imgui.extension.imlayout.ImGuiLayoutOptions;
 import imgui.extension.imlayout.ImLayout;
 import xlight.editor.imgui.util.XImGuiButton;
+import xlight.engine.core.editor.ui.XDragDropTarget;
+import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.list.XLinkedListNode;
 import xlight.engine.math.XColor;
 import static imgui.ImGuiHoveredFlags.ImGuiHoveredFlags_None;
@@ -36,8 +38,6 @@ public class XFileBrowserRenderer {
     private static final String CONTEXT_MENU_RENAME_FILE = "CONTEXT_MENU_RENAME_FILE";
     private static final String MODAL_INVALID_FILE_OPERATION = "Invalid File operation";
     private static final String MODAL_DELETE = "Delete";
-
-    private static final String DRAG_FILE = "DRAG_FILE";
 
     private ImGuiLayoutOptions op;
 
@@ -65,7 +65,7 @@ public class XFileBrowserRenderer {
         this.fileOpenListener = fileOpenListener;
     }
 
-    public void render(XFileManager fileData) {
+    public void render(XFileManager fileData, XUIData uiData) {
         XFile currentFolder = fileData.currentFolder;
         if(currentFolder == null || !currentFolder.isDirectory()) {
             return;
@@ -128,18 +128,26 @@ public class XFileBrowserRenderer {
 
             if(ImGui.BeginDragDropSource()) {
                 isDraggingFile = true;
-                if(!selectedFiles.contains(xFile)) {
-                    selectedFiles.clear();
-                    selectedFiles.add(xFile);
+
+                ImGuiPayload payload = ImGui.GetDragDropPayload();
+                if(payload == null)
+                {
+                    if(!selectedFiles.contains(xFile)) {
+                        selectedFiles.clear();
+                        selectedFiles.add(xFile);
+                    }
+                    ImGui.SetDragDropPayload(XDragDropTarget.FILE_SOURCE, 0);
+
+                    uiData.setDropTarget(xFile.getPath());
                 }
-                ImGui.SetDragDropPayload(DRAG_FILE, 0);
+
                 renderItem(fileData, xFile, textureHandle, thumbnailSize, true);
                 ImGui.EndDragDropSource();
             }
 
             if(isDirectory) {
                 if(!isSelected && ImGui.BeginDragDropTarget()) {
-                    ImGuiPayload dragDropPayload = ImGui.AcceptDragDropPayload(DRAG_FILE);
+                    ImGuiPayload dragDropPayload = ImGui.AcceptDragDropPayload(XDragDropTarget.FILE_SOURCE);
                     if(dragDropPayload != null) {
                         if(!fileData.dragSelectedFilesToFolder(xFile)) {
                             invalidFileOperation = true;
