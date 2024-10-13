@@ -68,6 +68,8 @@ public class XFile {
             }
             cur = cur.parent;
         }
+        // TODO remove assets_raw ?
+        path = path.replace("assets_raw/", "");
         return path;
     }
 

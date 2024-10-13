@@ -83,8 +83,6 @@ public class XContentBrowser {
                 Gdx.app.postRunnable(() -> {
                     if(file.fileHandle != null) {
                         String path = file.getPath();
-                        // TODO remove assets_raw ?
-                        path = path.replace("assets_raw/", "");
                         String ext = file.fileHandle.extension();
                         if(ext.equals("xscene")) {
                             XEngine gameEngine = editorManager.getGameEngine();

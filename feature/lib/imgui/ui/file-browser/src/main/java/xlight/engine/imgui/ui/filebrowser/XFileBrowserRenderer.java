@@ -1,5 +1,6 @@
 package xlight.engine.imgui.ui.filebrowser;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ObjectSet;
 import imgui.ImGui;
@@ -275,6 +276,7 @@ public class XFileBrowserRenderer {
                 renderOpen(fileData);
                 renderRename(fileData);
                 renderCopy(fileData);
+                renderCopyPath(fileData);
                 renderCut(fileData);
                 renderDeleteModal(fileData);
             }
@@ -316,6 +318,16 @@ public class XFileBrowserRenderer {
         }
     }
 
+    private void renderCopyPath(XFileManager fileData) {
+        if(ImGui.Button("Copy Path", ImVec2.TMP_1.set(0, 0))) {
+            ImGui.CloseCurrentPopup();
+            String path = fileData.getFilePath();
+            if(path != null) {
+                Gdx.app.getClipboard().setContents(path);
+            }
+        }
+    }
+
     private void renderCut(XFileManager fileData) {
         if(ImGui.Button("Cut", ImVec2.TMP_1.set(-1, 0))) {
             ImGui.CloseCurrentPopup();
@@ -350,7 +362,7 @@ public class XFileBrowserRenderer {
 
     private void renderDeleteModal(XFileManager fileData) {
         boolean closeDeleteMenu = false;
-        if(ImGui.Button("Delete")) {
+        if(ImGui.Button("Delete", ImVec2.TMP_1.set(-1, 0))) {
             ImGui.OpenPopup(MODAL_DELETE);
         }
         int flag = ImGuiWindowFlags.ImGuiWindowFlags_NoResize | ImGuiWindowFlags.ImGuiWindowFlags_NoSavedSettings;

@@ -226,6 +226,15 @@ public class XFileManager {
         }
     }
 
+    public String getFilePath() {
+        if(currentFolder != null) {
+            if(selectedFiles.size == 1) {
+                return selectedFiles.first().getPath();
+            }
+        }
+        return null;
+    }
+
     public boolean isCutFile(XFile file) {
         if(currentFolder != null && !cutFilesOperations.isEmpty()) {
             return cutFilesOperations.contains(file);
