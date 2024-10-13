@@ -135,7 +135,10 @@ public class XContentBrowser {
 
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
-            treeBrowser.render(fileManager);
+            if(ImGui.BeginChild(9012)) {
+                treeBrowser.render(fileManager);
+            }
+            ImGui.EndChild();
             ImGui.TableSetColumnIndex(1);
             renderFileBrowserRenderer();
             ImGui.EndTable();
@@ -184,6 +187,9 @@ public class XContentBrowser {
         }
         ImLayout.EndLayout();
 
-        fileBrowserRenderer.render(fileManager);
+        if(ImGui.BeginChild(9013)) {
+            fileBrowserRenderer.render(fileManager);
+        }
+        ImGui.EndChild();
     }
 }
