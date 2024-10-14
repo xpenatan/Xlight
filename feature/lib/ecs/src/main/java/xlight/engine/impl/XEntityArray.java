@@ -20,11 +20,25 @@ class XEntityArray {
     }
 
     public XEntityImpl obtainEntity() {
-        int nextId = getNextId();
+        int nextId = getNextId(-1);
         XEntityImpl entity = items[nextId];
         entity.index = nextId;
         entity.state = XEntityState.DETACHED;
         return entity;
+    }
+
+    /**
+     * Will return null if entity is not free
+     */
+    public XEntityImpl obtainEntity(int id) {
+        int nextId = getNextId(id);
+        if(nextId != -1) {
+            XEntityImpl entity = items[nextId];
+            entity.index = nextId;
+            entity.state = XEntityState.DETACHED;
+            return entity;
+        }
+        return null;
     }
 
     public boolean detachEntity(int id) {
@@ -142,16 +156,29 @@ class XEntityArray {
         return size;
     }
 
-    private int getNextId() {
-        if(reusableIds.getSize() == 0) {
-            int newSize = (int)(items.length * 1.75f);
-            resize(newSize);
-            fillEntities(items);
+    private int getNextId(int id) {
+        if(id < 0) {
+            if(reusableIds.getSize() == 0) {
+                int newSize = (int)(items.length * 1.75f);
+                resize(newSize);
+                fillEntities(items);
+            }
+            XIntSetNode head = reusableIds.getHead();
+            id = head.getKey();
+            reusableIds.removeNode(head);
         }
-        XIntSetNode head = reusableIds.getHead();
-        int key = head.getKey();
-        reusableIds.removeNode(head);
-        return key;
+        else {
+            if(id >= items.length) {
+                int newSize = (int)(id * 1.75f);
+                resize(newSize);
+                fillEntities(items);
+            }
+            if(items[id].state != XEntityState.RELEASE) {
+                return -1;
+            }
+            reusableIds.remove(id);
+        }
+        return id;
     }
 
     private void fillEntities(XEntityImpl[] items) {

@@ -2,13 +2,15 @@ package xlight.engine.scene.ecs.component;
 
 import com.badlogic.gdx.Files;
 import xlight.engine.core.asset.XAssetUtil;
+import xlight.engine.core.editor.ui.XUIData;
+import xlight.engine.core.editor.ui.XUIDataListener;
 import xlight.engine.datamap.XDataMap;
 import xlight.engine.datamap.XDataMapListener;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.pool.XPoolable;
 
-public final class XSceneComponent implements XComponent, XDataMapListener, XPoolable {
-
+public final class XSceneComponent implements XComponent, XDataMapListener, XUIDataListener, XPoolable {
+    // TODO need to improve filetype hack. Same as GLTF component
     public int fileHandleType = XAssetUtil.getFileTypeValue(Files.FileType.Internal);
     public String scenePath = "";
     public int entityId = -1;
@@ -36,5 +38,11 @@ public final class XSceneComponent implements XComponent, XDataMapListener, XPoo
         scenePath = "";
         entityId = -1;
         fileHandleType = XAssetUtil.getFileTypeValue(Files.FileType.Internal);
+    }
+
+    @Override
+    public void onUIDraw(XUIData uiData) {
+        uiData.text("Scene path", scenePath);
+        uiData.text("Entity id", "" + entityId);
     }
 }

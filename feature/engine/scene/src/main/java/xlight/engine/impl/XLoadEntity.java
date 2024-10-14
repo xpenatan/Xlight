@@ -59,6 +59,9 @@ class XLoadEntity {
     private XEntity loadEntityAndAdd(XWorld world, XScene scene, Array<XEntity> tmpEntities, XPoolController poolController, XDataMap entityMap) {
         // TODO remove loading recursive
         XEntity entity = loadEntity(world, scene, tmpEntities, poolController, entityMap);
+        if(entity == null) {
+            return null;
+        }
         XDataMapArray childEntitiesArray = entityMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
         if(childEntitiesArray != null) {
             XList<XDataMap> list = childEntitiesArray.getList();
@@ -81,10 +84,12 @@ class XLoadEntity {
         String entityName = entityMap.getString(XSceneKeys.NAME.getKey(), "");
         boolean isEnable = entityMap.getBoolean(XSceneKeys.ENABLE.getKey(), true);
         boolean isVisible = entityMap.getBoolean(XSceneKeys.VISIBLE.getKey(), true);
-        int jsonId = entityMap.getInt(XSceneKeys.JSON_ID.getKey(), -1);
+        int entityJsonId = entityMap.getInt(XSceneKeys.ENTITY_JSON_ID.getKey(), -1);
         String tag = entityMap.getString(XSceneKeys.TAG.getKey(), "");
-
-        XEntity entity = entityService.obtain();
+        XEntity entity = entityService.obtain(entityJsonId);
+        if(entity == null) {
+            return null;
+        }
         tmpEntities.add(entity);
         entity.setVisible(isVisible);
         entity.setName(entityName);
@@ -93,19 +98,23 @@ class XLoadEntity {
 
         XDataMapArray componentArray = entityMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
         if(componentArray != null) {
-            addEntityComponents(scene, registerManager, poolController, entity, componentArray, false);
+            addEntityComponents(scene, registerManager, poolController, entity, componentArray, false, entityJsonId);
         }
         return entity;
     }
 
-    private void addEntityComponents(XScene scene, XRegisterManager registerManager, XPoolController poolController, XEntity entity, XDataMapArray componentArray, boolean isSubScene) {
+    private void addEntityComponents(XScene scene, XRegisterManager registerManager, XPoolController poolController, XEntity entity, XDataMapArray componentArray, boolean isSubScene, int entityJsonId) {
         int size = componentArray.getSize();
         for(int i = 0; i < size; i++) {
             XDataMap componentMap = componentArray.get(i);
             Class<?> componentType = XSceneMapUtils.getComponentTypeFromComponentMap(registerManager, componentMap);
             if(componentType != null) {
-                XComponent component = loadComponent(poolController, componentMap, componentType);
-                entity.attachComponent(component);
+                boolean haveComponent = entity.containsComponent(componentType);
+                // Add component only if it's not set. Components loaded from sub scene may return false
+                if(!haveComponent) {
+                    XComponent component = loadComponent(poolController, componentMap, componentType);
+                    entity.attachComponent(component);
+                }
             }
         }
 
@@ -125,6 +134,7 @@ class XLoadEntity {
                     sceneComponent = poolController.obtainObject(XSceneComponent.class);
                     sceneComponent.scenePath = scene.getPath();
                     sceneComponent.fileHandleType = XAssetUtil.getFileTypeValue(scene.getFileType());
+                    sceneComponent.entityId = entityJsonId;
                     entity.attachComponent(sceneComponent);
                 }
             }
@@ -146,7 +156,7 @@ class XLoadEntity {
             if(sceneEntityDataMap != null) {
                 XDataMapArray componentsDataMap = sceneEntityDataMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
                 if(componentsDataMap != null) {
-                    addEntityComponents(scene, registerManager, poolController, entity, componentsDataMap, true);
+                    addEntityComponents(scene, registerManager, poolController, entity, componentsDataMap, true, -1);
                 }
             }
             sceneDataMap.free();

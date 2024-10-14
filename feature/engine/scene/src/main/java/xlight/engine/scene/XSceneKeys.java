@@ -10,7 +10,7 @@ public enum XSceneKeys {
     VISIBLE(37),
     ENABLE_FORCE(38),
     TAG(39),
-    JSON_ID(40),
+    ENTITY_JSON_ID(40),
     SYSTEMS(51),
     MANAGERS(52),
     ENTITIES(53),

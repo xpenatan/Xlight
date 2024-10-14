@@ -244,6 +244,12 @@ class XEntityImpl implements XEntity {
             setParent(null);
         }
 
+        // Detach all components. This may be used when entity is released and still contains components
+        while(componentsIndex.size != 0) {
+            XComponent componentAt = getComponentAt(0);
+            detachComponent(componentAt);
+        }
+
         name = EMPTY_NAME;
         index = -1;
         isVisible = true;

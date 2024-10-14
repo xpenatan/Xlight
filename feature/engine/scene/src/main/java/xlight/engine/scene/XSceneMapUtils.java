@@ -27,7 +27,7 @@ public class XSceneMapUtils {
                 XDataMap entityDataMap = entitiesArray.get(i);
                 int entityType = entityDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
                 if(entityType == XSceneTypeValue.ENTITY.getValue()) {
-                    int jsonId = entityDataMap.getInt(XSceneKeys.JSON_ID.getKey(), -1);
+                    int jsonId = entityDataMap.getInt(XSceneKeys.ENTITY_JSON_ID.getKey(), -1);
                     if(sceneEntityId == jsonId) {
                         return entityDataMap;
                     }

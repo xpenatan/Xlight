@@ -68,11 +68,15 @@ class XEntityServiceImpl implements XEntityService {
     }
 
     @Override
+    public XEntity obtain(int id) {
+        return entities.obtainEntity(id);
+    }
+
+    @Override
     public boolean releaseEntity(XEntity entity) {
-        if(detachEntity(entity)) {
-            return entities.releaseEntity(entity.getId());
-        }
-        return false;
+        // Try to detach it first before releasing.
+        detachEntity(entity);
+        return entities.releaseEntity(entity.getId());
     }
 
     @Override

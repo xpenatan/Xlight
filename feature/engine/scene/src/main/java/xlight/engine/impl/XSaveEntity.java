@@ -42,9 +42,9 @@ class XSaveEntity {
             }
         }
 
-        String jsonStr = sceneDataMap.saveJsonStr();
-        System.out.println("SAVE SCENE:");
-        System.out.println(jsonStr);
+//        String jsonStr = sceneDataMap.saveJsonStr();
+//        System.out.println("SAVE SCENE:");
+//        System.out.println(jsonStr);
     }
 
     /**
@@ -81,7 +81,7 @@ class XSaveEntity {
         entityMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneTypeValue.ENTITY.getValue());
         entityMap.put(XSceneKeys.NAME.getKey(), entity.getName());
         entityMap.put(XSceneKeys.VISIBLE.getKey(), entity.isVisible());
-        entityMap.put(XSceneKeys.JSON_ID.getKey(), entity.getId());
+        entityMap.put(XSceneKeys.ENTITY_JSON_ID.getKey(), entity.getId());
         // TODO add tag solution
 //        String tag = entity.getTag();
 //        if(tag != null && !tag.isEmpty()) {
