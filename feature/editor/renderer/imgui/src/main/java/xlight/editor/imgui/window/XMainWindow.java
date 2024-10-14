@@ -172,6 +172,8 @@ public class XMainWindow extends XImGuiWindowContext {
         if(renderMenuButton(XEditorAssets.stopTexture, "##stopTexture", buttonSize)) {
             // TODO call stop
         }
+        ImGui.SetItemTooltip("Stop");
+
         if(colorStop != 0) {
             ImGui.PopStyleColor();
         }
@@ -186,6 +188,7 @@ public class XMainWindow extends XImGuiWindowContext {
         if(colorPlay != 0) {
             ImGui.PopStyleColor();
         }
+        ImGui.SetItemTooltip("Play");
         ImGui.SameLine();
         boolean isCtrl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
 
@@ -196,6 +199,7 @@ public class XMainWindow extends XImGuiWindowContext {
         if(renderMenuButton(XEditorAssets.playStepTexture, "##playStepTexture", buttonSize)) {
             // TODO play step
         }
+        ImGui.SetItemTooltip("Run next frame");
         if(startHoldingStep) {
             ImGui.PopStyleColor();
         }
@@ -205,6 +209,7 @@ public class XMainWindow extends XImGuiWindowContext {
             XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
             sceneManager.save();
         }
+        ImGui.SetItemTooltip("Save scene to memory or file if path is set");
 
         if(ImGui.IsItemClicked(ImGuiMouseButton.ImGuiMouseButton_Right)) {
             ImGui.OpenPopup(POPUP_SAVE);
@@ -216,6 +221,7 @@ public class XMainWindow extends XImGuiWindowContext {
             XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
             sceneManager.load();
         }
+        ImGui.SetItemTooltip("Load");
 
         if(ImGui.IsItemClicked(ImGuiMouseButton.ImGuiMouseButton_Right)) {
             ImGui.OpenPopup(POPUP_LOAD);
@@ -233,7 +239,6 @@ public class XMainWindow extends XImGuiWindowContext {
         if(loadScenePath) {
             ImGui.OpenPopup(POPUP_LOAD_PATH);
         }
-
 
         boolean saveScenePath = false;
         if(ImGui.BeginPopup(POPUP_SAVE)) {
