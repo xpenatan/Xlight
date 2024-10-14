@@ -3,6 +3,7 @@ package xlight.editor.imgui.ecs.system.hierarchy;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import imgui.ImGui;
@@ -25,6 +26,8 @@ import xlight.editor.core.ecs.manager.XEntitySelectionManager;
 import xlight.editor.imgui.util.XImGuiPopUpWidget;
 import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.core.XEngine;
+import xlight.engine.core.editor.ui.XDragDropTarget;
+import xlight.engine.core.editor.ui.XUIData;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XGameWorldComponent;
@@ -57,6 +60,7 @@ public class XEntityHierarchyRenderer {
 
     private static final String POPUP_ADD_SCENE_PATH = "PopupAddScenePath";
     private ImGuiString pathString;
+    private XUIData uiData;
 
     public XEntityHierarchyRenderer() {
         pathString = new ImGuiString();
@@ -75,6 +79,8 @@ public class XEntityHierarchyRenderer {
             renderTree = false;
             return false;
         });
+
+        uiData = world.getGlobalData(XUIData.class);
     }
 
     public void onDetach(XWorld world) {
@@ -94,16 +100,20 @@ public class XEntityHierarchyRenderer {
         int childId = 0;
         int entitySize = 0;
         XEngine gameEngine = editorManager.getGameEngine();
+        XWorld gameWorld = null;
+        XPoolController poolController = null;
+        if(gameEngine != null) {
+            gameWorld = gameEngine.getWorld();
+            poolController = gameWorld.getGlobalData(XPoolController.class);
+        }
         ImGui.BeginChild(TAB, ImVec2.TMP_1.set(0, -ImGui.GetFrameHeightWithSpacing()));
         {
             ImGuiWindow currentWindow = ImGuiInternal.GetCurrentWindow();
             childId = currentWindow.get_ID();
-            if(gameEngine != null) {
-                XWorld gameEngineWorld = gameEngine.getWorld();
-
+            if(gameWorld != null) {
                 boolean b = ImGuiInternal.IsDragDropActive();
 
-                XEntityService entityService = gameEngineWorld.getWorldService().getEntityService();
+                XEntityService entityService = gameWorld.getWorldService().getEntityService();
                 XList<XEntity> entities = entityService.getEntities();
                 entitySize = entities.getSize();
                 boolean leftControl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
@@ -112,12 +122,26 @@ public class XEntityHierarchyRenderer {
                     if(entity.getParent() != null) {
                         continue;
                     }
-                    renderEntityItem(gameEngineWorld, entity, leftControl);
+                    renderEntityItem(gameWorld, entity, leftControl);
                 }
                 ImLayout.EndGlobalTree();
             }
         }
         ImGui.EndChild();
+
+        if(gameWorld != null && uiData.dropTarget(XDragDropTarget.FILE_SOURCE)) {
+            Object data = uiData.consumeDropTarget();
+            if(data instanceof String) {
+                String targetData = (String)data;
+                FileHandle targetHandle = Gdx.files.local(targetData);
+                if(targetHandle.exists() && !targetHandle.isDirectory()) {
+                    String ext = targetHandle.extension();
+                    if(ext.equals("gltf") || ext.equals("glb")) {
+                        createGameWorldModelEntity(gameWorld, poolController, targetHandle.nameWithoutExtension(), targetData);
+                    }
+                }
+            }
+        }
 
         ImGui.Separator();
 
@@ -145,8 +169,7 @@ public class XEntityHierarchyRenderer {
                 }
             }
         }
-        if(gameEngine != null) {
-            XWorld gameWorld = gameEngine.getWorld();
+        if(gameWorld != null) {
             if(ImGui.IsWindowHovered(ImGuiHoveredFlags_ChildWindows)) {
                 if(ImGui.IsMouseClicked(ImGuiMouseButton.ImGuiMouseButton_Right)) {
                     ImGui.OpenPopup("EntityOptions");
@@ -155,7 +178,7 @@ public class XEntityHierarchyRenderer {
 
             boolean openAddScenePath = false;
             if(ImGui.BeginPopup("EntityOptions")) {
-                renderNewEntityPopUp(gameWorld);
+                renderNewEntityPopUp(gameWorld, poolController);
                 if(ImGui.MenuItem("Add Scene")) {
                     openAddScenePath = true;
                 }
@@ -181,8 +204,7 @@ public class XEntityHierarchyRenderer {
         }
     }
 
-    private void renderNewEntityPopUp(XWorld gameWorld) {
-        XPoolController poolController = gameWorld.getGlobalData(XPoolController.class);
+    private void renderNewEntityPopUp(XWorld gameWorld, XPoolController poolController) {
         if(ImGui.BeginMenu("New Entity")) {
             if(ImGui.MenuItem("Empty")) {
                 XEntityService entityService = gameWorld.getWorldService().getEntityService();
@@ -210,18 +232,7 @@ public class XEntityHierarchyRenderer {
                 }
                 if(ImGui.BeginMenu("3D")) {
                     if(ImGui.MenuItem("Asset")) {
-                        XEntityService entityService = gameWorld.getWorldService().getEntityService();
-                        XEntity newEntity = entityService.obtain();
-                        newEntity.setName("Asset");
-                        XGameWorldComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
-                        XTransformComponent transformComponent = poolController.obtainObject(XTransformComponent.class);
-                        XGLTFComponent modelComponent = poolController.obtainObject(XGLTFComponent.class);
-
-                        newEntity.attachComponent(gameComponent);
-                        newEntity.attachComponent(transformComponent);
-                        newEntity.attachComponent(modelComponent);
-
-                        entityService.attachEntity(newEntity);
+                        createGameWorldModelEntity(gameWorld, poolController, "Asset", null);
                     }
                     if(ImGui.BeginItemTooltip()) {
                         ImGui.Text("Components:\nGameWorld\nTransform\nGLTF");
@@ -428,5 +439,24 @@ public class XEntityHierarchyRenderer {
             ImGui.EndDragDropTarget();
         }
         return treeOpen;
+    }
+
+    private static void createGameWorldModelEntity(XWorld gameWorld, XPoolController poolController, String entityName, String path) {
+        XEntityService entityService = gameWorld.getWorldService().getEntityService();
+        XEntity newEntity = entityService.obtain();
+        newEntity.setName(entityName);
+        XGameWorldComponent gameComponent = poolController.obtainObject(XGameWorldComponent.class);
+        XTransformComponent transformComponent = poolController.obtainObject(XTransformComponent.class);
+        XGLTFComponent modelComponent = poolController.obtainObject(XGLTFComponent.class);
+
+        if(path != null) {
+            modelComponent.setAsset(path);
+        }
+
+        newEntity.attachComponent(gameComponent);
+        newEntity.attachComponent(transformComponent);
+        newEntity.attachComponent(modelComponent);
+
+        entityService.attachEntity(newEntity);
     }
 }
