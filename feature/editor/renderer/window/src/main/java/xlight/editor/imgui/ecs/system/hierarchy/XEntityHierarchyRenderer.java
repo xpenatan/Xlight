@@ -28,6 +28,7 @@ import xlight.engine.camera.ecs.component.XCameraComponent;
 import xlight.engine.core.XEngine;
 import xlight.engine.core.editor.ui.XDragDropTarget;
 import xlight.engine.core.editor.ui.XUIData;
+import xlight.engine.core.file.XFileExtNames;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XGameWorldComponent;
@@ -136,8 +137,14 @@ public class XEntityHierarchyRenderer {
                 FileHandle targetHandle = Gdx.files.local(targetData);
                 if(targetHandle.exists() && !targetHandle.isDirectory()) {
                     String ext = targetHandle.extension();
-                    if(ext.equals("gltf") || ext.equals("glb")) {
+                    if(XFileExtNames.isGLTF(ext)) {
+                        // Add entity with model component and path
                         createGameWorldModelEntity(gameWorld, poolController, targetHandle.nameWithoutExtension(), targetData);
+                    }
+                    else if(XFileExtNames.isScene(ext)) {
+                        // Add scene to the current scene
+                        XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                        sceneManager.addScene(targetData, Files.FileType.Local);
                     }
                 }
             }
