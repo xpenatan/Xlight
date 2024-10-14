@@ -37,7 +37,7 @@ class XSaveEntity {
         XList<XEntity> entities = entityService.getEntities();
         for(XEntity entity : entities) {
             if(entity.getParent() == null && entity.isSavable()) {
-                XDataMap entityDataMap = saveEntity(entityService, poolController, registerManager, entity, true);
+                XDataMap entityDataMap = saveEntity(entityService, poolController, registerManager, entity);
                 entitiesDataMapArray.add(entityDataMap);
             }
         }
@@ -47,29 +47,23 @@ class XSaveEntity {
 //        System.out.println(jsonStr);
     }
 
-    /**
-     *
-     * @param saveChild true will save child entities is they are savable
-     */
-    private static XDataMap saveEntity(XEntityService entityService, XPoolController poolController, XRegisterManager registerManager, XEntity entity, boolean saveChild) {
+    public static XDataMap saveEntity(XEntityService entityService, XPoolController poolController, XRegisterManager registerManager, XEntity entity) {
         // TODO remove saving recursive
         XDataMap entityDataMap = saveEntity(poolController, registerManager, entity);
-        if(saveChild) {
-            boolean initSavableArray = false;
-            XList<XIntSetNode> childIntList = entity.getChildList();
-            XDataMapArray childEtitiesDataMapArray = null;
-            for(XIntSetNode node : childIntList) {
-                int key = node.getKey();
-                XEntity child = entityService.getEntity(key);
-                if(child.isSavable()) {
-                    if(!initSavableArray) {
-                        initSavableArray = true;
-                        childEtitiesDataMapArray = poolController.obtainObject(XDataMapArray.class);
-                        entityDataMap.put(XSceneKeys.ENTITIES.getKey(), childEtitiesDataMapArray);
-                    }
-                    XDataMap childEntityDataMap = saveEntity(entityService, poolController, registerManager, child, true);
-                    childEtitiesDataMapArray.add(childEntityDataMap);
+        boolean initSavableArray = false;
+        XList<XIntSetNode> childIntList = entity.getChildList();
+        XDataMapArray childEtitiesDataMapArray = null;
+        for(XIntSetNode node : childIntList) {
+            int key = node.getKey();
+            XEntity child = entityService.getEntity(key);
+            if(child.isSavable()) {
+                if(!initSavableArray) {
+                    initSavableArray = true;
+                    childEtitiesDataMapArray = poolController.obtainObject(XDataMapArray.class);
+                    entityDataMap.put(XSceneKeys.ENTITIES.getKey(), childEtitiesDataMapArray);
                 }
+                XDataMap childEntityDataMap = saveEntity(entityService, poolController, registerManager, child);
+                childEtitiesDataMapArray.add(childEntityDataMap);
             }
         }
         return entityDataMap;

@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.core.ecs.manager.XEntitySelectionManager;
 import xlight.editor.window.gameeditor.ecs.system.XGameEditorSystem;
@@ -18,21 +19,28 @@ import xlight.engine.camera.PROJECTION_MODE;
 import xlight.engine.camera.XCamera;
 import xlight.engine.camera.ecs.manager.XCameraManager;
 import xlight.engine.core.XEngine;
+import xlight.engine.datamap.XDataMap;
 import xlight.engine.ecs.XWorld;
+import xlight.engine.ecs.XWorldService;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
+import xlight.engine.ecs.event.XEvent;
+import xlight.engine.ecs.event.XEventListener;
+import xlight.engine.ecs.event.XEventService;
 import xlight.engine.ecs.system.XSystemData;
 import xlight.engine.ecs.system.XSystemType;
 import xlight.engine.g3d.XBatch3DAdapter;
 import xlight.engine.g3d.ecs.component.XRender3DComponent;
 import xlight.engine.gizmo.XCursor3DRenderer;
 import xlight.engine.gizmo.XGizmoRenderer;
+import xlight.engine.list.XList;
 import xlight.engine.math.XMath;
 import xlight.engine.math.XRotSeq;
 import xlight.engine.outline.XPicker2DFrameBuffer;
 import xlight.engine.outline.XPicker3DFrameBuffer;
+import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.transform.XTransform;
 import xlight.engine.transform.XTransformType;
 import xlight.engine.transform.XTransformMode;
@@ -59,14 +67,18 @@ public class XSelectingSystem extends XGameEditorSystem {
 
     private final Class<? extends XComponent> worldType;
 
+    private Array<XDataMap> copyEntities = new Array<>();
+
     public XSelectingSystem(Class<? extends XComponent> worldType) {
         this.worldType = worldType;
     }
 
     @Override
-    public void onSystemAttach(XWorld world, XSystemData systemData) {
-        selectionManager = world.getManager(XEntitySelectionManager.class);
-        editorManager = world.getManager(XEditorManager.class);
+    public void onSystemAttach(XWorld editorWorld, XSystemData systemData) {
+        XWorldService worldService = editorWorld.getWorldService();
+        XEventService editorEventService = worldService.getEventService();
+        selectionManager = editorWorld.getManager(XEntitySelectionManager.class);
+        editorManager = editorWorld.getManager(XEditorManager.class);
         selectionRenderer = new XSelectionRenderer(worldType);
         gizmoRenderer = new XGizmoRenderer();
         shader3DPicker = new XPicker3DFrameBuffer();
@@ -75,6 +87,53 @@ public class XSelectingSystem extends XGameEditorSystem {
         cursor3DRenderer = new XCursor3DRenderer();
         XMath.QUAT_1.idt();
         cursor3DRenderer.setGlobalAngle(XMath.QUAT_1);
+
+        editorEventService.addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, new XEventListener() {
+            @Override
+            public boolean onEvent(XEvent event) {
+                copyEntities.clear();
+                return false;
+            }
+        });
+
+
+        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_COPY_ENTITY, new XEventListener() {
+            @Override
+            public boolean onEvent(XEvent event) {
+                XEngine gameEngine = editorManager.getGameEngine();
+                if(gameEngine != null) {
+                    XWorld gameWorld = gameEngine.getWorld();
+                    XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                    XList<XEntity> selectedTargets = selectionManager.getSelectedTargets();
+                    for(XEntity entity : selectedTargets) {
+                        XDataMap entityMap = sceneManager.saveEntity(entity);
+                        copyEntities.add(entityMap);
+                    }
+                }
+                return false;
+            }
+        });
+
+        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_PASTE_ENTITY, new XEventListener() {
+            @Override
+            public boolean onEvent(XEvent event) {
+                XEngine gameEngine = editorManager.getGameEngine();
+                if(gameEngine != null) {
+                    XWorld gameWorld = gameEngine.getWorld();
+                    XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                    for(XDataMap entityMap : copyEntities) {
+                        XEntity entity = sceneManager.loadEntity(entityMap);
+                        XTransformComponent transformComponent = entity.getComponent(XTransformComponent.class);
+                        if(transformComponent  != null) {
+                            Vector3 cursorPosition = cursor3DRenderer.getCursorPosition();
+                            transformComponent.position(cursorPosition.x, cursorPosition.y, cursorPosition.z);
+                        }
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
     @Override

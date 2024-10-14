@@ -14,6 +14,7 @@ import xlight.engine.ecs.XWorldService;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
+import xlight.engine.ecs.event.XEventService;
 import xlight.engine.ecs.event.XWorldEvent;
 import xlight.engine.ecs.manager.XManager;
 import xlight.engine.list.XDataArray;
@@ -40,9 +41,10 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
     }
 
     @Override
-    public void onAttach(XWorld world) {
-        XWorldService worldService = world.getWorldService();
-        worldService.getEventService().addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, event -> {
+    public void onAttach(XWorld editorWorld) {
+        XWorldService worldService = editorWorld.getWorldService();
+        XEventService editorEventService = worldService.getEventService();
+        editorEventService.addEventListener(XEditorEvent.EVENT_ENGINE_CREATED, event -> {
             XEngine gameEngine = event.getUserData();
             XWorld gameEngineWorld = gameEngine.getWorld();
             gameEngineWorld.getWorldService().getEventService().addEventListener(XWorldEvent.EVENT_DETACH_ENTITY, new XEventListener() {

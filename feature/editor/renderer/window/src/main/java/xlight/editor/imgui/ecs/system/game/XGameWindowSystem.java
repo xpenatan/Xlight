@@ -1,10 +1,13 @@
 package xlight.editor.imgui.ecs.system.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.github.xpenatan.gdx.multiview.EmuApplicationWindow;
 import com.github.xpenatan.gdx.multiview.EmuInput;
 import com.github.xpenatan.imgui.gdx.frame.viewport.ImGuiGdxFrameWindow;
 import imgui.ImGui;
 import imgui.ImGuiWindowClass;
+import xlight.editor.core.ecs.event.XEditorEvent;
 import xlight.editor.core.ecs.manager.XEditorManager;
 import xlight.editor.imgui.ecs.manager.XImGuiManager;
 import xlight.editor.imgui.window.XImGuiWindowContext;
@@ -44,6 +47,16 @@ public class XGameWindowSystem implements XSystem {
     public void onTick(XWorld world) {
         ImGui.SetNextWindowClass(windowClass);
         frameWindow.render();
+
+        boolean copyEntities = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C);
+        boolean pasteEntity = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.V);
+
+        if(copyEntities) {
+            world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_COPY_ENTITY);
+        }
+        else if(pasteEntity) {
+            world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_PASTE_ENTITY);
+        }
     }
 
     @Override

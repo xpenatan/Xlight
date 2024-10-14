@@ -2,6 +2,8 @@ package xlight.engine.scene.ecs.manager;
 
 
 import com.badlogic.gdx.Files;
+import xlight.engine.datamap.XDataMap;
+import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneListener;
 
@@ -45,4 +47,7 @@ public interface XSceneManager {
      * Setup a new empty scene. The current scene data will be cleared and will be updated to have the new id and name
      */
     void newScene(int id, String name);
+
+    XDataMap saveEntity(XEntity entity);
+    XEntity loadEntity(XDataMap entityMap);
 }

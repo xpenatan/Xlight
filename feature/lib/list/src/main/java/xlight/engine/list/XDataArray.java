@@ -2,6 +2,7 @@ package xlight.engine.list;
 
 import java.util.Iterator;
 import xlight.engine.pool.XPool;
+import xlight.engine.pool.XPoolable;
 
 public class XDataArray<T, NODE extends XDataArray.XDataArrayNode<T>> {
 
@@ -65,10 +66,11 @@ public class XDataArray<T, NODE extends XDataArray.XDataArrayNode<T>> {
         return array.getSize();
     }
 
-    public void add(T value) {
+    public NODE add(T value) {
         NODE node = pool.obtain();
         node.value = value;
         array.add(node);
+        return node;
     }
 
     public void insert(int index, T value) {
@@ -133,10 +135,21 @@ public class XDataArray<T, NODE extends XDataArray.XDataArrayNode<T>> {
         return array.getList();
     }
 
-    public static class XDataArrayNode<T> {
+    public void clear() {
+        while(array.getSize() != 0) {
+            removeIndex(0);
+        }
+    }
+
+    public static class XDataArrayNode<T> implements XPoolable {
         T value;
         public T getValue() {
             return value;
+        }
+
+        @Override
+        public void onReset() {
+            value = null;
         }
     }
 }

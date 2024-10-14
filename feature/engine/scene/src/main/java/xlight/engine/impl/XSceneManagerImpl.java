@@ -4,16 +4,17 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import xlight.engine.core.XEngineEvent;
+import xlight.engine.core.register.XRegisterManager;
 import xlight.engine.datamap.XDataMap;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.XWorldService;
+import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventService;
 import xlight.engine.ecs.manager.XManager;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.XScene;
-import xlight.engine.scene.XSceneKeys;
 import xlight.engine.scene.XSceneListener;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 
@@ -145,6 +146,24 @@ class XSceneManagerImpl implements XSceneManager, XManager {
                 }
             }
         }, true);
+    }
+
+    @Override
+    public XDataMap saveEntity(XEntity entity) {
+        XEntityService entityService = world.getWorldService().getEntityService();
+        XRegisterManager registerManager = world.getManager(XRegisterManager.class);
+        XPoolController poolController = world.getGlobalData(XPoolController.class);
+        XDataMap entityDataMap = XSaveEntity.saveEntity(entityService, poolController, registerManager, entity);
+        return entityDataMap;
+    }
+
+    @Override
+    public XEntity loadEntity(XDataMap entityMap) {
+        XEntityService entityService = world.getWorldService().getEntityService();
+        XRegisterManager registerManager = world.getManager(XRegisterManager.class);
+        XPoolController poolController = world.getGlobalData(XPoolController.class);
+        XEntity entity = loadEntity.loadEntityAndAttach(entityService, registerManager, poolController, entityMap);
+        return entity;
     }
 
     public void loadInternal(XScene scene) {

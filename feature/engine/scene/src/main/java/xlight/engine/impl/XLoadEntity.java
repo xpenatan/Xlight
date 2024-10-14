@@ -3,7 +3,6 @@ package xlight.engine.impl;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
 import xlight.engine.core.asset.XAssetUtil;
 import xlight.engine.core.register.XRegisterManager;
 import xlight.engine.datamap.XDataMap;
@@ -13,7 +12,9 @@ import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
+import xlight.engine.list.XDataArray;
 import xlight.engine.list.XList;
+import xlight.engine.pool.XPool;
 import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.XScene;
 import xlight.engine.scene.XSceneKeys;
@@ -23,15 +24,20 @@ import xlight.engine.scene.ecs.component.XSceneComponent;
 
 class XLoadEntity {
 
-    private boolean loadSubScene;
-
-    private Array<XEntity> entitiesToAttach = new Array<>();
+    private XDataArray<XEntity, XEntityLoadNode> entitiesToAttach;
 
     public void load(XWorld world, XScene scene, boolean isSubScene) {
         System.out.println("LOAD SCENE:");
-        loadSubScene = isSubScene;
+        entitiesToAttach = new XDataArray<>(new XPool<>() {
+            @Override
+            protected XEntityLoadNode newObject() {
+                return new XEntityLoadNode();
+            }
+        });
 
         XPoolController poolController = world.getGlobalData(XPoolController.class);
+        XEntityService entityService = world.getWorldService().getEntityService();
+        XRegisterManager registerManager = world.getManager(XRegisterManager.class);
         XDataMap sceneDataMap = scene.getSceneDataMap();
         int sceneType = sceneDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
         if(sceneType == XSceneTypeValue.SCENE.getValue()) {
@@ -42,23 +48,41 @@ class XLoadEntity {
                     XDataMap entityMap = entitiesArray.get(i);
                     int entityType = entityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
                     if(entityType == XSceneTypeValue.ENTITY.getValue()) {
-                        loadEntityAndAdd(world, scene, entitiesToAttach, poolController, entityMap);
+                        loadEntity(entityService, registerManager, poolController, entityMap);
                     }
                 }
             }
 
-            XEntityService entityService = world.getWorldService().getEntityService();
-            for(int i = 0; i < entitiesToAttach.size; i++) {
-                XEntity entity = entitiesToAttach.get(i);
-                entityService.attachEntity(entity);
-            }
-            entitiesToAttach.clear();
+            attachEntities(entityService, poolController, isSubScene ? scene : null);
         }
     }
 
-    private XEntity loadEntityAndAdd(XWorld world, XScene scene, Array<XEntity> tmpEntities, XPoolController poolController, XDataMap entityMap) {
+    public XEntity loadEntityAndAttach(XEntityService entityService, XRegisterManager registerManager, XPoolController poolController, XDataMap entityMap) {
+        XEntity entity = loadEntity(entityService, registerManager, poolController, entityMap);
+        attachEntities(entityService, poolController, null);
+        return entity;
+    }
+
+    private void attachEntities(XEntityService entityService, XPoolController poolController, XScene subScene) {
+        for(int i = 0; i < entitiesToAttach.getSize(); i++) {
+            XEntityLoadNode node = entitiesToAttach.getNode(i);
+            XEntity entity = node.getValue();
+
+            if(subScene != null) {
+                XSceneComponent sceneComponent = poolController.obtainObject(XSceneComponent.class);
+                sceneComponent.scenePath = subScene.getPath();
+                sceneComponent.fileHandleType = XAssetUtil.getFileTypeValue(subScene.getFileType());
+                sceneComponent.entityId = node.entityJsonId;
+                entity.attachComponent(sceneComponent);
+            }
+            entityService.attachEntity(entity);
+        }
+        entitiesToAttach.clear();
+    }
+
+    private XEntity loadEntity(XEntityService entityService, XRegisterManager registerManager, XPoolController poolController, XDataMap entityMap) {
         // TODO remove loading recursive
-        XEntity entity = loadEntity(world, scene, tmpEntities, poolController, entityMap);
+        XEntity entity = setupEntity(entityService, registerManager, poolController, entityMap);
         if(entity == null) {
             return null;
         }
@@ -68,7 +92,7 @@ class XLoadEntity {
             for(XDataMap childDataMap : list) {
                 int entityType = childDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
                 if(entityType == XSceneTypeValue.ENTITY.getValue()) {
-                    XEntity childEntity = loadEntityAndAdd(world, scene, tmpEntities, poolController, childDataMap);
+                    XEntity childEntity = loadEntity(entityService, registerManager, poolController, childDataMap);
                     if(childEntity != null) {
                         childEntity.setParent(entity);
                     }
@@ -78,9 +102,7 @@ class XLoadEntity {
         return entity;
     }
 
-    private XEntity loadEntity(XWorld world, XScene scene, Array<XEntity> tmpEntities, XPoolController poolController, XDataMap entityMap) {
-        XEntityService entityService = world.getWorldService().getEntityService();
-        XRegisterManager registerManager = world.getManager(XRegisterManager.class);
+    private XEntity setupEntity(XEntityService entityService, XRegisterManager registerManager, XPoolController poolController, XDataMap entityMap) {
         String entityName = entityMap.getString(XSceneKeys.NAME.getKey(), "");
         boolean isEnable = entityMap.getBoolean(XSceneKeys.ENABLE.getKey(), true);
         boolean isVisible = entityMap.getBoolean(XSceneKeys.VISIBLE.getKey(), true);
@@ -88,9 +110,12 @@ class XLoadEntity {
         String tag = entityMap.getString(XSceneKeys.TAG.getKey(), "");
         XEntity entity = entityService.obtain(entityJsonId);
         if(entity == null) {
-            return null;
+            // Getting an entity with the same ID as the scene did not work because its already being used.
+            // Use a new entity
+            entity = entityService.obtain();
         }
-        tmpEntities.add(entity);
+        XEntityLoadNode node = entitiesToAttach.add(entity);
+        node.entityJsonId = entityJsonId;
         entity.setVisible(isVisible);
         entity.setName(entityName);
 //            entity.setTag(tag);
@@ -98,12 +123,12 @@ class XLoadEntity {
 
         XDataMapArray componentArray = entityMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
         if(componentArray != null) {
-            addEntityComponents(scene, registerManager, poolController, entity, componentArray, false, entityJsonId);
+            addEntityComponents(registerManager, poolController, entity, componentArray, false, entityJsonId);
         }
         return entity;
     }
 
-    private void addEntityComponents(XScene scene, XRegisterManager registerManager, XPoolController poolController, XEntity entity, XDataMapArray componentArray, boolean isSubScene, int entityJsonId) {
+    private void addEntityComponents(XRegisterManager registerManager, XPoolController poolController, XEntity entity, XDataMapArray componentArray, boolean isSubScene, int entityJsonId) {
         int size = componentArray.getSize();
         for(int i = 0; i < size; i++) {
             XDataMap componentMap = componentArray.get(i);
@@ -123,25 +148,16 @@ class XLoadEntity {
             if(sceneComponent != null) {
                 // search for component entityId in scene path add all recursive components from it
                 try {
-                    addSceneComponents(scene, registerManager, poolController, entity, sceneComponent.entityId, sceneComponent.scenePath, sceneComponent.fileHandleType);
+                    addSceneComponents(registerManager, poolController, entity, sceneComponent.entityId, sceneComponent.scenePath, sceneComponent.fileHandleType);
                 }
                 catch(Throwable t) {
                     t.printStackTrace();
                 }
             }
-            else {
-                if(loadSubScene) {
-                    sceneComponent = poolController.obtainObject(XSceneComponent.class);
-                    sceneComponent.scenePath = scene.getPath();
-                    sceneComponent.fileHandleType = XAssetUtil.getFileTypeValue(scene.getFileType());
-                    sceneComponent.entityId = entityJsonId;
-                    entity.attachComponent(sceneComponent);
-                }
-            }
         }
     }
 
-    private void addSceneComponents(XScene scene, XRegisterManager registerManager, XPoolController poolController, XEntity entity, int sceneEntityId, String scenePath, int fileHandleType) {
+    private void addSceneComponents(XRegisterManager registerManager, XPoolController poolController, XEntity entity, int sceneEntityId, String scenePath, int fileHandleType) {
         if(sceneEntityId == -1 || scenePath == null || scenePath.trim().isEmpty()) {
             return;
         }
@@ -156,7 +172,7 @@ class XLoadEntity {
             if(sceneEntityDataMap != null) {
                 XDataMapArray componentsDataMap = sceneEntityDataMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
                 if(componentsDataMap != null) {
-                    addEntityComponents(scene, registerManager, poolController, entity, componentsDataMap, true, -1);
+                    addEntityComponents(registerManager, poolController, entity, componentsDataMap, true, -1);
                 }
             }
             sceneDataMap.free();
@@ -192,6 +208,18 @@ class XLoadEntity {
         }
         else {
             return null;
+        }
+    }
+
+
+
+    public static class XEntityLoadNode extends XDataArray.XDataArrayNode<XEntity> {
+        public int entityJsonId = -1;
+
+        @Override
+        public void onReset() {
+            super.onReset();
+            entityJsonId = -1;
         }
     }
 }
