@@ -39,6 +39,7 @@ public class XTransformImpl implements XTransform {
     private int scalenRoundScale = 4;
 
     private boolean isDragging;
+    private boolean initPreviousPosition;
 
     private Array<XTransformListener> transformListeners;
 
@@ -70,6 +71,7 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public void reset() {
+        initPreviousPosition = true;
         position.setZero();
         previousPosition.setZero();
         rotation.setZero();
@@ -456,6 +458,10 @@ public class XTransformImpl implements XTransform {
             }
 
             if(flag) {
+                if(initPreviousPosition) {
+                    initPreviousPosition = false;
+                    previousPosition.set(position);
+                }
                 updateValuesToMatrix();
                 if(shouldCallListener) {
                     callOnChangeListeners(LISTENER_CODE_TRANSFORM);
