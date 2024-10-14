@@ -18,6 +18,7 @@ import xlight.editor.core.ecs.manager.XProjectManager;
 import xlight.editor.core.project.XProjectOptions;
 import xlight.engine.core.XEngine;
 import xlight.engine.core.editor.ui.XUIData;
+import xlight.engine.core.file.XFileExtNames;
 import xlight.engine.ecs.XWorld;
 import xlight.engine.ecs.event.XEvent;
 import xlight.engine.ecs.event.XEventListener;
@@ -76,7 +77,7 @@ public class XContentBrowser {
             public Array<String> allowFile(XFile file) {
                 if(file.fileHandle != null) {
                     String ext = file.fileHandle.extension();
-                    if(ext.equals("xscene")) {
+                    if(XFileExtNames.isScene(ext)) {
                         if(path.size == 0) {
                             path.add("Open");
                             path.add("Add scene");
@@ -93,7 +94,7 @@ public class XContentBrowser {
                     if(file.fileHandle != null) {
                         String path = file.getPath();
                         String ext = file.fileHandle.extension();
-                        if(ext.equals("xscene")) {
+                        if(XFileExtNames.isScene(ext)) {
                             XEngine gameEngine = editorManager.getGameEngine();
                             if(gameEngine != null) {
                                 Files.FileType fileType = Files.FileType.Local;
