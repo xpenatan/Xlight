@@ -151,8 +151,13 @@ class XSaveEntity {
         componentMap.put(XSceneKeys.CLASS.getKey(), metaClass.getKey());
         if(component instanceof XDataMapListener) {
             XDataMap componentDataMap = XDataMap.obtain(poolController);
-            componentMap.put(XSceneKeys.DATA.getKey(), componentDataMap);
             ((XDataMapListener)component).onSave(componentDataMap);
+            if(componentDataMap.getSize() == 0) {
+                componentDataMap.free();
+            }
+            else {
+                componentMap.put(XSceneKeys.DATA.getKey(), componentDataMap);
+            }
         }
         return componentMap;
     }
