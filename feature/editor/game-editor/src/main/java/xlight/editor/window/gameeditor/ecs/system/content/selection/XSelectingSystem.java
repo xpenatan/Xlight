@@ -91,7 +91,7 @@ public class XSelectingSystem extends XGameEditorSystem {
         editorEventService.addEventListener(XEditorEvent.EVENT_ENGINE_DISPOSED, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
-                copyEntities.clear();
+                clearCopiedEntities();
                 return false;
             }
         });
@@ -100,6 +100,7 @@ public class XSelectingSystem extends XGameEditorSystem {
         editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_COPY_ENTITY, new XEventListener() {
             @Override
             public boolean onEvent(XEvent event) {
+                clearCopiedEntities();
                 XEngine gameEngine = editorManager.getGameEngine();
                 if(gameEngine != null) {
                     XWorld gameWorld = gameEngine.getWorld();
@@ -136,6 +137,14 @@ public class XSelectingSystem extends XGameEditorSystem {
                 return false;
             }
         });
+    }
+
+    private void clearCopiedEntities() {
+        for(int i = 0; i < copyEntities.size; i++) {
+            XDataMap entityMap = copyEntities.get(i);
+            entityMap.free();
+        }
+        copyEntities.clear();
     }
 
     @Override
