@@ -230,7 +230,7 @@ public class XMainWindow extends XImGuiWindowContext {
 
         boolean loadScenePath = false;
         if(ImGui.BeginPopup(POPUP_LOAD)) {
-            if(ImGui.MenuItem("Load from file")) {
+            if(ImGui.MenuItem("Load path")) {
                 ImGui.CloseCurrentPopup();
                 loadScenePath = true;
             }
@@ -242,7 +242,7 @@ public class XMainWindow extends XImGuiWindowContext {
 
         boolean saveScenePath = false;
         if(ImGui.BeginPopup(POPUP_SAVE)) {
-            if(ImGui.MenuItem("Save to file")) {
+            if(ImGui.MenuItem("Save path")) {
                 ImGui.CloseCurrentPopup();
                 saveScenePath = true;
             }
