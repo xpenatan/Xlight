@@ -121,6 +121,7 @@ public class XSelectingSystem extends XGameEditorSystem {
                 if(gameEngine != null) {
                     XWorld gameWorld = gameEngine.getWorld();
                     XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                    selectionManager.unselectAllTargets();
                     for(XDataMap entityMap : copyEntities) {
                         XEntity entity = sceneManager.loadEntity(entityMap);
                         XTransformComponent transformComponent = entity.getComponent(XTransformComponent.class);
@@ -128,6 +129,7 @@ public class XSelectingSystem extends XGameEditorSystem {
                             Vector3 cursorPosition = cursor3DRenderer.getCursorPosition();
                             transformComponent.position(cursorPosition.x, cursorPosition.y, cursorPosition.z);
                         }
+                        selectionManager.selectTarget(entity, true);
                     }
                 }
 

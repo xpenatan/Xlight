@@ -9,7 +9,6 @@ public class XEditorEvent {
     public static final int EVENT_ENGINE_DISPOSED = XWorldEvent.getNewEventId();
     public static final int EVENT_EDITOR_COPY_ENTITY = XWorldEvent.getNewEventId();
     public static final int EVENT_EDITOR_PASTE_ENTITY = XWorldEvent.getNewEventId();
-    public static final int EVENT_EDITOR_SELECT_ENTITY = XWorldEvent.getNewEventId();
 
     private XEditorEvent() {}
 }
