@@ -156,20 +156,20 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
         assetToLoad = false;
         clearAsset();
 
-        this.fileType = fileType;
-        Files.FileType type = XAssetUtil.getFileTypeEnum(fileType);
-        FileHandle fileHandle = Gdx.files.getFileHandle(path, type);
-
-        if(path == null) {
+        if(path == null || path.isEmpty()) {
             return;
         }
 
+        this.fileType = fileType;
         assetPath = path;
-        if(!fileHandle.exists() || fileHandle.isDirectory()) {
+
+        FileHandle fileHandle = getFileHandle(path);
+        if(fileHandle == null) {
             assetError = true;
             return;
         }
 
+        this.fileType = XAssetUtil.getFileTypeValue(fileHandle.type());
         String extension = fileHandle.extension();
 
         try {
@@ -203,5 +203,26 @@ public class XGLTFComponent extends XRender3DComponent implements XUIDataListene
             sceneAsset = null;
             scene = null;
         }
+    }
+
+    private FileHandle getFileHandle(String path) {
+        Files.FileType type = XAssetUtil.getFileTypeEnum(fileType);
+        FileHandle fileHandle = Gdx.files.getFileHandle(path, type);
+        if(!fileHandle.exists() || fileHandle.isDirectory()) {
+            //TODO fix this hack.
+            if(type == Files.FileType.Internal) {
+                fileHandle = Gdx.files.local(path);
+                if(!fileHandle.exists() || fileHandle.isDirectory()) {
+                    fileHandle = null;
+                }
+            }
+            else if(type == Files.FileType.Local) {
+                fileHandle = Gdx.files.internal(path);
+                if(!fileHandle.exists() || fileHandle.isDirectory()) {
+                    fileHandle = null;
+                }
+            }
+        }
+        return fileHandle;
     }
 }
