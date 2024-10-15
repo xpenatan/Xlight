@@ -139,7 +139,7 @@ class XEntitySelectionManagerImpl extends XObjectSelection<XEntity, XEntitySelec
                     XMath.QUAT_2.idt();
 
                     {
-                        if(transformType == XTransformType.POSITION) {
+                        if(transformType == XTransformType.TRANSLATE) {
                             transform.forceUpdate();
                             transform.setPosition(targetX, targetY, targetZ);
                             firstX = targetX;

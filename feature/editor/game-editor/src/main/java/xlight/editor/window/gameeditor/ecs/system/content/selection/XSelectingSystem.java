@@ -60,7 +60,7 @@ public class XSelectingSystem extends XGameEditorSystem {
 
     private final Array<XAABBTreeNode> hitList = new Array<>();
 
-    private XTransformType transformType = XTransformType.POSITION;
+    private XTransformType transformType = XTransformType.TRANSLATE;
     private boolean isGlobalTransform = true;
 
     private boolean targetLock = false;
@@ -97,46 +97,68 @@ public class XSelectingSystem extends XGameEditorSystem {
         });
 
 
-        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_COPY_ENTITY, new XEventListener() {
-            @Override
-            public boolean onEvent(XEvent event) {
-                clearCopiedEntities();
-                XEngine gameEngine = editorManager.getGameEngine();
-                if(gameEngine != null) {
-                    XWorld gameWorld = gameEngine.getWorld();
-                    XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+        XEventListener copyPasteEventListener = event -> {
+            int eventId = event.getId();
+            XEngine gameEngine = editorManager.getGameEngine();
+            if(gameEngine != null) {
+                XWorld gameWorld = gameEngine.getWorld();
+                XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                if(eventId == XEditorEvent.EVENT_EDITOR_COPY_ENTITY) {
+                    clearCopiedEntities();
                     XList<XEntity> selectedTargets = selectionManager.getSelectedTargets();
                     for(XEntity entity : selectedTargets) {
                         XDataMap entityMap = sceneManager.saveEntity(entity);
                         copyEntities.add(entityMap);
                     }
                 }
-                return false;
-            }
-        });
-
-        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_PASTE_ENTITY, new XEventListener() {
-            @Override
-            public boolean onEvent(XEvent event) {
-                XEngine gameEngine = editorManager.getGameEngine();
-                if(gameEngine != null) {
-                    XWorld gameWorld = gameEngine.getWorld();
-                    XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                else if(eventId == XEditorEvent.EVENT_EDITOR_PASTE_ENTITY) {
                     selectionManager.unselectAllTargets();
                     for(XDataMap entityMap : copyEntities) {
                         XEntity entity = sceneManager.loadEntity(entityMap);
-                        XTransformComponent transformComponent = entity.getComponent(XTransformComponent.class);
-                        if(transformComponent  != null) {
-                            Vector3 cursorPosition = cursor3DRenderer.getCursorPosition();
-                            transformComponent.position(cursorPosition.x, cursorPosition.y, cursorPosition.z);
+                        if(entity != null) {
+                            XTransformComponent transformComponent = entity.getComponent(XTransformComponent.class);
+                            if(transformComponent  != null) {
+                                Vector3 cursorPosition = cursor3DRenderer.getCursorPosition();
+                                transformComponent.position(cursorPosition.x, cursorPosition.y, cursorPosition.z);
+                            }
+                            selectionManager.selectTarget(entity, true);
                         }
-                        selectionManager.selectTarget(entity, true);
                     }
                 }
+            }
+            return false;
+        };
 
+        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_COPY_ENTITY, copyPasteEventListener);
+        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_PASTE_ENTITY, copyPasteEventListener);
+
+        XEventListener gizmoEventListener = new XEventListener() {
+            @Override
+            public boolean onEvent(XEvent event) {
+                int eventId = event.getId();
+                if(eventId == XEditorEvent.EVENT_EDITOR_GIZMO_GLOBAL) {
+                    setGlobalTransform(true);
+                }
+                else if(eventId == XEditorEvent.EVENT_EDITOR_GIZMO_LOCAL) {
+                    setGlobalTransform(false);
+                }
+                else if(eventId == XEditorEvent.EVENT_EDITOR_GIZMO_TRANSLATE) {
+                    setTransformType(XTransformType.TRANSLATE);
+                }
+                else if(eventId == XEditorEvent.EVENT_EDITOR_GIZMO_ROTATE) {
+                    setTransformType(XTransformType.ROTATE);
+                }
+                else if(eventId == XEditorEvent.EVENT_EDITOR_GIZMO_SCALE) {
+                    setTransformType(XTransformType.SCALE);
+                }
                 return false;
             }
-        });
+        };
+        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_GIZMO_SCALE, gizmoEventListener);
+        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_GIZMO_ROTATE, gizmoEventListener);
+        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_GIZMO_TRANSLATE, gizmoEventListener);
+        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_GIZMO_GLOBAL, gizmoEventListener);
+        editorEventService.addEventListener(XEditorEvent.EVENT_EDITOR_GIZMO_LOCAL, gizmoEventListener);
     }
 
     private void clearCopiedEntities() {

@@ -2,12 +2,12 @@ package xlight.engine.ecs.entity;
 
 import com.badlogic.gdx.utils.Bits;
 import xlight.engine.ecs.component.XComponent;
-import xlight.engine.list.XIntSet;
 import xlight.engine.list.XIntSetNode;
 import xlight.engine.list.XList;
 
 public interface XEntity {
     int getId();
+    int getLoadId();
     XEntityState getState();
     /**
      * Return read-only component mask

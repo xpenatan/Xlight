@@ -13,6 +13,7 @@ import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.list.XDataArray;
+import xlight.engine.list.XIntSetNode;
 import xlight.engine.list.XList;
 import xlight.engine.pool.XPool;
 import xlight.engine.pool.XPoolController;
@@ -96,7 +97,7 @@ class XLoadEntity {
         if(sceneComponent != null) {
             XDataMap jsonEntityMap = getEntityMap(poolController, sceneComponent);
             if(jsonEntityMap != null) {
-                setupChildEntities(entityService, registerManager, poolController, entity, jsonEntityMap, false);
+                setupChildEntities(entityService, registerManager, poolController, entity, jsonEntityMap, true);
                 jsonEntityMap.free();
             }
         }
@@ -108,16 +109,36 @@ class XLoadEntity {
         XDataMapArray childEntitiesArray = entityMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
         if(childEntitiesArray != null) {
             XList<XDataMap> list = childEntitiesArray.getList();
-            for(XDataMap childDataMap : list) {
-                int entityType = childDataMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
+            for(XDataMap childEntityMap : list) {
+                int entityType = childEntityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
                 if(entityType == XSceneTypeValue.ENTITY.getValue()) {
-                    XEntity childEntity = loadEntity(entityService, registerManager, poolController, childDataMap, obtainIfFails);
-                    if(childEntity != null) {
-                        childEntity.setParent(parent);
+                    int entityJsonId = childEntityMap.getInt(XSceneKeys.ENTITY_JSON_ID.getKey(), -1);
+                    if(!containsChildLoadId(entityService, parent, entityJsonId)) {
+                        XEntity childEntity = loadEntity(entityService, registerManager, poolController, childEntityMap, obtainIfFails);
+                        if(childEntity != null) {
+                            childEntity.setParent(parent);
+                        }
                     }
                 }
             }
         }
+    }
+
+    private boolean containsChildLoadId(XEntityService entityService, XEntity parent, int entityLoadId) {
+        // Check if the parent entity contains a scene component pointing to entity load id
+        XIntSetNode cur = parent.getChildHead();
+        while(cur != null) {
+            int key = cur.getKey();
+            XEntity childEntity = entityService.getEntity(key);
+            XSceneComponent sceneComponent = childEntity.getComponent(XSceneComponent.class);
+            if(sceneComponent != null) {
+                if(sceneComponent.entityId == entityLoadId) {
+                    return true;
+                }
+            }
+            cur = cur.getNext();
+        }
+        return false;
     }
 
     private XEntity setupEntity(XEntityService entityService, XRegisterManager registerManager, XPoolController poolController, XDataMap entityMap, boolean obtainIfFails) {
@@ -126,17 +147,18 @@ class XLoadEntity {
         boolean isVisible = entityMap.getBoolean(XSceneKeys.VISIBLE.getKey(), true);
         int entityJsonId = entityMap.getInt(XSceneKeys.ENTITY_JSON_ID.getKey(), -1);
         String tag = entityMap.getString(XSceneKeys.TAG.getKey(), "");
-        XEntity entity = entityService.obtain(entityJsonId);
+        XEntityImpl entity = (XEntityImpl)entityService.obtain(entityJsonId);
         if(entity == null) {
             // Getting an entity with the same ID as the scene did not work because its already being used.
             // Use a new entity
             if(obtainIfFails) {
-                entity = entityService.obtain();
+                entity = (XEntityImpl)entityService.obtain();
             }
             else {
                 return null;
             }
         }
+        entity.loadId = entityJsonId;
         XEntityLoadNode node = entitiesToAttach.add(entity);
         node.entityJsonId = entityJsonId;
         entity.setVisible(isVisible);

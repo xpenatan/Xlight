@@ -1,5 +1,5 @@
 package xlight.engine.transform;
 
 public enum XTransformType {
-    POSITION, ROTATE, SCALE
+    TRANSLATE, ROTATE, SCALE
 }

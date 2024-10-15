@@ -46,6 +46,7 @@ public class XEntityInspector {
             {
                 // TODO improve getting id as string
                 uiData.text("ID:", "" + entity.getId());
+                uiData.text("Load ID:", "" + entity.getLoadId());
                 XUIOpStringEditText strOp = XUIOpStringEditText.get();
                 if(uiData.editText("Name:", entity.getName(), strOp)) {
                     entity.setName(strOp.value);

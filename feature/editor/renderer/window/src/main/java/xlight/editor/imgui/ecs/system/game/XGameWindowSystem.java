@@ -50,12 +50,32 @@ public class XGameWindowSystem implements XSystem {
 
         boolean copyEntities = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.C);
         boolean pasteEntity = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.V);
+        boolean gizmoScaleKey = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.S);
+        boolean gizmoTranslateKey = Gdx.input.isKeyJustPressed(Input.Keys.T);
+        boolean gizmoRotateKey = Gdx.input.isKeyJustPressed(Input.Keys.R);
+        boolean gizmoLocalKey = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.G);
+        boolean gizmoGlobalKey = Gdx.input.isKeyJustPressed(Input.Keys.G);
 
         if(copyEntities) {
             world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_COPY_ENTITY);
         }
         else if(pasteEntity) {
             world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_PASTE_ENTITY);
+        }
+        else if(gizmoScaleKey) {
+            world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_GIZMO_SCALE);
+        }
+        else if(gizmoTranslateKey) {
+            world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_GIZMO_TRANSLATE);
+        }
+        else if(gizmoRotateKey) {
+            world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_GIZMO_ROTATE);
+        }
+        else if(gizmoLocalKey) {
+            world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_GIZMO_LOCAL);
+        }
+        else if(gizmoGlobalKey) {
+            world.getWorldService().getEventService().sendEvent(XEditorEvent.EVENT_EDITOR_GIZMO_GLOBAL);
         }
     }
 

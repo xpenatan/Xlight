@@ -69,7 +69,7 @@ public class XGizmoRenderer {
     private XMeshData meshData;
 
     private boolean isGlobalTransform = true;
-    private XTransformType transformType = XTransformType.POSITION;
+    private XTransformType transformType = XTransformType.TRANSLATE;
 
     private XInputStateController onInput = new XInputStateController();
 
@@ -288,7 +288,7 @@ public class XGizmoRenderer {
     }
 
     public Vector3 getObjectVirtualPosition() {
-        if(!isDragging() || transformType != XTransformType.POSITION) {
+        if(!isDragging() || transformType != XTransformType.TRANSLATE) {
             objectVirtualPosition.set(objectPosition);
         }
         return objectVirtualPosition;
@@ -376,7 +376,7 @@ public class XGizmoRenderer {
 
         XMeshData meshData = null;
 
-        if(transformType == XTransformType.POSITION) {
+        if(transformType == XTransformType.TRANSLATE) {
             meshData = positionGizmoModelInstance.rayCast(null, camera, Gdx.input.getX(), Gdx.input.getY(), intersection);
         }
         else if(transformType == XTransformType.ROTATE) {
@@ -431,7 +431,7 @@ public class XGizmoRenderer {
         // Makes model render on top of the game models
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
         modelBatch.begin(camera);
-        if(transformType == XTransformType.POSITION) {
+        if(transformType == XTransformType.TRANSLATE) {
             modelBatch.render(positionGizmoModelInstance, environment);
         }
         else if(transformType == XTransformType.ROTATE) {
@@ -466,7 +466,7 @@ public class XGizmoRenderer {
         if(meshData == null)
             return null;
         XCursor3DRenderer.AXIS_TYPE type = null;
-        if(transformType == XTransformType.POSITION) {
+        if(transformType == XTransformType.TRANSLATE) {
             Node parent = meshData.parentNode.getParent();
             String id = parent.id;
             if(id.equals("axisX")) {
@@ -608,7 +608,7 @@ public class XGizmoRenderer {
         Node axisXZ = null;
         Node axisYZ = null;
 
-        if(transformType == XTransformType.POSITION) {
+        if(transformType == XTransformType.TRANSLATE) {
             axisX = positionGizmoModelInstance.getNode("axisX");
             axisY = positionGizmoModelInstance.getNode("axisY");
             axisZ = positionGizmoModelInstance.getNode("axisZ");

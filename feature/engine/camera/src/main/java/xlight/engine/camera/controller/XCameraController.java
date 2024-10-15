@@ -91,6 +91,17 @@ public class XCameraController {
         leftShift = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);
         rightCtrl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
         leftCtrl = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT);
+
+        if(leftCtrl) {
+            // Cancel movements if ctrl is pressed
+            moveRight = false;
+            moveLeft = false;
+            moveForward = false;
+            moveBackward = false;
+            moveUp = false;
+            moveDown = false;
+        }
+
         boolean cursorCatched = Gdx.input.isCursorCatched();
         int oldMouseX = mouseX;
         int oldMouseY = mouseY;

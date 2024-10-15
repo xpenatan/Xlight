@@ -16,6 +16,7 @@ import xlight.engine.list.XList;
 class XEntityImpl implements XEntity {
     private static String EMPTY_NAME = "NoName";
     public int index;
+    public int loadId;
     public XEntityState state;
     Bits componentMask;
     IntArray componentsIndex;
@@ -43,6 +44,11 @@ class XEntityImpl implements XEntity {
     @Override
     public int getId() {
         return index;
+    }
+
+    @Override
+    public int getLoadId() {
+        return loadId;
     }
 
     @Override
@@ -252,6 +258,7 @@ class XEntityImpl implements XEntity {
 
         name = EMPTY_NAME;
         index = -1;
+        loadId = -1;
         isVisible = true;
         parentId = -1;
         isSavable = false;

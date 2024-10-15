@@ -52,13 +52,13 @@ public class XFloatingButtonSystem extends XGameEditorSystem {
                 ImVec4 buttonSelectedColor = ImGui.GetStyle().Colors(ImGuiCol.ImGuiCol_ButtonActive);
                 XTransformType transformType = selectingSystem.getTransformType();
 
-                if(transformType == XTransformType.POSITION) {
+                if(transformType == XTransformType.TRANSLATE) {
                     ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Button, buttonSelectedColor);
                 }
                 if(ImGui.ImageButton("position", XEditorAssets.axisPositionTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(buttonSize, buttonSize), ImVec2.TMP_2.set(0, 0), ImVec2.TMP_3.set(1, 1))) {
-                    selectingSystem.setTransformType(XTransformType.POSITION);
+                    selectingSystem.setTransformType(XTransformType.TRANSLATE);
                 }
-                if(transformType == XTransformType.POSITION) {
+                if(transformType == XTransformType.TRANSLATE) {
                     ImGui.PopStyleColor();
                 }
 
