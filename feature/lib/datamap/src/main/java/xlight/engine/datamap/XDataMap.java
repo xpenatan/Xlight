@@ -36,6 +36,7 @@ public interface XDataMap {
     void free();
 
     void copy(XDataMap dataMap);
+    XDataMap clone();
 
     /** Vector4 is converted to an array */
     void put(int key, Vector4 value);
