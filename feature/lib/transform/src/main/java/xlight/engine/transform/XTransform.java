@@ -88,4 +88,9 @@ public interface XTransform {
      * Force listener to call onUpdate
      */
     void callOnChangeListeners(int code);
+
+    /**
+     * Return true when there was no change to position, rotate or rotate
+     */
+    boolean isInitState();
 }

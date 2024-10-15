@@ -43,6 +43,8 @@ public class XTransformImpl implements XTransform {
 
     private Array<XTransformListener> transformListeners;
 
+    private boolean isInitState;
+
     public static final int LISTENER_CODE_TRANSFORM = 0;
     public static final int LISTENER_CODE_ROTATE = 1;
     public static final int LISTENER_CODE_SCALE = 2;
@@ -71,6 +73,7 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public void reset() {
+        isInitState = true;
         initPreviousPosition = true;
         position.setZero();
         previousPosition.setZero();
@@ -336,6 +339,11 @@ public class XTransformImpl implements XTransform {
     }
 
     @Override
+    public boolean isInitState() {
+        return isInitState;
+    }
+
+    @Override
     public Quaternion getQuaternion() {
         tmpQuaternion.set(quaternion);
         return tmpQuaternion;
@@ -458,6 +466,7 @@ public class XTransformImpl implements XTransform {
             }
 
             if(flag) {
+                isInitState = false;
                 if(initPreviousPosition) {
                     initPreviousPosition = false;
                     previousPosition.set(position);
@@ -502,6 +511,7 @@ public class XTransformImpl implements XTransform {
             }
 
             if(flag) {
+                isInitState = false;
                 if(convertToQuat) {
                     XRotationUtils.convertEulerToQuat(rotationSequence, rotation, quaternion);
                 }
@@ -530,6 +540,7 @@ public class XTransformImpl implements XTransform {
         }
 
         if(toUpdate) {
+            isInitState = false;
             scale.x = x;
             scale.y = y;
             scale.z = z;
