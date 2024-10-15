@@ -184,7 +184,7 @@ public class XDataMapImpl implements XDataMap, XPoolable {
     @Override
     public XDataMap clone() {
         XDataMap newMap = XDataMap.obtain(poolController);
-        copy(newMap);
+        newMap.copy(this);
         return newMap;
     }
 
