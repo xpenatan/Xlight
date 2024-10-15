@@ -19,7 +19,7 @@ public class XSceneMapUtils {
     }
 
     private static XDataMap getEntityMapFromEntities(XDataMap entityMap, int sceneEntityId) {
-        XDataMapArray entitiesArray = entityMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
+        XDataMapArray entitiesArray = getEntityChildrenArray(entityMap);
         if(entitiesArray != null) {
             // TODO change to a int map?
             int size = entitiesArray.getSize();
@@ -40,6 +40,18 @@ public class XSceneMapUtils {
             }
         }
         return null;
+    }
+
+    public static int getEntityID(XDataMap entityMap) {
+        int entityType = entityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
+        if(entityType == XSceneTypeValue.ENTITY.getValue()) {
+            return entityMap.getInt(XSceneKeys.ENTITY_JSON_ID.getKey(), -1);
+        }
+        return -1;
+    }
+
+    public static XDataMapArray getEntityChildrenArray(XDataMap entityMap) {
+        return entityMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
     }
 
     public static Class<?> getComponentTypeFromComponentMap(XRegisterManager registerManager, XDataMap componentMap) {
@@ -71,43 +83,40 @@ public class XSceneMapUtils {
     }
 
     public static XDataMap getComponentMapFromEntityMap(XRegisterManager registerManager, XDataMap entityMap, Class<?> componentType) {
-        if(entityMap == null) {
-            return null;
-        }
-        int sceneType = entityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
-        if(sceneType == XSceneTypeValue.ENTITY.getValue()) {
-            XDataMapArray componentArray = entityMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
-            if(componentArray != null) {
-                int size = componentArray.getSize();
-                for(int i = 0; i < size; i++) {
-                    XDataMap componentMap = componentArray.get(i);
-                    Class<?> type = getComponentTypeFromComponentMap(registerManager, componentMap);
-                    if(type == componentType) {
-                        return componentMap;
-                    }
+        XMetaClass metaClass = registerManager.getRegisteredClass(componentType);
+        int componentKey = metaClass.getKey();
+        return getComponentMapFromEntityMap(entityMap, componentKey);
+    }
+
+    public static XDataMap getComponentMapFromEntityMap(XDataMap entityMap, int componentKey) {
+        XDataMapArray componentArray = getComponentArrayFromEntityMap(entityMap);
+        return getComponentMapFromEntityComponentArray(componentArray, componentKey);
+    }
+
+    public static XDataMap getComponentMapFromEntityComponentArray(XRegisterManager registerManager, XDataMapArray componentArray, Class<?> componentType) {
+        XMetaClass metaClass = registerManager.getRegisteredClass(componentType);
+        int componentKey = metaClass.getKey();
+        return getComponentMapFromEntityComponentArray(componentArray, componentKey);
+    }
+
+    public static XDataMap getComponentMapFromEntityComponentArray(XDataMapArray componentArray, int componentKey) {
+        if(componentArray != null) {
+            int size = componentArray.getSize();
+            for(int i = 0; i < size; i++) {
+                XDataMap componentMap = componentArray.get(i);
+                int key = getComponentKeyFromComponentMap(componentMap);
+                if(key != -1 && key == componentKey) {
+                    return componentMap;
                 }
             }
         }
         return null;
     }
 
-    public static XDataMap getComponentMapFromEntityMap(XDataMap entityMap, int componentKey) {
-        if(entityMap == null) {
-            return null;
-        }
+    public static XDataMapArray getComponentArrayFromEntityMap(XDataMap entityMap) {
         int sceneType = entityMap.getInt(XSceneKeys.SCENE_TYPE.getKey(), 0);
         if(sceneType == XSceneTypeValue.ENTITY.getValue()) {
-            XDataMapArray componentArray = entityMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
-            if(componentArray != null) {
-                int size = componentArray.getSize();
-                for(int i = 0; i < size; i++) {
-                    XDataMap componentMap = componentArray.get(i);
-                    int key = getComponentKeyFromComponentMap(componentMap);
-                    if(key != -1 && key == componentKey) {
-                        return componentMap;
-                    }
-                }
-            }
+            return entityMap.getDataMapArray(XSceneKeys.COMPONENTS.getKey());
         }
         return null;
     }

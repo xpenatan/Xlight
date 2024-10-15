@@ -27,14 +27,14 @@ class XSceneManagerImpl implements XSceneManager, XManager {
     private XSceneListener sceneListener;
     private XPoolController poolController;
 
-    private XLoadEntity loadEntity;
+    private XLoadEntity2 loadEntity;
 
     @Override
     public void onAttach(XWorld world) {
         poolController = world.getGlobalData(XPoolController.class);
         this.world = world;
         currentScene = new XSceneImpl(poolController);
-        loadEntity = new XLoadEntity();
+        loadEntity = new XLoadEntity2();
     }
 
     @Override
@@ -159,10 +159,7 @@ class XSceneManagerImpl implements XSceneManager, XManager {
 
     @Override
     public XEntity loadEntity(XDataMap entityMap) {
-        XEntityService entityService = world.getWorldService().getEntityService();
-        XRegisterManager registerManager = world.getManager(XRegisterManager.class);
-        XPoolController poolController = world.getGlobalData(XPoolController.class);
-        XEntity entity = loadEntity.loadEntityAndAttach(entityService, registerManager, poolController, entityMap);
+        XEntity entity = loadEntity.loadEntityAndAttach(world, entityMap);
         return entity;
     }
 
