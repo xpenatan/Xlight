@@ -43,7 +43,7 @@ public class XTransformImpl implements XTransform {
 
     private Array<XTransformListener> transformListeners;
 
-    private boolean isInitState;
+    private int isInitState;
 
     public static final int LISTENER_CODE_TRANSFORM = 0;
     public static final int LISTENER_CODE_ROTATE = 1;
@@ -73,7 +73,7 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public void reset() {
-        isInitState = true;
+        isInitState = 0;
         initPreviousPosition = true;
         position.setZero();
         previousPosition.setZero();
@@ -340,7 +340,7 @@ public class XTransformImpl implements XTransform {
 
     @Override
     public boolean isInitState() {
-        return isInitState;
+        return isInitState == 0;
     }
 
     @Override
@@ -436,6 +436,9 @@ public class XTransformImpl implements XTransform {
     private void setPositionInternal(float x, float y, float z, boolean shouldCallListener) {
         boolean forceChange = forceUpdate;
         forceUpdate = false;
+        if(isInitState == 0) {
+            isInitState = 1;
+        }
 
         boolean toUpdate = false;
         if(forceChange) {
@@ -466,7 +469,7 @@ public class XTransformImpl implements XTransform {
             }
 
             if(flag) {
-                isInitState = false;
+                isInitState = 2;
                 if(initPreviousPosition) {
                     initPreviousPosition = false;
                     previousPosition.set(position);
@@ -482,6 +485,9 @@ public class XTransformImpl implements XTransform {
     private void setRotationInternal(float rotationX, float rotationY, float rotationZ, boolean convertToQuat, boolean shouldCallListener) {
         boolean forceChange = forceUpdate;
         forceUpdate = false;
+        if(isInitState == 0) {
+            isInitState = 1;
+        }
 
         boolean toUpdate = false;
         if(forceChange) {
@@ -511,7 +517,7 @@ public class XTransformImpl implements XTransform {
             }
 
             if(flag) {
-                isInitState = false;
+                isInitState = 2;
                 if(convertToQuat) {
                     XRotationUtils.convertEulerToQuat(rotationSequence, rotation, quaternion);
                 }
@@ -526,6 +532,9 @@ public class XTransformImpl implements XTransform {
     private void setScaleInternal(float x, float y, float z, boolean shouldCallListener) {
         boolean forceChange = forceUpdate;
         forceUpdate = false;
+        if(isInitState == 0) {
+            isInitState = 1;
+        }
 
         boolean toUpdate = false;
         if(forceChange) {
@@ -540,7 +549,7 @@ public class XTransformImpl implements XTransform {
         }
 
         if(toUpdate) {
-            isInitState = false;
+            isInitState = 2;
             scale.x = x;
             scale.y = y;
             scale.z = z;
