@@ -20,6 +20,7 @@ public class XTransformComponent extends XLocalTransformComponent {
 
     public static final int LISTENER_CODE_UPDATE_CHILD_TRANSFORM = -1;
     public static final int LISTENER_CODE_LOCAL_TRANSFORM_CHANGED = -2;
+    public static final int LISTENER_CODE_LOCAL_TRANSFORM_UPDATE_OFFSET = -3;
 
     private XEntityService entityService;
     private XEntity entity;

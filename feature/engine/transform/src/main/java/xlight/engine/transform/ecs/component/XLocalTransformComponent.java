@@ -47,14 +47,23 @@ public class XLocalTransformComponent implements XComponent, XUIDataListener, XD
         this.entity = entity;
         XEntity parent = entity.getParent();
         if(parent != null) {
-            XTransformComponent transformComponent = parent.getComponent(XTransformComponent.class);
-            if(getClass() == XLocalTransformComponent.class && transformComponent != null) {
+            XTransformComponent parentTransformComponent = parent.getComponent(XTransformComponent.class);
+            XTransformComponent childComponent = entity.getComponent(XTransformComponent.class);
+            if(getClass() == XLocalTransformComponent.class && parentTransformComponent != null && childComponent != null) {
                 transform.addTransformListener(listener);
-                // Force Calculating offset
-                XTransform otherTransform = transformComponent.transform;
-                otherTransform.setDragging(true);
-                otherTransform.callOnChangeListeners(XTransformComponent.LISTENER_CODE_LOCAL_TRANSFORM_CHANGED);
-                otherTransform.setDragging(false);
+                XTransform parentTransform = parentTransformComponent.transform;
+                XTransform childTransform = childComponent.transform;
+                if(transform.isInitState()) {
+                    // If locale transform was not changed calculate the offset based on the entity global transform
+                    childTransform.setDragging(true);
+                    childTransform.callOnChangeListeners(XTransformComponent.LISTENER_CODE_LOCAL_TRANSFORM_UPDATE_OFFSET);
+                    childTransform.setDragging(false);
+                }
+                else {
+                    parentTransform.setDragging(true);
+                    parentTransform.callOnChangeListeners(XTransformComponent.LISTENER_CODE_LOCAL_TRANSFORM_CHANGED);
+                    parentTransform.setDragging(false);
+                }
             }
         }
     }
