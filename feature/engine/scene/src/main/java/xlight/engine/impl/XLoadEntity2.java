@@ -214,7 +214,6 @@ class XLoadEntity2 {
                 }
             }
         }
-        initEntitySceneComponent(registerManager, poolController, tempEntitiesToAttach);
 
         // We add missing sub scene entities that was added later in the current scene
         XList<XEntityLoadNode> list = tempEntitiesToAttach.getNodeList();
@@ -231,12 +230,12 @@ class XLoadEntity2 {
                     rootNode.error = tmpNode.error;
                     tmpNode.entityMap = null;
                     tmpNode.sceneEntityMap = null;
-
-//                    XSceneComponent sceneComponent = poolController.obtainObject(XSceneComponent.class);
-//                    sceneComponent.scenePath = parentSceneComponent.scenePath;
-//                    sceneComponent.fileHandleType = parentSceneComponent.fileHandleType;
-//                    sceneComponent.entityId = entity.getLoadId(); // Since we added entity from a file, we can use the loaded id
-//                    entity.attachComponent(sceneComponent);
+                    // Need to add scene component because this entity is new
+                    XSceneComponent sceneComponent = poolController.obtainObject(XSceneComponent.class);
+                    sceneComponent.scenePath = parentSceneComponent.scenePath;
+                    sceneComponent.fileHandleType = parentSceneComponent.fileHandleType;
+                    sceneComponent.entityId = entity.getLoadId(); // Since we added entity from a file, we can use the loaded id
+                    entity.attachComponent(sceneComponent);
                 }
             }
         }
