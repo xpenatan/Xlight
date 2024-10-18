@@ -230,6 +230,11 @@ public class XMainWindow extends XImGuiWindowContext {
 
         boolean loadScenePath = false;
         if(ImGui.BeginPopup(POPUP_LOAD)) {
+            if(ImGui.MenuItem("Load from memory")) {
+                ImGui.CloseCurrentPopup();
+                XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                sceneManager.load(true);
+            }
             if(ImGui.MenuItem("Load path")) {
                 ImGui.CloseCurrentPopup();
                 loadScenePath = true;
@@ -242,6 +247,11 @@ public class XMainWindow extends XImGuiWindowContext {
 
         boolean saveScenePath = false;
         if(ImGui.BeginPopup(POPUP_SAVE)) {
+            if(ImGui.MenuItem("Save to memory")) {
+                ImGui.CloseCurrentPopup();
+                XSceneManager sceneManager = gameWorld.getManager(XSceneManager.class);
+                sceneManager.save(true);
+            }
             if(ImGui.MenuItem("Save path")) {
                 ImGui.CloseCurrentPopup();
                 saveScenePath = true;

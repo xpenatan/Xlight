@@ -42,9 +42,9 @@ class XSaveEntity {
             }
         }
 
-//        String jsonStr = sceneDataMap.saveJsonStr();
-//        System.out.println("SAVE SCENE:");
-//        System.out.println(jsonStr);
+        String jsonStr = sceneDataMap.saveJsonStr();
+        System.out.println("SAVE SCENE:");
+        System.out.println(jsonStr);
     }
 
     public static XDataMap saveEntity(XEntityService entityService, XPoolController poolController, XRegisterManager registerManager, XEntity entity) {

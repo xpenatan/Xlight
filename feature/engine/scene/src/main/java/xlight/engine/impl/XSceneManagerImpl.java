@@ -44,7 +44,12 @@ class XSceneManagerImpl implements XSceneManager, XManager {
 
     @Override
     public void save() {
-        if(currentScene.doFileExists()) {
+        save(false);
+    }
+
+    @Override
+    public void save(boolean toMemory) {
+        if(!toMemory && currentScene.doFileExists()) {
             saveToFile(currentScene.getPath(), currentScene.getFileType());
         }
         else {
@@ -54,7 +59,12 @@ class XSceneManagerImpl implements XSceneManager, XManager {
 
     @Override
     public void load() {
-        if(currentScene.doFileExists()) {
+        load(false);
+    }
+
+    @Override
+    public void load(boolean fromMemory) {
+        if(!fromMemory && currentScene.doFileExists()) {
             loadFromFile(currentScene.getPath(), currentScene.getFileType());
         }
         else {

@@ -4,7 +4,9 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class XPool<T> {
 
-    private Array<T> freeObjects;
+    public static boolean ASSERT = true;
+
+    protected Array<T> freeObjects;
 
     public XPool() {
         this(100, 100);
@@ -17,6 +19,10 @@ public abstract class XPool<T> {
     public XPool(int initialSize, int capacity) {
         freeObjects = new Array<>(false, capacity);
         createNewObjects(initialSize);
+    }
+
+    public T get(int index) {
+        return freeObjects.get(index);
     }
 
     /**
@@ -36,6 +42,12 @@ public abstract class XPool<T> {
     }
 
     public void free(T object) {
+        if(ASSERT) {
+            if(freeObjects.contains(object, true)) {
+                throw new RuntimeException("Pool object already exist in pool" + object);
+            }
+        }
+
         if(object instanceof XPoolable) {
             ((XPoolable)object).onReset();
         }

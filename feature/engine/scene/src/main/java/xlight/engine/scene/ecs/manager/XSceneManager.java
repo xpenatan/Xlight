@@ -19,10 +19,23 @@ public interface XSceneManager {
     void save();
 
     /**
+     * Save all scene objects to the current XScene.
+     * The current XScene data will be cleared before saving.
+     * If toMemory is true, it will only save the current memory. False will also overwrite the file if it exists.
+     */
+    void save(boolean toMemory);
+
+    /**
      * Load all XScene from memory.
      * All entities will be cleared before loading.
      */
     void load();
+
+    /**
+     * Load all XScene from memory.
+     * All entities will be cleared before loading.
+     */
+    void load(boolean fromMemory);
 
     /** Save current scene a json string */
     boolean saveToFile(String path, Files.FileType filetype);

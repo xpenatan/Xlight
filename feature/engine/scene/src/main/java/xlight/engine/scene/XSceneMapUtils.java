@@ -4,6 +4,9 @@ import xlight.engine.core.register.XMetaClass;
 import xlight.engine.core.register.XRegisterManager;
 import xlight.engine.datamap.XDataMap;
 import xlight.engine.datamap.XDataMapArray;
+import xlight.engine.datamap.XDataMapListener;
+import xlight.engine.ecs.component.XComponent;
+import xlight.engine.pool.XPoolController;
 
 public class XSceneMapUtils {
 
@@ -18,8 +21,8 @@ public class XSceneMapUtils {
         return null;
     }
 
-    private static XDataMap getEntityMapFromEntities(XDataMap entityMap, int sceneEntityId) {
-        XDataMapArray entitiesArray = getEntityChildrenArray(entityMap);
+    public static XDataMap getEntityMapFromEntities(XDataMap entityMap, int sceneEntityId) {
+        XDataMapArray entitiesArray = getEntityArray(entityMap);
         if(entitiesArray != null) {
             // TODO change to a int map?
             int size = entitiesArray.getSize();
@@ -50,7 +53,7 @@ public class XSceneMapUtils {
         return -1;
     }
 
-    public static XDataMapArray getEntityChildrenArray(XDataMap entityMap) {
+    public static XDataMapArray getEntityArray(XDataMap entityMap) {
         return entityMap.getDataMapArray(XSceneKeys.ENTITIES.getKey());
     }
 
@@ -146,5 +149,26 @@ public class XSceneMapUtils {
             return componentMap.getDataMap(XSceneKeys.DATA.getKey());
         }
         return null;
+    }
+
+    public static XDataMap addComponent(XRegisterManager registerManager, XPoolController poolController, XDataMap entityMap, Class<?> componentType) {
+        XDataMap componentMap = null;
+
+        XDataMapArray componentsArray = getComponentArrayFromEntityMap(entityMap);
+        if(componentsArray != null) {
+            XMetaClass metaClass = registerManager.getRegisteredClass(componentType);
+            if(metaClass != null) {
+                componentMap = poolController.obtainObject(XDataMap.class);
+                componentMap.put(XSceneKeys.SCENE_TYPE.getKey(), XSceneTypeValue.COMPONENT.getValue());
+                componentMap.put(XSceneKeys.CLASS.getKey(), metaClass.getKey());
+            }
+        }
+        return componentMap;
+    }
+
+    public static XDataMap putComponentDataMap(XPoolController poolController, XDataMap componentMap) {
+        XDataMap componentDataMap = XDataMap.obtain(poolController);
+        componentMap.put(XSceneKeys.DATA.getKey(), componentDataMap);
+        return componentDataMap;
     }
 }
