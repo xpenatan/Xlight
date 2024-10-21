@@ -44,6 +44,7 @@ public class XPicker3DFrameBuffer extends XFrameBufferExt {
         depthConfig.vertexShader = depthV;
         depthConfig.fragmentShader = depthF;
         depthConfig.numBones = 89;
+        depthConfig.defaultCullFace = GL20.GL_BACK;
         modelBatch = new ModelBatch(new DefaultShaderProvider() {
             @Override
             protected Shader createShader(final Renderable renderable) {
@@ -66,8 +67,8 @@ public class XPicker3DFrameBuffer extends XFrameBufferExt {
                     public void begin(final Camera camera, final RenderContext context) {
                         super.begin(camera, context);
                         // make model non transparent
-                        context.setDepthTest(GL20.GL_LEQUAL);
-                        context.setCullFace(GL20.GL_BACK);
+//                        context.setDepthTest(GL20.GL_LEQUAL);
+//                        context.setCullFace(GL20.GL_BACK);
                     }
 
                     @Override
@@ -161,208 +162,6 @@ public class XPicker3DFrameBuffer extends XFrameBufferExt {
         end();
         return i;
     }
-
-    private static String VS = "" +
-            "attribute vec3 a_position;\n" +
-            "uniform mat4 u_projViewWorldTrans;\n" +
-            "\n" +
-            "\n" +
-            "#ifdef position0Flag\n" +
-            "attribute vec3 a_position0;\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef position1Flag\n" +
-            "attribute vec3 a_position1;\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef position2Flag\n" +
-            "attribute vec3 a_position2;\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef position3Flag\n" +
-            "attribute vec3 a_position3;\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef position4Flag\n" +
-            "attribute vec3 a_position4;\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef position5Flag\n" +
-            "attribute vec3 a_position5;\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef position6Flag\n" +
-            "attribute vec3 a_position6;\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef position7Flag\n" +
-            "attribute vec3 a_position7;\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef position0Flag\n" +
-            "#ifndef morphTargetsFlag\n" +
-            "#define morphTargetsFlag\n" +
-            "#endif\n" +
-            "uniform vec4 u_morphTargets1;\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef position4Flag\n" +
-            "uniform vec4 u_morphTargets2;\n" +
-            "#endif\n" +
-            "\n" +
-            "\n" +
-            "#if defined(diffuseTextureFlag) && defined(blendedFlag)\n" +
-            "#define blendedTextureFlag\n" +
-            "attribute vec2 a_texCoord0;\n" +
-            "varying vec2 v_texCoords0;\n" +
-            "#endif\n" +
-            "\n" +
-            "\n" +
-            "#ifdef boneWeight0Flag\n" +
-            "#define boneWeightsFlag\n" +
-            "attribute vec2 a_boneWeight0;\n" +
-            "#endif //boneWeight0Flag\n" +
-            "\n" +
-            "#ifdef boneWeight1Flag\n" +
-            "#ifndef boneWeightsFlag\n" +
-            "#define boneWeightsFlag\n" +
-            "#endif\n" +
-            "attribute vec2 a_boneWeight1;\n" +
-            "#endif //boneWeight1Flag\n" +
-            "\n" +
-            "#ifdef boneWeight2Flag\n" +
-            "#ifndef boneWeightsFlag\n" +
-            "#define boneWeightsFlag\n" +
-            "#endif\n" +
-            "attribute vec2 a_boneWeight2;\n" +
-            "#endif //boneWeight2Flag\n" +
-            "\n" +
-            "#ifdef boneWeight3Flag\n" +
-            "#ifndef boneWeightsFlag\n" +
-            "#define boneWeightsFlag\n" +
-            "#endif\n" +
-            "attribute vec2 a_boneWeight3;\n" +
-            "#endif //boneWeight3Flag\n" +
-            "\n" +
-            "#ifdef boneWeight4Flag\n" +
-            "#ifndef boneWeightsFlag\n" +
-            "#define boneWeightsFlag\n" +
-            "#endif\n" +
-            "attribute vec2 a_boneWeight4;\n" +
-            "#endif //boneWeight4Flag\n" +
-            "\n" +
-            "#ifdef boneWeight5Flag\n" +
-            "#ifndef boneWeightsFlag\n" +
-            "#define boneWeightsFlag\n" +
-            "#endif\n" +
-            "attribute vec2 a_boneWeight5;\n" +
-            "#endif //boneWeight5Flag\n" +
-            "\n" +
-            "#ifdef boneWeight6Flag\n" +
-            "#ifndef boneWeightsFlag\n" +
-            "#define boneWeightsFlag\n" +
-            "#endif\n" +
-            "attribute vec2 a_boneWeight6;\n" +
-            "#endif //boneWeight6Flag\n" +
-            "\n" +
-            "#ifdef boneWeight7Flag\n" +
-            "#ifndef boneWeightsFlag\n" +
-            "#define boneWeightsFlag\n" +
-            "#endif\n" +
-            "attribute vec2 a_boneWeight7;\n" +
-            "#endif //boneWeight7Flag\n" +
-            "\n" +
-            "#if defined(numBones) && defined(boneWeightsFlag)\n" +
-            "#if (numBones > 0)\n" +
-            "#define skinningFlag\n" +
-            "#endif\n" +
-            "#endif\n" +
-            "\n" +
-            "#if defined(numBones)\n" +
-            "#if numBones > 0\n" +
-            "uniform mat4 u_bones[numBones];\n" +
-            "#endif //numBones\n" +
-            "#endif\n" +
-            "\n" +
-            "#ifdef PackedDepthFlag\n" +
-            "varying float v_depth;\n" +
-            "#endif //PackedDepthFlag\n" +
-            "\n" +
-            "void main() {\n" +
-            "    #ifdef blendedTextureFlag\n" +
-            "        v_texCoords0 = a_texCoord0;\n" +
-            "    #endif // blendedTextureFlag\n" +
-            "\n" +
-            "    #ifdef skinningFlag\n" +
-            "        mat4 skinning = mat4(0.0);\n" +
-            "        #ifdef boneWeight0Flag\n" +
-            "            skinning += (a_boneWeight0.y) * u_bones[int(a_boneWeight0.x)];\n" +
-            "        #endif //boneWeight0Flag\n" +
-            "        #ifdef boneWeight1Flag\n" +
-            "            skinning += (a_boneWeight1.y) * u_bones[int(a_boneWeight1.x)];\n" +
-            "        #endif //boneWeight1Flag\n" +
-            "        #ifdef boneWeight2Flag\n" +
-            "            skinning += (a_boneWeight2.y) * u_bones[int(a_boneWeight2.x)];\n" +
-            "        #endif //boneWeight2Flag\n" +
-            "        #ifdef boneWeight3Flag\n" +
-            "            skinning += (a_boneWeight3.y) * u_bones[int(a_boneWeight3.x)];\n" +
-            "        #endif //boneWeight3Flag\n" +
-            "        #ifdef boneWeight4Flag\n" +
-            "            skinning += (a_boneWeight4.y) * u_bones[int(a_boneWeight4.x)];\n" +
-            "        #endif //boneWeight4Flag\n" +
-            "        #ifdef boneWeight5Flag\n" +
-            "            skinning += (a_boneWeight5.y) * u_bones[int(a_boneWeight5.x)];\n" +
-            "        #endif //boneWeight5Flag\n" +
-            "        #ifdef boneWeight6Flag\n" +
-            "            skinning += (a_boneWeight6.y) * u_bones[int(a_boneWeight6.x)];\n" +
-            "        #endif //boneWeight6Flag\n" +
-            "        #ifdef boneWeight7Flag\n" +
-            "            skinning += (a_boneWeight7.y) * u_bones[int(a_boneWeight7.x)];\n" +
-            "        #endif //boneWeight7Flag\n" +
-            "    #endif //skinningFlag\n" +
-            "\n" +
-            "    #ifdef morphTargetsFlag\n" +
-            "        vec3 morph_pos = a_position;\n" +
-            "        #ifdef position0Flag\n" +
-            "            morph_pos += a_position0 * u_morphTargets1.x;\n" +
-            "        #endif\n" +
-            "        #ifdef position1Flag\n" +
-            "            morph_pos += a_position1 * u_morphTargets1.y;\n" +
-            "        #endif\n" +
-            "        #ifdef position2Flag\n" +
-            "            morph_pos += a_position2 * u_morphTargets1.z;\n" +
-            "        #endif\n" +
-            "        #ifdef position3Flag\n" +
-            "            morph_pos += a_position3 * u_morphTargets1.w;\n" +
-            "        #endif\n" +
-            "        #ifdef position4Flag\n" +
-            "            tmorph_pos += a_position4 * u_morphTargets2.x;\n" +
-            "        #endif\n" +
-            "        #ifdef position5Flag\n" +
-            "            morph_pos += a_position5 * u_morphTargets2.y;\n" +
-            "        #endif\n" +
-            "        #ifdef position6Flag\n" +
-            "            morph_pos += a_position6 * u_morphTargets2.z;\n" +
-            "        #endif\n" +
-            "        #ifdef position7Flag\n" +
-            "            morph_pos += a_position7 * u_morphTargets2.w;\n" +
-            "        #endif\n" +
-            "    #else\n" +
-            "        vec3 morph_pos = a_position;\n" +
-            "    #endif\n" +
-            "\n" +
-            "    #ifdef skinningFlag\n" +
-            "        vec4 pos = u_projViewWorldTrans * skinning * vec4(morph_pos, 1.0);\n" +
-            "    #else\n" +
-            "        vec4 pos = u_projViewWorldTrans * vec4(morph_pos, 1.0);\n" +
-            "    #endif\n" +
-            "\n" +
-            "    #ifdef PackedDepthFlag\n" +
-            "        v_depth = pos.z / pos.w * 0.5 + 0.5;\n" +
-            "    #endif //PackedDepthFlag\n" +
-            "\n" +
-            "    gl_Position = pos;\n" +
-            "}\n";
 
     private static String FS = "" +
             "#ifdef GL_ES\n" +
