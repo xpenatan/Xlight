@@ -81,6 +81,12 @@ class XEntityImpl implements XEntity {
     @Override
     public void setVisible(boolean flag) {
         isVisible = flag;
+        XList<XIntSetNode> nodeList = children.getNodeList();
+        for(XIntSetNode node : nodeList) {
+            int childId = node.getKey();
+            XEntity child = getChild(childId);
+            child.setVisible(flag);
+        }
     }
 
     @Override
@@ -155,6 +161,12 @@ class XEntityImpl implements XEntity {
     @Override
     public void setSavable(boolean flag) {
         isSavable = flag;
+        XList<XIntSetNode> nodeList = children.getNodeList();
+        for(XIntSetNode node : nodeList) {
+            int childId = node.getKey();
+            XEntity child = getChild(childId);
+            child.setSavable(flag);
+        }
     }
 
     @Override
@@ -200,10 +212,10 @@ class XEntityImpl implements XEntity {
     }
 
     @Override
-    public XEntity getChild(int id) {
-        if(children.containsKey(id)) {
+    public XEntity getChild(int childId) {
+        if(children.containsKey(childId)) {
             XEntityService entityService = world.getWorldService().getEntityService();
-            return entityService.getEntity(id);
+            return entityService.getEntity(childId);
         }
         return null;
     }

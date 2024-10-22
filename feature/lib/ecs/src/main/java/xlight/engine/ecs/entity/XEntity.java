@@ -58,7 +58,7 @@ public interface XEntity {
     /**
      * Return child entity. null if not found
      */
-    XEntity getChild(int id);
+    XEntity getChild(int childId);
 
     /**
      * Return children list

@@ -11,6 +11,7 @@ import xlight.engine.ecs.component.XComponentMatcher;
 import xlight.engine.ecs.entity.XEntity;
 import xlight.engine.ecs.entity.XEntityService;
 import xlight.engine.ecs.event.XWorldEvent;
+import xlight.engine.list.XIntSetNode;
 import xlight.engine.list.XList;
 import xlight.engine.math.XMath;
 
@@ -74,9 +75,7 @@ class XEntityServiceImpl implements XEntityService {
 
     @Override
     public boolean releaseEntity(XEntity entity) {
-        // Try to detach it first before releasing.
-        detachEntity(entity);
-        return entities.releaseEntity(entity.getId());
+        return releaseEntityInternal(entity, true);
     }
 
     @Override
@@ -102,19 +101,7 @@ class XEntityServiceImpl implements XEntityService {
 
     @Override
     public boolean detachEntity(XEntity entity) {
-        boolean flag = entities.detachEntity(entity.getId());
-        if(flag) {
-            // Send event as soon as possible.
-            world.getWorldService().getEventService().sendEvent(XWorldEvent.EVENT_DETACH_ENTITY, entity, null, false);
-            entitySize--;
-            XEntityImpl e = (XEntityImpl)entity;
-            // Loop all matchers if entity mask bits match
-            XMath.BITS_1.clear();
-            updateEntityRemove(e, e.componentMask, XMath.BITS_1);
-            entity.clearChildren();
-            entity.setParent(null);
-        }
-        return flag;
+        return detachEntityInternal(entity, true);
     }
 
     @Override
@@ -132,11 +119,56 @@ class XEntityServiceImpl implements XEntityService {
         for(int i = 0; i < entities.items.length; i++) {
             XEntityImpl entity = entities.get(i);
             if(entity != null) {
-                if(detachEntity(entity)) {
-                    releaseEntity(entity);
+                if(detachEntityInternal(entity, false)) {
+                    releaseEntityInternal(entity, false);
                 }
             }
         }
+    }
+
+    public boolean releaseEntityInternal(XEntity entity, boolean detachChild) {
+        if(detachChild) {
+            XList<XIntSetNode> list = entity.getChildList();
+            if(list.getSize() > 0) {
+                // Removing parent also removes
+                for(XIntSetNode node : list) {
+                    int childId = node.getKey();
+                    XEntity childEntity = getEntity(childId);
+                    releaseEntityInternal(childEntity, true);
+                }
+            }
+        }
+        // Try to detach it first before releasing.
+        detachEntityInternal(entity, false);
+        return entities.releaseEntity(entity.getId());
+    }
+
+    private boolean detachEntityInternal(XEntity entity, boolean detachChild) {
+        if(detachChild) {
+            XList<XIntSetNode> list = entity.getChildList();
+            if(list.getSize() > 0) {
+                // Detaching parent also removes children
+                for(XIntSetNode node : list) {
+                    int childId = node.getKey();
+                    XEntity childEntity = getEntity(childId);
+                    detachEntityInternal(childEntity, true);
+                }
+            }
+        }
+
+        boolean flag = entities.detachEntity(entity.getId());
+        if(flag) {
+            // Send event as soon as possible.
+            world.getWorldService().getEventService().sendEvent(XWorldEvent.EVENT_DETACH_ENTITY, entity, null, false);
+            entitySize--;
+            XEntityImpl e = (XEntityImpl)entity;
+            // Loop all matchers if entity mask bits match
+            XMath.BITS_1.clear();
+            updateEntityRemove(e, e.componentMask, XMath.BITS_1);
+            entity.clearChildren();
+            entity.setParent(null);
+        }
+        return flag;
     }
 
     public XComponentMatcher getOrCreate(int id, XComponentMatcherBuilderImpl builder, XComponentMatcher.XComponentMatcherListener listener) {
