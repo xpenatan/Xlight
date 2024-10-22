@@ -9,6 +9,7 @@ public interface XComponentService {
     boolean containsComponent(XEntity entity, Class<?> type);
     <T extends XComponent> T getComponentIndex(XEntity entity, int index);
     boolean attachComponent(XEntity entity, XComponent component);
+    boolean attachComponent(XEntity entity, Class<? extends XComponent> type);
     boolean detachComponent(XEntity entity, Class<?> type);
     boolean detachComponent(XEntity entity, XComponent component);
     XComponentMatcherBuilder getMatcherBuilder();

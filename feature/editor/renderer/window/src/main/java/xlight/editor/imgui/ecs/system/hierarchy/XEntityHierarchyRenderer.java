@@ -42,6 +42,7 @@ import xlight.engine.pool.XPoolController;
 import xlight.engine.scene.ecs.manager.XSceneManager;
 import xlight.engine.string.XStringUtil;
 import xlight.engine.string.XTextBuilder;
+import xlight.engine.transform.ecs.component.XLocalTransformComponent;
 import xlight.engine.transform.ecs.component.XTransformComponent;
 import static imgui.ImGuiCond.ImGuiCond_Once;
 import static imgui.ImGuiHoveredFlags.ImGuiHoveredFlags_ChildWindows;
@@ -426,10 +427,12 @@ public class XEntityHierarchyRenderer {
                     if(draggedEntity != null) {
                         if(draggedEntity.getParent() == entity) {
                             draggedEntity.setParent(null);
+                            draggedEntity.detachComponent(XLocalTransformComponent.class);
                             treeOpen = false;
                         }
                         else {
                             draggedEntity.setParent(entity);
+                            draggedEntity.attachComponent(XLocalTransformComponent.class);
                         }
                     }
                 }
@@ -439,7 +442,8 @@ public class XEntityHierarchyRenderer {
                 if(dragDropPayload1 != null) {
                     int data = dragDropPayload1.get_Data();
                     if(data == entity.getId()) {
-                        entity.setParent(null);
+                        throw new RuntimeException("Check why it comes here");
+//                        entity.setParent(null);
                     }
                 }
             }

@@ -177,7 +177,7 @@ class XLoadEntity {
         int size = componentArray.getSize();
         for(int i = 0; i < size; i++) {
             XDataMap componentMap = componentArray.get(i);
-            Class<?> componentType = XSceneMapUtils.getComponentTypeFromComponentMap(registerManager, componentMap);
+            Class<?> componentType = XSceneMapUtils.getComponentClassFromComponentMap(registerManager, componentMap);
             if(componentType != null) {
                 boolean haveComponent = entity.containsComponent(componentType);
                 // Add component only if it's not set. Components loaded from sub scene may return false

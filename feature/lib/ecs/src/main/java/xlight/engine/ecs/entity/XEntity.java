@@ -30,6 +30,8 @@ public interface XEntity {
      */
     boolean attachComponent(XComponent component);
 
+    boolean attachComponent(Class<? extends XComponent> type);
+
     /**
      * Quick way to detach component. Same as using ComponentService.
      */

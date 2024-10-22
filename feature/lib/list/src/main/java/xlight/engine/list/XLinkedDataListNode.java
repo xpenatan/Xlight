@@ -9,7 +9,6 @@ public class XLinkedDataListNode<NODE_VALUE, NODE_TYPE extends XLinkedDataListNo
     float order;
 
     public XLinkedDataListNode() {
-        onReset();
     }
 
     public NODE_VALUE getValue() {

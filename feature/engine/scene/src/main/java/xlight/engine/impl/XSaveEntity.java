@@ -119,10 +119,6 @@ class XSaveEntity {
                                     addComponent = false;
                                 }
                             }
-                            else {
-                                // Component don't have data map so it should be equal
-                                addComponent = false;
-                            }
                         }
                     }
                     if(addComponent) {
@@ -146,12 +142,7 @@ class XSaveEntity {
         if(component instanceof XDataMapListener) {
             XDataMap componentDataMap = XDataMap.obtain(poolController);
             ((XDataMapListener)component).onSave(componentDataMap);
-            if(componentDataMap.getSize() == 0) {
-                componentDataMap.free();
-            }
-            else {
-                componentMap.put(XSceneKeys.DATA.getKey(), componentDataMap);
-            }
+            componentMap.put(XSceneKeys.DATA.getKey(), componentDataMap);
         }
         return componentMap;
     }

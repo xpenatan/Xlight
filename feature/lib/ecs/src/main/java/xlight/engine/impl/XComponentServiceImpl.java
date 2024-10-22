@@ -9,6 +9,8 @@ import xlight.engine.ecs.component.XComponent;
 import xlight.engine.ecs.component.XComponentService;
 import xlight.engine.ecs.component.XComponentType;
 import xlight.engine.ecs.entity.XEntity;
+import xlight.engine.pool.XPoolController;
+import xlight.engine.pool.XPoolable;
 
 class XComponentServiceImpl implements XComponentService {
 
@@ -19,9 +21,12 @@ class XComponentServiceImpl implements XComponentService {
 
     private XECSWorldImpl world;
 
+    private XPoolController poolController;
+
     public void init(XECSWorldImpl world, XEntityServiceImpl entityService) {
         this.entityService = entityService;
         this.world = world;
+        poolController = world.getGlobalData(XPoolController.class);
         components = new Array<>();
         matcher = new XComponentMatcherBuilderImpl(this, entityService);
     }
@@ -99,6 +104,17 @@ class XComponentServiceImpl implements XComponentService {
     }
 
     @Override
+    public boolean attachComponent(XEntity entity, Class<? extends XComponent> type) {
+        if(!entity.containsComponent(type)) {
+            XComponent component = poolController.obtainObject(type);
+            if(!attachComponent(entity, component)) {
+                poolController.releaseObject(component);
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean detachComponent(XEntity entity, Class<?> type) {
         XComponentType componentType = getComponentInternal(type);
         if(componentType != null) {
@@ -170,6 +186,9 @@ class XComponentServiceImpl implements XComponentService {
                     entityService.onComponentRemoved(entity, tmpBits, entity.componentMask);
                     entity.componentsIndex.removeValue(componentIndex);
                     componentList.set(entityIndex, null);
+                    if(componentFound instanceof XPoolable) {
+                        poolController.releaseObject(componentFound);
+                    }
                     ret = true;
                 }
             }

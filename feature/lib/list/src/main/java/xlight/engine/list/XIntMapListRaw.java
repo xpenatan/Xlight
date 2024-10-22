@@ -57,10 +57,6 @@ public class XIntMapListRaw<NODE_VALUE, NODE_TYPE extends XIntDataMapListNode<NO
         return map.size;
     }
 
-    public boolean contains(int key) {
-        return map.containsKey(key);
-    }
-
     public XList<NODE_VALUE> getList() {
         return linkedList.getList();
     }

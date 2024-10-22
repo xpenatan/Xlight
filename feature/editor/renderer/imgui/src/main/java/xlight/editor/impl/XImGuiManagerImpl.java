@@ -154,7 +154,7 @@ class XImGuiManagerImpl implements XImGuiManager, XManager, XSystemBeginEndListe
 
     @Override
     public boolean containsClassID(int classID) {
-        return windowContexts.contains(classID);
+        return windowContexts.containsKey(classID);
     }
 
     @Override

@@ -96,6 +96,12 @@ class XEntityImpl implements XEntity {
     }
 
     @Override
+    public boolean attachComponent(Class<? extends XComponent> type) {
+        XComponentService componentService = world.getWorldService().getComponentService();
+        return componentService.attachComponent(this, type);
+    }
+
+    @Override
     public boolean detachComponent(Class<?> type) {
         XComponentService componentService = world.getWorldService().getComponentService();
         return componentService.detachComponent(this, type);

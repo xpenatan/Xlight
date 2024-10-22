@@ -45,7 +45,7 @@ public class XECSWorldImpl implements XWorld {
     @Override
     public <T extends XService> void attachService(Class<?> type, XService service) {
         int key = type.hashCode();
-        if(!services.contains(key)) {
+        if(!services.containsKey(key)) {
             services.put(type.hashCode(), service);
             initServices.add(service);
         }

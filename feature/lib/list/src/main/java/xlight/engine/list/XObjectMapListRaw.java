@@ -57,7 +57,7 @@ public class XObjectMapListRaw<NODE_KEY, NODE_VALUE, NODE_TYPE extends XObjectMa
         return map.size;
     }
 
-    public boolean contains(NODE_KEY key) {
+    public boolean containsKey(NODE_KEY key) {
         return map.containsKey(key);
     }
 

@@ -94,7 +94,7 @@ public class XPropertiesImpl implements XProperties {
 
     @Override
     public boolean containsKey(String key) {
-        return map.contains(key);
+        return map.containsKey(key);
     }
 
     @Override
