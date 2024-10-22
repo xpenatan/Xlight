@@ -64,8 +64,11 @@ public class XEntityHierarchyRenderer {
     private ImGuiString pathString;
     private XUIData uiData;
 
+    private Array<XEntity> releaseEntities;
+
     public XEntityHierarchyRenderer() {
         pathString = new ImGuiString();
+        releaseEntities = new Array<>();
     }
 
     public void onAttach(XWorld world) {
@@ -283,8 +286,8 @@ public class XEntityHierarchyRenderer {
 
     private void renderEntityItem(XWorld gameWorld, XEntity entity, boolean leftControl) {
         boolean isOpen = renderEntity(gameWorld, entity, leftControl);
+        XEntityService entityService = gameWorld.getWorldService().getEntityService();
         if(isOpen) {
-            XEntityService entityService = gameWorld.getWorldService().getEntityService();
             XIntSetNode cur = entity.getChildHead();
             while(cur != null) {
                 int key = cur.getKey();
@@ -310,6 +313,11 @@ public class XEntityHierarchyRenderer {
             }
         }
         ImLayout.EndTree();
+
+        while(releaseEntities.size != 0) {
+            XEntity e = releaseEntities.removeIndex(0);
+            entityService.releaseEntity(e);
+        }
     }
 
     private boolean renderEntity(XWorld gameWorld, XEntity entity, boolean leftControl) {
@@ -372,8 +380,7 @@ public class XEntityHierarchyRenderer {
             ImLayout.BeginAlign("saveID", ImLayout.WRAP_PARENT, ImLayout.MATCH_PARENT, 0, 0.5f);
             {
                 if(ImGui.ImageButton("entityTrash", XEditorAssets.ic_trashTexture.getTextureObjectHandle(), ImVec2.TMP_1.set(buttonSize, buttonSize))) {
-                    XEntityService entityService = gameWorld.getWorldService().getEntityService();
-                    entityService.releaseEntity(entity);
+                    releaseEntities.add(entity);
                 }
             }
             ImLayout.EndAlign();
